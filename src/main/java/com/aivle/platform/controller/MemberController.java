@@ -3,6 +3,7 @@ package com.aivle.platform.controller;
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.exception.MemberCreationFailedException;
+import com.aivle.platform.exception.MemberNotFoundException;
 import com.aivle.platform.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -27,7 +25,7 @@ public class MemberController {
     public String registerForm(Model model) {
         MemberRequestDto request = new MemberRequestDto();
         model.addAttribute("request", request);
-        return "register";
+        return "member/register";
     }
 
     // 회원가입 POST, 프론트에서 이메일 중복체크
@@ -47,8 +45,8 @@ public class MemberController {
 
     @GetMapping("/members")
     public String getMembers(Model model,
-                          @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(defaultValue = "10") int size) {
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size) {
         // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
         Pageable pageable = PageRequest.of(page, size);
 
@@ -61,7 +59,21 @@ public class MemberController {
         model.addAttribute("totalPages", members.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", members.getTotalElements()); // 전체 항목 수
 
-        return "members"; // register.html 페이지로 반환
+        return "member/members"; // register.html 페이지로 반환
+    }
+
+    // 단건 조회
+    @GetMapping("/member/{memberId}")
+    public String getMember(@PathVariable("memberId") Long memberId, Model model) {
+        try {
+            Member member = memberService.getMemberById(memberId);
+            model.addAttribute("member", member);
+            return "member/member";
+        } catch (MemberNotFoundException e) {
+            return "redirect:/members";
+        } catch (Exception e) {
+            return "/error";
+        }
     }
 
 
