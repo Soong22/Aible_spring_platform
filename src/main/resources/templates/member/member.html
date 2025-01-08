@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 상세 조회</title>
 </head>
 <body>
+
+<h1>회원 상세 조회</h1>
+
+<div>
+    <p><strong>회원ID:</strong> <span th:text="${member.memberId}"></span></p>
+    <p><strong>이메일:</strong> <span th:text="${member.email}"></span></p>
+    <p><strong>권한:</strong> <span th:text="${member.role}"></span></p>
+    <p><strong>사용자 이름:</strong> <span th:text="${member.memberName}"></span></p>
+    <p><strong>개인 전화번호:</strong> <span th:text="${member.personPhone}"></span></p>
+    <p><strong>사무실 전화번호:</strong> <span th:text="${member.officePhone}"></span></p>
+    <p><strong>관할부서:</strong> <span th:text="${member.districtName}"></span></p>
+    <p><strong>가입일자:</strong> <span th:text="${member.createdAt}"></span></p>
+</div>
+
+<div>
+    <a th:href="@{'/member/edit/' + ${member.memberId}}">수정</a> |
+    <a th:href="@{/member/}">목록</a>
+</div>
 
 </body>
 </html>

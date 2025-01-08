@@ -30,23 +30,26 @@
 <h1>전체 유저 조회</h1>
 
 <div th:each="member : ${members}" class="user-container">
-    <div class="user-header">
-        유저 ID: <span th:text="${member.memberId}"></span>
-    </div>
     <div class="user-info">
+        <p>회원ID: <span th:text="${member.memberId}"></span></p>
         <p>이메일: <span th:text="${member.email}"></span></p>
-        <p>역할: <span th:text="${member.role}"></span></p>
+        <p>권한: <span th:text="${member.role}"></span></p>
         <p>사용자 이름: <span th:text="${member.memberName}"></span></p>
         <p>개인 전화번호: <span th:text="${member.personPhone}"></span></p>
         <p>사무실 전화번호: <span th:text="${member.officePhone}"></span></p>
-        <p>관할 부서: <span th:text="${member.districtName}"></span></p>
-        <p>등록 일자: <span th:text="${member.createdAt}"></span></p>
+        <p>관할부서: <span th:text="${member.districtName}"></span></p>
+        <p>가입일자: <span th:text="${member.createdAt}"></span></p>
     </div>
     <div class="user-actions">
         <button th:onclick="|location.href='/member/' + ${member.memberId}|">개인 조회</button>
         <button th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정</button>
-        <button th:onclick="|location.href='/member/delete/' + ${member.memberId}|">삭제</button>
+
+        <!-- 삭제 버튼을 form 태그로 변경하여 POST 요청을 보냄 -->
+        <form th:action="@{/member/delete/{memberId}(memberId=${member.memberId})}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+            <button type="submit">삭제</button>
+        </form>
     </div>
+
 </div>
 
 <div>

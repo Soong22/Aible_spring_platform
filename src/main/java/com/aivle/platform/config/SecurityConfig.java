@@ -31,7 +31,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**", "/error", "/index", "/check-email/**", "/register", "/members", "/member/**", "/login").permitAll()
+                        .requestMatchers("/h2-console/**", "/error", "/index", "/check-email/**", "/login").permitAll()
+                        .requestMatchers("/member/**").permitAll()
                         .requestMatchers("/test").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

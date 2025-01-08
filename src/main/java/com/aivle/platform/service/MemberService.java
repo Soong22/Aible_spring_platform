@@ -4,7 +4,9 @@ import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.exception.MemberCreationFailedException;
+import com.aivle.platform.exception.MemberDeletionFailedException;
 import com.aivle.platform.exception.MemberNotFoundException;
+import com.aivle.platform.exception.MemberUpdateFailedException;
 import com.aivle.platform.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -72,18 +74,22 @@ public class MemberService {
 
     // 전체 수정
     public Member updateMember(Long memberId, MemberRequestDto request) {
-        Member member = getMemberById(memberId);
-        Member newMember = MemberRequestDto.toEntity(request);
+        try {
+            Member member = getMemberById(memberId);
+            Member newMember = MemberRequestDto.toEntity(request);
 
-        newMember.setPassword(passwordEncoder.encode(newMember.getPassword()));
-        member.setEmail(newMember.getEmail());
-        member.setPassword(newMember.getPassword());
-        member.setMemberName(newMember.getMemberName());
-        member.setPersonPhone(newMember.getPersonPhone());
-        member.setOfficePhone(newMember.getOfficePhone());
-        member.setDistrictName(newMember.getDistrictName());
+            newMember.setPassword(passwordEncoder.encode(newMember.getPassword()));
+            member.setEmail(newMember.getEmail());
+            member.setPassword(newMember.getPassword());
+            member.setMemberName(newMember.getMemberName());
+            member.setPersonPhone(newMember.getPersonPhone());
+            member.setOfficePhone(newMember.getOfficePhone());
+            member.setDistrictName(newMember.getDistrictName());
 
-        return memberRepository.save(member);
+            return memberRepository.save(member);
+        } catch (Exception e) {
+            throw new MemberUpdateFailedException("회원 수정에 실패하였습니다.", e);
+        }
     }
 
     // 사용자 권한만 수정
@@ -102,10 +108,14 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    // 회원 삭제
     public void deleteMember(Long memberId) {
-        Member member = getMemberById(memberId);
-
-        memberRepository.delete(member);
+        try {
+            Member member = getMemberById(memberId);
+            memberRepository.delete(member);
+        } catch (Exception e) {
+            throw new MemberDeletionFailedException("회원 삭제에 실패했습니다.", e);
+        }
     }
 
 }
