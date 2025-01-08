@@ -15,4 +15,5 @@ public class MemberRestController {
     public Boolean checkEmail(@PathVariable String email) {
         return memberService.existsByEmail(email);
     }
+
 }

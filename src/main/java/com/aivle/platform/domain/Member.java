@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,23 +21,32 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(nullable = false)
-    private String memberName;
-
-    @Column(nullable = false)
-    private String phoneNumber;
-
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
+
+    @Column(nullable = false, length = 50)
+    private String memberName;
+
+    @Column(nullable = false, length = 13)
+    private String personPhone;
+
+    @Column(length = 13)
+    private String officePhone;
+
+    @Column(nullable = false, length = 50)
+    private String districtName;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Board> boards = new ArrayList<>();
 
 }

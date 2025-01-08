@@ -3,9 +3,12 @@ package com.aivle.platform.service;
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.MemberRequestDto;
+import com.aivle.platform.exception.MemberCreationFailedException;
+import com.aivle.platform.exception.MemberNotFoundException;
 import com.aivle.platform.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-
 
 @Service
 @Transactional
@@ -23,8 +25,21 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public Member createMember(MemberRequestDto request) {
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        return memberRepository.save(toMember(request));
+        // 이메일 중복 체크
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new MemberCreationFailedException("이미 존재하는 이메일 입니다. email: " + request.getEmail());
+        }
+
+        Member member = MemberRequestDto.toEntity(request);
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setRole(Role.USER);
+        member.setCreatedAt(LocalDateTime.now());
+
+        try {
+            return memberRepository.save(member);
+        } catch (DataIntegrityViolationException e) {
+            throw new MemberCreationFailedException("회원가입에 실패하였습니다: ", e.getCause());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -35,19 +50,19 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member getMemberById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElse(null);
+                .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_id: " + memberId));
     }
 
     @Transactional(readOnly = true)
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElse(null);
+                .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. email: " + email));
     }
 
     @Transactional(readOnly = true)
-    public Member findMemberByNameAndPhone(String memberName, String phoneNumber) {
-        return memberRepository.findByMemberNameAndPhoneNumber(memberName, phoneNumber)
-                .orElse(null);
+    public Member findMemberByNameAndPersonPhone(String memberName, String personPhone) {
+        return memberRepository.findByMemberNameAndPersonPhone(memberName, personPhone)
+                .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_name: " + memberName + ", person_phone: " + personPhone));
     }
 
     @Transactional(readOnly = true)
@@ -55,21 +70,34 @@ public class MemberService {
         return memberRepository.findAll(pageable);
     }
 
+    // 전체 수정
     public Member updateMember(Long memberId, MemberRequestDto request) {
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-
         Member member = getMemberById(memberId);
-        member.setMemberName(request.getMemberName());
-        member.setPhoneNumber(request.getPhoneNumber());
-        member.setEmail(request.getEmail());
-        member.setPassword(request.getPassword());
+        Member newMember = MemberRequestDto.toEntity(request);
+
+        newMember.setPassword(passwordEncoder.encode(newMember.getPassword()));
+        member.setEmail(newMember.getEmail());
+        member.setPassword(newMember.getPassword());
+        member.setMemberName(newMember.getMemberName());
+        member.setPersonPhone(newMember.getPersonPhone());
+        member.setOfficePhone(newMember.getOfficePhone());
+        member.setDistrictName(newMember.getDistrictName());
 
         return memberRepository.save(member);
     }
 
+    // 사용자 권한만 수정
     public Member updateMemberRole(Long memberId, Role newRole) {
         Member member = getMemberById(memberId);
         member.setRole(newRole);
+
+        return memberRepository.save(member);
+    }
+
+    // 비밀번호만 변경
+    public Member updateMemberPassword(Long memberId, String password) {
+        Member member = getMemberById(memberId);
+        member.setPassword(passwordEncoder.encode(password));
 
         return memberRepository.save(member);
     }
@@ -80,15 +108,4 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    private Member toMember(MemberRequestDto request) {
-        Member member = new Member();
-        member.setMemberName(request.getMemberName());
-        member.setPhoneNumber(request.getPhoneNumber());
-        member.setEmail(request.getEmail());
-        member.setPassword(request.getPassword());
-        member.setRole(Role.GUEST);
-        member.setCreatedAt(LocalDateTime.now());
-
-        return member;
-    }
 }

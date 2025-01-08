@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전체 유저 조회</title>
+    <style>
+        .user-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .user-info {
+            margin-bottom: 10px;
+        }
+        .user-actions button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>전체 유저 조회</h1>
+
+<div th:each="member : ${members}" class="user-container">
+    <div class="user-header">
+        유저 ID: <span th:text="${member.memberId}"></span>
+    </div>
+    <div class="user-info">
+        <p>이메일: <span th:text="${member.email}"></span></p>
+        <p>역할: <span th:text="${member.role}"></span></p>
+        <p>사용자 이름: <span th:text="${member.memberName}"></span></p>
+        <p>개인 전화번호: <span th:text="${member.personPhone}"></span></p>
+        <p>사무실 전화번호: <span th:text="${member.officePhone}"></span></p>
+        <p>관할 부서: <span th:text="${member.districtName}"></span></p>
+        <p>등록 일자: <span th:text="${member.createdAt}"></span></p>
+    </div>
+    <div class="user-actions">
+        <button th:onclick="|location.href='/member/' + ${member.memberId}|">개인 조회</button>
+        <button th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정</button>
+        <button th:onclick="|location.href='/member/delete/' + ${member.memberId}|">삭제</button>
+    </div>
+</div>
+
+<div>
+    <span>페이지: <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span></span>
+</div>
+
+<div>
+    <a th:href="@{/members(page=${currentPage - 1}, size=${size})}" th:if="${currentPage > 0}">이전</a>
+    <a th:href="@{/members(page=${currentPage + 1}, size=${size})}" th:if="${currentPage < totalPages - 1}">다음</a>
+</div>
+
+</body>
+</html>

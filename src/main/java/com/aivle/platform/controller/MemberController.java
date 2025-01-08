@@ -2,6 +2,7 @@ package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.dto.request.MemberRequestDto;
+import com.aivle.platform.exception.MemberCreationFailedException;
 import com.aivle.platform.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +16,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
 
+    // 회원가입 GET
     @GetMapping("/register")
     public String registerForm(Model model) {
         MemberRequestDto request = new MemberRequestDto();
@@ -29,36 +30,38 @@ public class MemberController {
         return "register";
     }
 
-    // 프론트에서 중복체크
+    // 회원가입 POST, 프론트에서 이메일 중복체크
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("request") MemberRequestDto request) {
         try {
             memberService.createMember(request);
             return "redirect:/index";
-        } catch (IllegalArgumentException e) {
-            return "register";
+        } catch (MemberCreationFailedException e) {
+            // 실패 시 다시 회원가입으로 리다이렉트
+            return "redirect:/register";
         } catch (Exception e) {
-            return "error";
+            // 예상못한 에러의 경우 에러페이지로 리다이렉트
+            return "/error";
         }
     }
 
-    @GetMapping("/all")
-    public String allForm(Model model,
+    @GetMapping("/members")
+    public String getMembers(Model model,
                           @RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size) {
         // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
         Pageable pageable = PageRequest.of(page, size);
 
         // 페이징된 멤버 목록 조회
-        Page<Member> allMembers = memberService.getAllMembers(pageable);
+        Page<Member> members = memberService.getAllMembers(pageable);
 
         // 모델에 멤버 목록과 페이징 정보 추가
-        model.addAttribute("members", allMembers.getContent()); // 멤버 목록
+        model.addAttribute("members", members.getContent()); // 멤버 목록
         model.addAttribute("currentPage", page); // 현재 페이지
-        model.addAttribute("totalPages", allMembers.getTotalPages()); // 전체 페이지 수
-        model.addAttribute("totalItems", allMembers.getTotalElements()); // 전체 항목 수
+        model.addAttribute("totalPages", members.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", members.getTotalElements()); // 전체 항목 수
 
-        return "all"; // register.html 페이지로 반환
+        return "members"; // register.html 페이지로 반환
     }
 
 
