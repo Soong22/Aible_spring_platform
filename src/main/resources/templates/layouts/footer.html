@@ -1,4 +1,4 @@
-<div class="mb-5 container-fluid footer" th:fragment="footer">
+<div class="container-fluid footer" th:fragment="footer">
   <style>
     .footer {
       position: fixed;
@@ -6,12 +6,22 @@
       bottom: 0;
       width: 100%;
       text-align: center;
+      background-color: #fff; /* 배경색을 흰색으로 설정 */
+      color: black; /* 글자 색을 검은색으로 설정 */
+      padding: 10px 0; /* 상하 여백 추가 */
+      z-index: 9999; /* 푸터가 항상 맨 위에 오도록 */
+    }
+
+    /* 푸터가 고정되어 있을 때, 페이지 본문 콘텐츠에 여백을 추가 */
+    .content-wrapper {
+      padding-bottom: 80px; /* 푸터의 높이에 맞게 여백 조정 */
     }
   </style>
-  <hr>
+
+  <hr style="border-color: #000;"> <!-- 푸터의 선 색을 검은색으로 설정 -->
   <p>© Hyeongjun Kim 김형준 |
-    <a th:href="@{/privacy}">Privacy</a> |
-    <a th:href="@{/terms}">Terms</a>
+    <a th:href="@{/privacy}" style="color: #000;">Privacy</a> |
+    <a th:href="@{/terms}" style="color: #000;">Terms</a>
   </p>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
