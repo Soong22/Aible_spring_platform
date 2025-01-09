@@ -31,7 +31,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**", "/error", "/index", "/check-email/**", "/login").permitAll()
+                        .requestMatchers("/h2-console/**", "/error", "/", "/check-email/**", "/login").permitAll()
                         .requestMatchers("/member/**").permitAll()
                         .requestMatchers("/test").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .permitAll() // 기본 로그인 페이지를 사용하므로 모든 사용자에게 접근 허용
                         .loginProcessingUrl("/login") // 기본 로그인 처리 URL
-                        .defaultSuccessUrl("/index", true) // 로그인 성공 시 리다이렉트할 URL
+                        .defaultSuccessUrl("/", true) // 로그인 성공 시 리다이렉트할 URL
                         .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
                 )
                 .logout(logout -> logout.permitAll());

@@ -37,7 +37,7 @@ public class MemberController {
     public String registerMember(@Valid @ModelAttribute("request") MemberRequestDto request) {
         try {
             memberService.createMember(request);
-            return "redirect:/index";
+            return "redirect:/";
         } catch (MemberCreationFailedException e) {
             // 실패 시 다시 회원가입으로 리다이렉트
             return "redirect:/member/register";
