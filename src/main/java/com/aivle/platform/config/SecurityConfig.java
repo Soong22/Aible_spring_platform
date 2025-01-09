@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/h2-console/**", "/error", "/", "/check-email/**", "/login").permitAll()
-                        .requestMatchers("/member/**").permitAll()
+                        .requestMatchers("/member/**", "/index2", "/imgs/**").permitAll()
                         .requestMatchers("/test").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

@@ -9,4 +9,9 @@ public class HomeController {
     public String homeForm() {
         return "index";
     }
+
+    @GetMapping("/index2")
+    public String homeForm2() {
+        return "index2";
+    }
 }
