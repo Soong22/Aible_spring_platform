@@ -70,7 +70,7 @@
                         <p><strong>가입일자:</strong> <span th:text="${member.createdAt}"></span></p>
                     </div>
                     <div class="user-actions">
-                        <button class="btn btn-primary" th:onclick="|location.href='/member/'|">목록</button>
+                        <button class="btn btn-primary" th:onclick="|location.href='/members'|">목록</button>
                         <button class="btn btn-warning"
                                 th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정
                         </button>

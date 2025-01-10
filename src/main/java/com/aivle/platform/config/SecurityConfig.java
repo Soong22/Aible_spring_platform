@@ -33,10 +33,12 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/h2-console/**", "/error", "/", "/check-email/**", "/login").permitAll()
-                        .requestMatchers("/error", "/", "/check-email/**", "/login").permitAll()
-                        .requestMatchers("/member/**").permitAll()
-                        .requestMatchers("/h2-console/**", "/test").hasRole("ADMIN")
+                        .requestMatchers("/", "/error", "/check-email/**", "/login").permitAll()
+                        .requestMatchers("/member/register", "/mypage", "/favicon.ico").permitAll()
+//                        .requestMatchers().hasRole("USER")
+                        .requestMatchers("/member/**").authenticated()
+                        .requestMatchers("/members").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -45,10 +47,14 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true) // 로그인 성공 시 리다이렉트할 URL
                         .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
                 )
-                .logout(LogoutConfigurer::permitAll);
+                .logout(logout -> logout
+                        .permitAll() // 로그아웃을 모든 사용자에게 허용
+                        .logoutSuccessUrl("/") // 로그아웃 성공 시 /로 리다이렉트
+                );
 
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

@@ -13,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
 
@@ -116,6 +118,24 @@ public class MemberService {
             memberRepository.delete(member);
         } catch (Exception e) {
             throw new MemberDeletionFailedException("회원 삭제에 실패했습니다.", e);
+        }
+    }
+
+    // 회원 인증 처리 메소드
+    public static void addMemberInfoToModel(Model model, Authentication authentication) {
+        if (authentication != null) {
+            String username = authentication.getName();
+            boolean isUser = authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_USER"));
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+
+            model.addAttribute("isUser", isUser);
+            model.addAttribute("isAdmin", isAdmin);
+            model.addAttribute("username", username);
+        } else {
+            model.addAttribute("isUser", false);
+            model.addAttribute("isAdmin", false);
         }
     }
 
