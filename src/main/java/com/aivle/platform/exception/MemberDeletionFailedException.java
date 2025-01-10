@@ -1,6 +1,8 @@
 package com.aivle.platform.exception;
 
+
 public class MemberDeletionFailedException extends RuntimeException {
+
     // 메시지 전달을 위한 생성자
     public MemberDeletionFailedException(String message) {
         super(message);
@@ -10,4 +12,5 @@ public class MemberDeletionFailedException extends RuntimeException {
     public MemberDeletionFailedException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

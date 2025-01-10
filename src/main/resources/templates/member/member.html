@@ -49,7 +49,7 @@
 <body>
 <div class="content-wrapper">
     <!-- Header -->
-    <div th:replace="layouts/header :: header"></div>
+    <div th:replace="~{layouts/header :: header}"></div>
 
     <!-- Main Content -->
     <div class="container mt-4 main-content">
@@ -71,8 +71,11 @@
                     </div>
                     <div class="user-actions">
                         <button class="btn btn-primary" th:onclick="|location.href='/member/'|">목록</button>
-                        <button class="btn btn-warning" th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정</button>
-                        <form th:action="@{/member/delete/{memberId}(memberId=${member.memberId})}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');" class="d-inline">
+                        <button class="btn btn-warning"
+                                th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정
+                        </button>
+                        <form th:action="@{/member/delete/{memberId}(memberId=${member.memberId})}" method="post"
+                              onsubmit="return confirm('정말로 삭제하시겠습니까?');" class="d-inline">
                             <button type="submit" class="btn btn-danger">삭제</button>
                         </form>
                     </div>
@@ -82,7 +85,8 @@
     </div>
 
     <!-- Footer -->
-    <div th:replace="layouts/footer :: footer"></div>
+    <div th:replace="~{layouts/footer :: footer}"></div>
+
 </div>
 </body>
 </html>

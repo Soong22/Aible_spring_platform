@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,11 +31,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**", "/error", "/", "/check-email/**", "/login").permitAll()
-                        .requestMatchers("/member/**", "/index2", "/imgs/**").permitAll()
-                        .requestMatchers("/test").hasRole("ADMIN")
+//                        .requestMatchers("/h2-console/**", "/error", "/", "/check-email/**", "/login").permitAll()
+                        .requestMatchers("/error", "/", "/check-email/**", "/login").permitAll()
+                        .requestMatchers("/member/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/test").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -42,7 +45,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true) // 로그인 성공 시 리다이렉트할 URL
                         .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
                 )
-                .logout(logout -> logout.permitAll());
+                .logout(LogoutConfigurer::permitAll);
 
         return http.build();
     }

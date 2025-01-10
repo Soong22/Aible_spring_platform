@@ -49,7 +49,7 @@
 <body>
 <div class="content-wrapper">
     <!-- Header -->
-    <div th:replace="layouts/header :: header"></div>
+    <div th:replace="~{layouts/header :: header}"></div>
 
     <!-- Main Content -->
     <div class="container mt-4 main-content">
@@ -69,9 +69,14 @@
                         <p><strong>가입일자:</strong> <span th:text="${member.createdAt}"></span></p>
                     </div>
                     <div class="user-actions">
-                        <button class="btn btn-primary" th:onclick="|location.href='/member/' + ${member.memberId}|">조회</button>
-                        <button class="btn btn-warning" th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정</button>
-                        <form th:action="@{/member/delete/{memberId}(memberId=${member.memberId})}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');" class="d-inline">
+                        <button class="btn btn-primary" th:onclick="|location.href='/member/' + ${member.memberId}|">
+                            조회
+                        </button>
+                        <button class="btn btn-warning"
+                                th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정
+                        </button>
+                        <form th:action="@{/member/delete/{memberId}(memberId=${member.memberId})}" method="post"
+                              onsubmit="return confirm('정말로 삭제하시겠습니까?');" class="d-inline">
                             <button type="submit" class="btn btn-danger">삭제</button>
                         </form>
                     </div>
@@ -83,14 +88,17 @@
         <div class="d-flex justify-content-between">
             <span>페이지: <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span></span>
             <div>
-                <a th:href="@{/members(page=${currentPage - 1}, size=${size})}" th:if="${currentPage > 0}" class="btn btn-secondary">이전</a>
-                <a th:href="@{/members(page=${currentPage + 1}, size=${size})}" th:if="${currentPage < totalPages - 1}" class="btn btn-secondary">다음</a>
+                <a th:href="@{/members(page=${currentPage - 1}, size=${size})}" th:if="${currentPage > 0}"
+                   class="btn btn-secondary">이전</a>
+                <a th:href="@{/members(page=${currentPage + 1}, size=${size})}" th:if="${currentPage < totalPages - 1}"
+                   class="btn btn-secondary">다음</a>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <div th:replace="layouts/footer :: footer"></div>
+    <div th:replace="~{layouts/footer :: footer}"></div>
+
 </div>
 
 </body>

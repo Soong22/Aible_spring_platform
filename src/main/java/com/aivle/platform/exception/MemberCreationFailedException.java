@@ -2,6 +2,7 @@ package com.aivle.platform.exception;
 
 
 public class MemberCreationFailedException extends RuntimeException {
+
     // 메세지 전달을 위한 생성자
     public MemberCreationFailedException(String message) {
         super(message);
@@ -11,4 +12,5 @@ public class MemberCreationFailedException extends RuntimeException {
     public MemberCreationFailedException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

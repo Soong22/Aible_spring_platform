@@ -3,6 +3,7 @@ package com.aivle.platform.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
 @Controller
 public class HomeController {
     @GetMapping("/")
@@ -10,8 +11,4 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/index2")
-    public String homeForm2() {
-        return "index2";
-    }
 }

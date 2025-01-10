@@ -114,7 +114,7 @@ public class MemberController {
     // 회원삭제 POST
     @PostMapping("/delete/{memberId}")
     public String deleteMember(@PathVariable("memberId") Long memberId) {
-        try{
+        try {
             memberService.deleteMember(memberId);
             return "redirect:/member/";
         } catch (MemberDeletionFailedException e) {
