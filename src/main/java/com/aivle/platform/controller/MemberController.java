@@ -1,6 +1,5 @@
 package com.aivle.platform.controller;
 
-import com.aivle.platform.domain.Member;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.exception.MemberCreationFailedException;
@@ -18,11 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
 @Controller
 @RequiredArgsConstructor
-//@RequestMapping("/member")
 public class MemberController {
+
     private final MemberService memberService;
 
     // 회원가입 GET
@@ -32,6 +30,7 @@ public class MemberController {
 
         MemberRequestDto request = new MemberRequestDto();
         model.addAttribute("request", request);
+
         return "member/register";
     }
 
@@ -54,14 +53,14 @@ public class MemberController {
     public String getMembers(Model model, Authentication authentication,
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "10") int size) {
-        try{
+        try {
             MemberService.addMemberInfoToModel(model, authentication);
 
             // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
             Pageable pageable = PageRequest.of(page, size);
 
             // 페이징된 멤버 목록 조회
-            Page<Member> members = memberService.getAllMembers(pageable);
+            Page<MemberResponseDto> members = memberService.getAllMembers(pageable);
 
             // 모델에 멤버 목록과 페이징 정보 추가
             model.addAttribute("members", members.getContent()); // 멤버 목록
@@ -80,7 +79,7 @@ public class MemberController {
     public String getMember(@PathVariable("memberId") Long memberId, Model model, Authentication authentication) {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
-            Member member = memberService.getMemberById(memberId);
+            MemberResponseDto member = memberService.getMemberById(memberId);
             model.addAttribute("member", member);
             return "member/member";
         } catch (MemberNotFoundException e) {
@@ -95,7 +94,7 @@ public class MemberController {
     public String editMemberForm(@PathVariable("memberId") Long memberId, Model model, Authentication authentication) {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
-            MemberResponseDto response = MemberResponseDto.toDto(memberService.getMemberById(memberId));
+            MemberResponseDto response = memberService.getMemberById(memberId);
             model.addAttribute("response", response);
             model.addAttribute("request", new MemberRequestDto());
             return "member/edit";

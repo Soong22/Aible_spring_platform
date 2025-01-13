@@ -80,7 +80,7 @@
                 return;
             }
 
-            fetch(`/check-email/${encodeURIComponent(email)}`)
+            fetch(`/api/check-email/${encodeURIComponent(email)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data) {

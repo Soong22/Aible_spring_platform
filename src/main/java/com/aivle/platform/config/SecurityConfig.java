@@ -9,12 +9,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 
 @Configuration
 @EnableWebSecurity
@@ -33,13 +31,13 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/error", "/check-email/**", "/login").permitAll()
-                        .requestMatchers("/member/register", "/mypage", "/favicon.ico").permitAll()
+                                .requestMatchers("/", "/error", "/api/**", "/login").permitAll()
+                                .requestMatchers("/member/register", "/mypage", "/favicon.ico").permitAll()
 //                        .requestMatchers().hasRole("USER")
-                        .requestMatchers("/member/**").authenticated()
-                        .requestMatchers("/members").hasRole("ADMIN")
+                                .requestMatchers("/member/**").authenticated()
+                                .requestMatchers("/members").hasRole("ADMIN")
 
-                        .anyRequest().authenticated()
+                                .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .permitAll() // 기본 로그인 페이지를 사용하므로 모든 사용자에게 접근 허용
@@ -54,7 +52,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

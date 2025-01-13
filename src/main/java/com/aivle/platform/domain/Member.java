@@ -1,19 +1,16 @@
 package com.aivle.platform.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
@@ -22,7 +19,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -32,22 +29,31 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50, nullable = false)
     private String memberName;
 
-    @Column(nullable = false, length = 13)
+    @Column(length = 13, nullable = false)
     private String personPhone;
 
     @Column(length = 13)
     private String officePhone;
 
-    @Column(nullable = false, length = 50)
-    private String districtName;
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @OneToOne
+    @JoinColumn(name = "police_unit_id", nullable = false)
+    private PoliceUnit policeUnit;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Board> boards = new ArrayList<>();
+
+    // 알림 발신자 관계 (Notification.sender_id)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Notification> sentNotifications = new ArrayList<>();
+
+    // 알림 수신자 관계 (Notification.receiver_id)
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Notification> receivedNotifications = new ArrayList<>();
 
 }

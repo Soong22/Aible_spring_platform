@@ -1,16 +1,15 @@
 package com.aivle.platform.service;
 
 import com.aivle.platform.domain.Member;
+import com.aivle.platform.domain.PoliceUnit;
 import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.MemberRequestDto;
-import com.aivle.platform.exception.MemberCreationFailedException;
-import com.aivle.platform.exception.MemberDeletionFailedException;
-import com.aivle.platform.exception.MemberNotFoundException;
-import com.aivle.platform.exception.MemberUpdateFailedException;
+import com.aivle.platform.dto.response.MemberResponseDto;
+import com.aivle.platform.exception.*;
 import com.aivle.platform.repository.MemberRepository;
 
+import com.aivle.platform.repository.PoliceUnitRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -21,12 +20,12 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PoliceUnitRepository policeUnitRepository;
     private final PasswordEncoder passwordEncoder;
 
     public Member createMember(MemberRequestDto request) {
@@ -35,16 +34,24 @@ public class MemberService {
             throw new MemberCreationFailedException("이미 존재하는 이메일 입니다. email: " + request.getEmail());
         }
 
-        Member member = MemberRequestDto.toEntity(request);
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setRole(Role.USER);
-        member.setCreatedAt(LocalDateTime.now());
+        PoliceUnit policeUnit = policeUnitRepository.findById(request.getPoliceUnitId())
+                .orElseThrow(() -> new PoliceUnitNotFoundException("존재하지 않는 지구대/파출소 정보입니다."));
 
         try {
+            Member member = MemberRequestDto.toEntity(request, policeUnit);
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
+            member.setRole(Role.USER);
+            member.setCreatedAt(LocalDateTime.now());
+
             return memberRepository.save(member);
-        } catch (DataIntegrityViolationException e) {
+        } catch (Exception e) {
             throw new MemberCreationFailedException("회원가입에 실패하였습니다: ", e.getCause());
         }
+    }
+
+    private Member getMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_id: " + memberId));
     }
 
     @Transactional(readOnly = true)
@@ -52,69 +59,84 @@ public class MemberService {
         return memberRepository.existsByEmail(email);
     }
 
+    // 지구대/파출소 사용 여부 확인
     @Transactional(readOnly = true)
-    public Member getMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_id: " + memberId));
+    public boolean checkPoliceUnitUsed(Long policeUnitId) {
+        return memberRepository.existsByPoliceUnit_PoliceUnitId(policeUnitId);
     }
 
     @Transactional(readOnly = true)
-    public Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email)
+    public MemberResponseDto getMemberById(Long memberId) {
+        Member member = getMember(memberId);
+        return MemberResponseDto.fromEntity(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberResponseDto getMemberByEmail(String email) {
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. email: " + email));
+
+        return MemberResponseDto.fromEntity(member);
     }
 
     @Transactional(readOnly = true)
-    public Member findMemberByNameAndPersonPhone(String memberName, String personPhone) {
-        return memberRepository.findByMemberNameAndPersonPhone(memberName, personPhone)
+    public MemberResponseDto findMemberByNameAndPersonPhone(String memberName, String personPhone) {
+        Member member = memberRepository.findByMemberNameAndPersonPhone(memberName, personPhone)
                 .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_name: " + memberName + ", person_phone: " + personPhone));
+
+        return MemberResponseDto.fromEntity(member);
     }
 
     @Transactional(readOnly = true)
-    public Page<Member> getAllMembers(Pageable pageable) {
-        return memberRepository.findAll(pageable);
+    public Page<MemberResponseDto> getAllMembers(Pageable pageable) {
+        Page<Member> members = memberRepository.findAll(pageable);
+
+        return members.map(MemberResponseDto::fromEntity);
     }
 
     // 전체 수정
-    public Member updateMember(Long memberId, MemberRequestDto request) {
-        try {
-            Member member = getMemberById(memberId);
-            Member newMember = MemberRequestDto.toEntity(request);
+    public MemberResponseDto updateMember(Long memberId, MemberRequestDto request) {
+        PoliceUnit policeUnit = policeUnitRepository.findById(request.getPoliceUnitId())
+                .orElseThrow(() -> new PoliceUnitNotFoundException("존재하지 않는 지구대/파출소 정보입니다."));
 
+        try {
+            Member member = getMember(memberId);
+            Member newMember = MemberRequestDto.toEntity(request, policeUnit);
             newMember.setPassword(passwordEncoder.encode(newMember.getPassword()));
+
             member.setEmail(newMember.getEmail());
             member.setPassword(newMember.getPassword());
             member.setMemberName(newMember.getMemberName());
             member.setPersonPhone(newMember.getPersonPhone());
             member.setOfficePhone(newMember.getOfficePhone());
-            member.setDistrictName(newMember.getDistrictName());
+            member.setPoliceUnit(newMember.getPoliceUnit());
 
-            return memberRepository.save(member);
+            return MemberResponseDto.fromEntity(memberRepository.save(member));
         } catch (Exception e) {
-            throw new MemberUpdateFailedException("회원 수정에 실패하였습니다.", e);
+            throw new MemberUpdateFailedException("회원 수정에 실패하였습니다.", e.getCause());
         }
     }
 
     // 사용자 권한만 수정
-    public Member updateMemberRole(Long memberId, Role newRole) {
-        Member member = getMemberById(memberId);
+    public MemberResponseDto updateMemberRole(Long memberId, Role newRole) {
+        Member member = getMember(memberId);
         member.setRole(newRole);
 
-        return memberRepository.save(member);
+        return MemberResponseDto.fromEntity(memberRepository.save(member));
     }
 
     // 비밀번호만 변경
-    public Member updateMemberPassword(Long memberId, String password) {
-        Member member = getMemberById(memberId);
+    public MemberResponseDto updateMemberPassword(Long memberId, String password) {
+        Member member = getMember(memberId);
         member.setPassword(passwordEncoder.encode(password));
 
-        return memberRepository.save(member);
+        return MemberResponseDto.fromEntity(memberRepository.save(member));
     }
 
     // 회원 삭제
     public void deleteMember(Long memberId) {
         try {
-            Member member = getMemberById(memberId);
+            Member member = getMember(memberId);
             memberRepository.delete(member);
         } catch (Exception e) {
             throw new MemberDeletionFailedException("회원 삭제에 실패했습니다.", e);
