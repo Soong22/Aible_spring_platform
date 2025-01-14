@@ -8,6 +8,7 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
+
 <!-- Header -->
 <div th:replace="~{layouts/header :: header}"></div>
 
@@ -38,13 +39,32 @@
     <input type="tel" id="officePhone" name="officePhone" th:value="${response.officePhone}">
     <br>
 
-    <label for="districtName">관할부서:</label>
-    <input type="text" id="districtName" name="districtName" th:value="${response.districtName}" required
-           maxlength="50">
+    <!-- 지구대/파출소 선택 -->
+    <input type="hidden" name="memberId" id="memberId" th:value="${response.memberId}">
+    <input type="hidden" name="responsePoliceUnitId" id="responsePoliceUnitId" th:value="${response.policeUnitId}">
+
+    <label for="deptName">광역청:</label>
+    <select id="deptName">
+        <option value="">선택하세요</option>
+    </select>
+
+    <label for="stationName">경찰서:</label>
+    <select id="stationName" disabled>
+        <option value="">선택하세요</option>
+    </select>
+
+    <label for="policeUnit">지구대/파출소:</label>
+    <select id="policeUnit" name="policeUnitId" disabled>
+        <option value="">선택하세요</option>
+    </select>
+    <button type="button" id="checkPoliceUnitBtn">지구대/파출소 사용 여부 확인</button>
     <br>
 
     <!-- 숨겨진 필드에 이메일 값을 저장 -->
     <input type="hidden" id="hiddenEmail" name="email">
+
+    <!-- 숨겨진 필드에 지구대/파출소 ID를 저장 -->
+    <input type="hidden" id="hiddenPoliceUnitId" name="policeUnitId">
 
     <button type="submit" id="submitBtn" disabled>회원 수정</button>
 
@@ -55,19 +75,42 @@
 
 <script>
     const checkEmailBtn = document.getElementById('checkEmailBtn');
-    const submitBtn = document.getElementById('submitBtn');
+    const checkPoliceUnitBtn = document.getElementById('checkPoliceUnitBtn');
     const emailInput = document.getElementById('email');
     const hiddenEmailInput = document.getElementById('hiddenEmail');
+    const deptNameSelect = document.getElementById('deptName');
+    const stationNameSelect = document.getElementById('stationName');
+    const policeUnitSelect = document.getElementById('policeUnit');
+    const hiddenPoliceUnitInput = document.getElementById('hiddenPoliceUnitId');
     const personPhoneInput = document.getElementById('personPhone');
     const officePhoneInput = document.getElementById('officePhone');
     const memberNameInput = document.getElementById('memberName');
     const passwordInput = document.getElementById('password');
+    const memberId = document.getElementById("memberId").value;
+    const policeUnitId = document.getElementById("responsePoliceUnitId").value;
+
 
     // 기존 이메일 값 (서버에서 받아온 값)
     const originalEmail = emailInput.value;
 
     // 이메일 중복 확인 후 임시 변수에 저장
     let emailValue = originalEmail;
+
+    let policeUnitValue = '';
+    let originalPoliceUnitId = policeUnitId; // 초기 PoliceUnitId
+
+    let isEmailValid = false; // 이메일 중복 확인 결과
+    let isPoliceUnitValid = false; // 파출소 중복 확인 결과
+
+    // 버튼 활성화 조건 확인 함수
+    function checkFormValidity() {
+        const submitBtn = document.getElementById('submitBtn');
+        if (isEmailValid && isPoliceUnitValid) {
+            submitBtn.disabled = false; // 버튼 활성화
+        } else {
+            submitBtn.disabled = true; // 버튼 비활성화
+        }
+    }
 
     // 이메일 중복 확인 버튼 클릭 시 처리
     checkEmailBtn.addEventListener('click', function () {
@@ -85,10 +128,10 @@
                 .then(data => {
                     if (data) {
                         alert('이미 사용 중인 이메일입니다. 다른 이메일을 사용해주세요.');
-                        submitBtn.disabled = true; // 이메일 중복일 경우 회원가입 버튼 비활성화
+                        isEmailValid = false;
                     } else {
                         alert('사용 가능한 이메일입니다.');
-                        submitBtn.disabled = false; // 이메일 사용 가능 시 회원가입 버튼 활성화
+                        isEmailValid = true;
 
                         // 이메일을 임시 변수에 저장
                         emailValue = email;
@@ -105,8 +148,8 @@
                 });
         } else {
             // 기존 이메일과 같으면 사용 가능 알림
-            alert('현재 이메일은 사용 가능합니다.');
-            submitBtn.disabled = false; // 이메일 사용 가능 시 버튼 활성화
+            alert('기존 이메일을 사용합니다.');
+            isEmailValid = true;
 
             // 이메일을 임시 변수에 저장
             emailValue = email;
@@ -116,6 +159,58 @@
             // hidden 필드에 이메일 값 저장
             hiddenEmailInput.value = emailValue;
         }
+    });
+
+    // 지구대/파출소 사용 여부 확인
+    checkPoliceUnitBtn.addEventListener('click', function () {
+        const selectedPoliceUnitId = policeUnitSelect.value;
+
+        if (!selectedPoliceUnitId) {
+            alert('지구대/파출소를 선택해주세요.');
+            return;
+        }
+
+        // 기존 값과 동일한 경우
+        if (selectedPoliceUnitId === originalPoliceUnitId) {
+            alert('기존 지구대/파출소를 사용합니다.');
+
+            policeUnitValue = selectedPoliceUnitId;
+            deptNameSelect.disabled = true; //비활성화
+            stationNameSelect.disabled = true; // 비활성화
+            policeUnitSelect.disabled = true; // 비활성화
+            hiddenPoliceUnitInput.value = policeUnitValue; // Hidden Input에 값 저장
+            checkPoliceUnitBtn.disabled = true;
+
+            isPoliceUnitValid = true;
+            checkFormValidity(); // 버튼 활성화 상태 확인
+            return;
+        }
+
+        fetch(`/api/check-police-unit/${encodeURIComponent(selectedPoliceUnitId)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    alert('이미 사용 중인 지구대/파출소입니다.');
+                    isPoliceUnitValid = false;
+                } else {
+                    alert('사용 가능한 지구대/파출소입니다.');
+                    policeUnitValue = selectedPoliceUnitId;
+
+                    deptNameSelect.disabled = true; //비활성화
+                    stationNameSelect.disabled = true; // 비활성화
+                    policeUnitSelect.disabled = true; // 비활성화
+
+                    hiddenPoliceUnitInput.value = policeUnitValue; // Hidden Input에 값 저장
+                    checkPoliceUnitBtn.disabled = true;
+
+                    isPoliceUnitValid = true
+                }
+                checkFormValidity(); // 버튼 활성화 상태 확인
+            })
+            .catch(error => {
+                console.error('에러 발생:', error);
+                alert('지구대/파출소 사용 여부 확인에 실패했습니다.');
+            });
     });
 
     // 폼 제출 시 이메일, 사용자 이름, 전화번호, 비밀번호 검증
@@ -158,6 +253,137 @@
             event.preventDefault();
         }
     });
+
+    // DOMContentLoaded 이벤트 핸들러 (수정 폼 초기화)
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // 초기화 및 선택 항목 활성화
+        function setOptions(selectElement, options, selectedValue) {
+            selectElement.innerHTML = '<option value="">선택하세요</option>';
+            options.forEach(optionValue => {
+                const option = document.createElement("option");
+                option.value = optionValue;
+                option.textContent = optionValue;
+                if (optionValue === selectedValue) {
+                    option.selected = true;
+                }
+                selectElement.appendChild(option);
+            });
+            selectElement.disabled = false;
+        }
+
+        // PoliceUnit 정보 가져오기
+        fetch(`/api/police-units/member/${memberId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("PoliceUnit 정보를 가져오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(policeUnit => {
+                policeUnitValue = policeUnit.policeUnitId;
+
+                // 광역청 선택 설정
+                fetch("/api/police-units/departments")
+                    .then(response => response.json())
+                    .then(departments => {
+                        setOptions(deptNameSelect, departments, policeUnit.deptName);
+                    });
+
+                // 경찰서 선택 설정
+                fetch(`/api/police-units/stations?deptName=${encodeURIComponent(policeUnit.deptName)}`)
+                    .then(response => response.json())
+                    .then(stations => {
+                        setOptions(stationNameSelect, stations, policeUnit.stationName);
+                    });
+
+                // 지구대/파출소 선택 설정
+                fetch(`/api/police-units/units?deptName=${encodeURIComponent(policeUnit.deptName)}&stationName=${encodeURIComponent(policeUnit.stationName)}`)
+                    .then(response => response.json())
+                    .then(units => {
+                        units.forEach(unit => {
+                            const option = document.createElement("option");
+                            option.value = unit.policeUnitId;
+                            option.textContent = `${unit.policeUnitName}${unit.policeUnitTypeDescription}`;
+                            if (unit.policeUnitId === policeUnit.policeUnitId) {
+                                option.selected = true;
+                            }
+                            policeUnitSelect.appendChild(option);
+                        });
+                        policeUnitSelect.disabled = false;
+                    });
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+                alert("PoliceUnit 정보를 로드하는 중 오류가 발생했습니다.");
+            });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const deptNameSelect = document.getElementById("deptName");
+        const stationNameSelect = document.getElementById("stationName");
+        const policeUnitSelect = document.getElementById("policeUnit");
+
+        // 광역청 목록 가져오기
+        fetch("/api/police-units/departments")
+            .then(response => response.json())
+            .then(departments => {
+                departments.forEach(dept => {
+                    const option = document.createElement("option");
+                    option.value = dept;
+                    option.textContent = dept;
+                    deptNameSelect.appendChild(option);
+                });
+            });
+
+        // 광역청 선택 시 경찰서 목록 업데이트
+        deptNameSelect.addEventListener("change", function () {
+            const selectedDept = deptNameSelect.value;
+
+            stationNameSelect.innerHTML = '<option value="">선택하세요</option>';
+            policeUnitSelect.innerHTML = '<option value="">선택하세요</option>';
+            stationNameSelect.disabled = true;
+            policeUnitSelect.disabled = true;
+
+            if (!selectedDept) return;
+
+            fetch(`/api/police-units/stations?deptName=${encodeURIComponent(selectedDept)}`)
+                .then(response => response.json())
+                .then(stations => {
+                    stations.forEach(station => {
+                        const option = document.createElement("option");
+                        option.value = station;
+                        option.textContent = station;
+                        stationNameSelect.appendChild(option);
+                    });
+                    stationNameSelect.disabled = false;
+                });
+        });
+
+        // 경찰서 선택 시 지구대/파출소 목록 업데이트
+        stationNameSelect.addEventListener("change", function () {
+            const selectedDept = deptNameSelect.value;
+            const selectedStation = stationNameSelect.value;
+
+            policeUnitSelect.innerHTML = '<option value="">선택하세요</option>';
+            policeUnitSelect.disabled = true;
+
+            if (!selectedStation) return;
+
+            fetch(`/api/police-units/units?deptName=${encodeURIComponent(selectedDept)}&stationName=${encodeURIComponent(selectedStation)}`)
+                .then(response => response.json())
+                .then(units => {
+                    units.forEach(unit => {
+                        const option = document.createElement("option");
+                        option.value = unit.policeUnitId;
+                        option.textContent = `${unit.policeUnitName}${unit.policeUnitTypeDescription}`; // 한글 설명 사용
+                        policeUnitSelect.appendChild(option);
+                    });
+                    policeUnitSelect.disabled = false;
+                });
+        });
+    });
+
 </script>
 </body>
 </html>

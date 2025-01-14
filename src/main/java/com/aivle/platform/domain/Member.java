@@ -42,7 +42,7 @@ public class Member {
     private LocalDateTime createdAt;
 
     @OneToOne
-    @JoinColumn(name = "police_unit_id", nullable = false)
+    @JoinColumn(name = "police_unit_id")
     private PoliceUnit policeUnit;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

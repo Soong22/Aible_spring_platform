@@ -1,5 +1,6 @@
 package com.aivle.platform.controller;
 
+import com.aivle.platform.domain.PoliceUnit;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.exception.MemberCreationFailedException;
@@ -7,6 +8,7 @@ import com.aivle.platform.exception.MemberDeletionFailedException;
 import com.aivle.platform.exception.MemberNotFoundException;
 import com.aivle.platform.exception.MemberUpdateFailedException;
 import com.aivle.platform.service.MemberService;
+import com.aivle.platform.service.PoliceUnitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PoliceUnitService policeUnitService;
 
     // 회원가입 GET
     @GetMapping("/member/register")
@@ -97,6 +100,15 @@ public class MemberController {
             MemberResponseDto response = memberService.getMemberById(memberId);
             model.addAttribute("response", response);
             model.addAttribute("request", new MemberRequestDto());
+
+            PoliceUnit policeUnit = policeUnitService.getPoliceUnitById(response.getPoliceUnitId());
+            if (policeUnit != null) {
+                model.addAttribute("selectedPoliceUnitId", policeUnit.getPoliceUnitId());
+                model.addAttribute("selectedDeptName", policeUnit.getDeptName());
+                model.addAttribute("selectedStationName", policeUnit.getStationName());
+                model.addAttribute("selectedPoliceUnitName", policeUnit.getPoliceUnitName());
+            }
+
             return "member/edit";
         } catch (MemberNotFoundException e) {
             return "redirect:/members";

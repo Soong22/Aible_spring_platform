@@ -1,6 +1,7 @@
 package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.PoliceUnit;
+import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.PoliceUnitService;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,18 @@ public class ApiController {
     @GetMapping("/police-units/units")
     public List<PoliceUnit> getUnits(@RequestParam String deptName, @RequestParam String stationName) {
         return policeUnitService.getUnits(deptName, stationName);
+    }
+
+    @GetMapping("/police-units/member/{memberId}")
+    public ResponseEntity<PoliceUnit> getPoliceUnitByMemberId(@PathVariable Long memberId) {
+        MemberResponseDto response = memberService.getMemberById(memberId);
+
+        PoliceUnit policeUnit = policeUnitService.getPoliceUnitById(response.getPoliceUnitId());
+
+        if (policeUnit == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(policeUnit);
     }
 
 }

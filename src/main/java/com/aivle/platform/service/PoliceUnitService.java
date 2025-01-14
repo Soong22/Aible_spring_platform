@@ -1,6 +1,9 @@
 package com.aivle.platform.service;
 
+import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
+import com.aivle.platform.exception.MemberNotFoundException;
+import com.aivle.platform.exception.PoliceUnitNotFoundException;
 import com.aivle.platform.repository.PoliceUnitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,11 @@ import java.util.List;
 public class PoliceUnitService {
 
     private final PoliceUnitRepository policeUnitRepository;
+
+    public PoliceUnit getPoliceUnitById(Long policeUnitId) {
+        return policeUnitRepository.findById(policeUnitId)
+                .orElseThrow(() -> new PoliceUnitNotFoundException("지구대/파출소 정보를 찾을 수 없습니다. police_unit_id: " + policeUnitId));
+    }
 
     // 광역청 목록 가져오기
     public List<String> getDepartments() {
