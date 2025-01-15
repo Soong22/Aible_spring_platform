@@ -17,6 +17,15 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String content;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -29,12 +38,5 @@ public class Comment {
     @JoinColumn(name = "comment_id2")
     private Comment parentComment;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
 }

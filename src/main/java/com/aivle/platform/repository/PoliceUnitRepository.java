@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PoliceUnitRepository extends JpaRepository<PoliceUnit, Long> {
+
     @Query("SELECT DISTINCT p.deptName FROM PoliceUnit p")
     List<String> findDistinctDeptNames();
 
@@ -14,4 +15,5 @@ public interface PoliceUnitRepository extends JpaRepository<PoliceUnit, Long> {
     List<String> findDistinctStationNamesByDeptName(String deptName);
 
     List<PoliceUnit> findByDeptNameAndStationName(String deptName, String stationName);
+
 }

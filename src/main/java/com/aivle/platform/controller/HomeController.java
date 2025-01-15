@@ -20,21 +20,10 @@ public class HomeController {
     public String mypageForm(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
 
-        model.addAttribute("errorMessage", "Dasdadasd");
+        // 4. 일반적인 에러 메시지 추가 (필요하면 유지)
+        model.addAttribute("errorMessage", "미구현");
 
-        return "error/error";
-    }
-
-    @GetMapping("/index2")
-    public String homeForm2(Model model) {
-        boolean isUser = true;
-        boolean isAdmin = false;
-
-        model.addAttribute("isUser", isUser);
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("username", "user");
-
-        return "index";
+        return "error/error"; // 도달하지 않음 (위에서 예외 발생)
     }
 
 }

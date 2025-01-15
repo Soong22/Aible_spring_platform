@@ -41,19 +41,25 @@ public class Member {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+
     @OneToOne
-    @JoinColumn(name = "police_unit_id", nullable = false)
+    @JoinColumn(name = "police_unit_id")
     private PoliceUnit policeUnit;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Board> boards = new ArrayList<>();
 
     // 알림 발신자 관계 (Notification.sender_id)
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
     private List<Notification> sentNotifications = new ArrayList<>();
 
     // 알림 수신자 관계 (Notification.receiver_id)
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private List<Notification> receivedNotifications = new ArrayList<>();
+
+
+    public String getRoleDescription() {
+        return role.getDescription();
+    }
 
 }

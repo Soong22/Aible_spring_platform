@@ -1,6 +1,5 @@
 package com.aivle.platform.exception;
 
-
 public class MemberUpdateFailedException extends RuntimeException {
 
     // 메시지 전달을 위한 생성자

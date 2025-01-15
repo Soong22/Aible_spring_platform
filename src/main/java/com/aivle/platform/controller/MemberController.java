@@ -11,6 +11,7 @@ import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.PoliceUnitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -39,17 +44,22 @@ public class MemberController {
 
     // 회원가입 POST, 프론트에서 이메일 중복체크
     @PostMapping("/member/register")
-    public String registerMember(@Valid @ModelAttribute("request") MemberRequestDto request) {
+    public String registerMember(@Valid @ModelAttribute("request") MemberRequestDto request, Model model) {
         try {
             memberService.createMember(request);
             return "redirect:/";
         } catch (MemberCreationFailedException e) {
             // 실패 시 다시 회원가입으로 리다이렉트
+            log.error("에러: {}", e.getMessage());
             return "redirect:/member/register";
         } catch (Exception e) {
             // 예상못한 에러의 경우 에러페이지로 리다이렉트
-            return "/error";
+            log.error("에러: {}", e.getMessage());
+
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
         }
+
     }
 
     @GetMapping("/members")
@@ -65,15 +75,27 @@ public class MemberController {
             // 페이징된 멤버 목록 조회
             Page<MemberResponseDto> members = memberService.getAllMembers(pageable);
 
+            // 경찰서 정보를 추가적으로 조회
+            Map<Long, PoliceUnit> policeUnits = members.getContent().stream()
+                    .filter(member -> member.getPoliceUnitId() != null) // policeUnitId가 있는 멤버만 처리
+                    .map(member -> member.getPoliceUnitId())
+                    .distinct() // 중복 제거
+                    .collect(Collectors.toMap(
+                            id -> id,
+                            id -> policeUnitService.getPoliceUnitById(id)
+                    ));
+
             // 모델에 멤버 목록과 페이징 정보 추가
             model.addAttribute("members", members.getContent()); // 멤버 목록
+            model.addAttribute("policeUnits", policeUnits); // 경찰서 정보 맵
             model.addAttribute("currentPage", page); // 현재 페이지
             model.addAttribute("totalPages", members.getTotalPages()); // 전체 페이지 수
             model.addAttribute("totalItems", members.getTotalElements()); // 전체 항목 수
 
             return "member/members"; // register.html 페이지로 반환
         } catch (Exception e) {
-            return "/error";
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
         }
     }
 
@@ -83,12 +105,22 @@ public class MemberController {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
             MemberResponseDto member = memberService.getMemberById(memberId);
+
+            PoliceUnit policeUnit = null;
+
+            if (member.getPoliceUnitId() != null) {
+                policeUnit = policeUnitService.getPoliceUnitById(member.getPoliceUnitId());
+            }
+
             model.addAttribute("member", member);
+            model.addAttribute("policeUnit", policeUnit); // 경찰서 정보 맵
+
             return "member/member";
         } catch (MemberNotFoundException e) {
             return "redirect:/members";
         } catch (Exception e) {
-            return "/error";
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
         }
     }
 
@@ -113,14 +145,15 @@ public class MemberController {
         } catch (MemberNotFoundException e) {
             return "redirect:/members";
         } catch (Exception e) {
-            return "/error";
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
         }
     }
 
     // 회원수정 POST
     @PostMapping("/member/edit/{memberId}")
     public String editMember(@PathVariable("memberId") Long memberId,
-                             @Valid @ModelAttribute("request") MemberRequestDto request) {
+                             @Valid @ModelAttribute("request") MemberRequestDto request, Model model) {
         try {
             memberService.updateMember(memberId, request);
 
@@ -128,21 +161,23 @@ public class MemberController {
         } catch (MemberUpdateFailedException e) {
             return "redirect:/members";
         } catch (Exception e) {
-            return "/error";
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
         }
 
     }
 
     // 회원삭제 POST
     @PostMapping("/member/delete/{memberId}")
-    public String deleteMember(@PathVariable("memberId") Long memberId) {
+    public String deleteMember(@PathVariable("memberId") Long memberId, Model model) {
         try {
             memberService.deleteMember(memberId);
             return "redirect:/members";
         } catch (MemberDeletionFailedException e) {
             return "redirect:/member/" + memberId;
         } catch (Exception e) {
-            return "/error";
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
         }
     }
 

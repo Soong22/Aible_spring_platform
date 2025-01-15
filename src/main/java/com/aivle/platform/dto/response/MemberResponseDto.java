@@ -25,7 +25,7 @@ public class MemberResponseDto {
         return new MemberResponseDto(
                 member.getMemberId(),
                 member.getEmail(),
-                member.getRole().name(),
+                member.getRole().getDescription(),
                 member.getMemberName(),
                 member.getPersonPhone(),
                 member.getOfficePhone(),

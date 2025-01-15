@@ -67,6 +67,19 @@
                         <p><strong>사무실 전화번호:</strong> <span th:text="${member.officePhone}"></span></p>
                         <p><strong>관할부서아이디:</strong> <span th:text="${member.policeUnitId}"></span></p>
                         <p><strong>가입일자:</strong> <span th:text="${member.createdAt}"></span></p>
+
+                        <p>
+                            <strong>소속:</strong>
+                            <!-- 소속 정보가 있을 때 -->
+                            <span th:if="${member.policeUnitId != null and policeUnits[member.policeUnitId] != null}"
+                                  th:text="${policeUnits[member.policeUnitId].policeUnitName + ' ' + policeUnits[member.policeUnitId].policeUnitTypeDescription}">
+                            </span>
+                            <!-- 소속 정보가 없을 때 (null 일 때) -->
+                            <span th:unless="${member.policeUnitId != null and policeUnits[member.policeUnitId] != null}">
+                                정보 없음
+                            </span>
+                        </p>
+
                     </div>
                     <div class="user-actions">
                         <button class="btn btn-primary" th:onclick="|location.href='/member/' + ${member.memberId}|">

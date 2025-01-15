@@ -137,7 +137,18 @@ public class MemberService {
     public void deleteMember(Long memberId) {
         try {
             Member member = getMember(memberId);
-            memberRepository.delete(member);
+            PoliceUnit policeUnit = member.getPoliceUnit();
+
+            // member -> policeUnit 연결 해제
+            member.setPoliceUnit(null);
+            member.setRole(Role.WITHDRAWN);
+
+            // policeUnit -> member 연결도 해제
+            if (policeUnit != null) {
+                policeUnit.setMember(null);
+            }
+
+//            memberRepository.delete(member);
         } catch (Exception e) {
             throw new MemberDeletionFailedException("회원 삭제에 실패했습니다.", e);
         }

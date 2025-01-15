@@ -40,9 +40,11 @@ public class PoliceUnit {
     @Column(precision = 11, scale = 8, nullable = false)
     private BigDecimal longitude;
 
+
     @OneToOne(mappedBy = "policeUnit")
     @JsonIgnore // 순환 참조 방지
     private Member member;
+
 
     public String getPoliceUnitTypeDescription() {
         return policeUnitType.getDescription();

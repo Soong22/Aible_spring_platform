@@ -66,8 +66,25 @@
                         <p><strong>사용자 이름:</strong> <span th:text="${member.memberName}"></span></p>
                         <p><strong>개인 전화번호:</strong> <span th:text="${member.personPhone}"></span></p>
                         <p><strong>사무실 전화번호:</strong> <span th:text="${member.officePhone}"></span></p>
-                        <p><strong>관할부서:</strong> <span th:text="${member.districtName}"></span></p>
                         <p><strong>가입일자:</strong> <span th:text="${member.createdAt}"></span></p>
+
+                        <p>
+                            <strong>소속:</strong>
+                            <span th:if="${policeUnit != null}"
+                                  th:text="${policeUnit.policeUnitName + ' ' + policeUnit.policeUnitTypeDescription}">
+                            </span>
+                            <span th:if="${policeUnit == null}">
+                                정보 없음
+                            </span>
+                        </p>
+                        <p>
+                            <strong>주소:</strong>
+                            <span th:if="${policeUnit != null}" th:text="${policeUnit.address}"></span>
+                            <span th:if="${policeUnit == null}">
+                                정보 없음
+                            </span>
+                        </p>
+
                     </div>
                     <div class="user-actions">
                         <button class="btn btn-primary" th:onclick="|location.href='/members'|">목록</button>

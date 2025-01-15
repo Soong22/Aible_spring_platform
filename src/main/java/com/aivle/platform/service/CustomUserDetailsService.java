@@ -1,14 +1,15 @@
 package com.aivle.platform.service;
 
 import com.aivle.platform.domain.Member;
+import com.aivle.platform.domain.Role;
 import com.aivle.platform.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email));
+
+        // 탈퇴자면 예외 발생 → 로그인 거부
+        if (member.getRole() == Role.WITHDRAWN) {
+            // Spring Security가 제공하는 DisabledException 등 사용 가능
+            throw new DisabledException("탈퇴한 사용자입니다.");
+
+            // or throw new UsernameNotFoundException("탈퇴한 사용자입니다.");
+        }
 
         // UserDetails 객체 생성 (Spring Security가 요구하는 형식)
         return User.builder()

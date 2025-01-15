@@ -17,10 +17,6 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
     @Column(length = 50, nullable = false)
     private String title;
 
@@ -35,5 +31,11 @@ public class Board {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
 
 }

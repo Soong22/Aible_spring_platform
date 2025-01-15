@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,27 +27,44 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/", "/error", "/api/**", "/login").permitAll()
-                                .requestMatchers("/member/register", "/mypage", "/favicon.ico").permitAll()
-//                        .requestMatchers().hasRole("USER")
-                                .requestMatchers("/member/**").authenticated()
-                                .requestMatchers("/members").hasRole("ADMIN")
 
-                                .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .permitAll() // 기본 로그인 페이지를 사용하므로 모든 사용자에게 접근 허용
-                        .loginProcessingUrl("/login") // 기본 로그인 처리 URL
+        // 헤더 설정
+        http.headers(headers ->
+                headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // 동일 출처의 iframe 허용
+        );
+
+        // 권한 설정
+        http.authorizeHttpRequests(authorize ->
+                authorize
+                        // 인증 없이 접근 가능한 경로
+                        .requestMatchers("/", "/error", "/api/**", "/login").permitAll()
+                        .requestMatchers("/member/register", "/mypage", "/favicon.ico").permitAll()
+
+                        // 인증이 필요한 경로
+                        .requestMatchers("/member/**").authenticated()
+
+                        // 관리자 권한이 필요한 경로
+                        .requestMatchers("/members").hasRole("ADMIN")
+
+                        // 기타 모든 요청은 인증 필요
+                        .anyRequest().authenticated()
+        );
+
+        // 로그인 설정
+        http.formLogin(form ->
+                form
+                        .permitAll() // 로그인 페이지 접근 허용
+                        .loginProcessingUrl("/login") // 로그인 처리 URL
                         .defaultSuccessUrl("/", true) // 로그인 성공 시 리다이렉트할 URL
                         .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트할 URL
-                )
-                .logout(logout -> logout
-                        .permitAll() // 로그아웃을 모든 사용자에게 허용
-                        .logoutSuccessUrl("/") // 로그아웃 성공 시 /로 리다이렉트
-                );
+        );
+
+        // 로그아웃 설정
+        http.logout(logout ->
+                logout
+                        .permitAll() // 로그아웃 접근 허용
+                        .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트
+        );
 
         return http.build();
     }

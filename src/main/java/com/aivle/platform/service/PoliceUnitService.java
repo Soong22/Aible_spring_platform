@@ -1,8 +1,6 @@
 package com.aivle.platform.service;
 
-import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
-import com.aivle.platform.exception.MemberNotFoundException;
 import com.aivle.platform.exception.PoliceUnitNotFoundException;
 import com.aivle.platform.repository.PoliceUnitRepository;
 import lombok.RequiredArgsConstructor;
