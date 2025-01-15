@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -47,6 +49,9 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "receiver_id", nullable = false)
     private Member receiver; // Receiver (Member 테이블과 다대일 관계)
+
+    @OneToMany(mappedBy = "notification", fetch = FetchType.EAGER)
+    private List<Image> images = new ArrayList<>();
 
 
 }

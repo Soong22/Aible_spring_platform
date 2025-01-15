@@ -1,6 +1,8 @@
 package com.aivle.platform.controller;
 
+import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
+import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.PoliceUnitService;
@@ -27,6 +29,18 @@ public class ApiController {
     public ResponseEntity<Boolean> checkPoliceUnit(@PathVariable Long policeUnitId) {
         boolean isPoliceUnitUsed = memberService.checkPoliceUnitUsed(policeUnitId);
         return ResponseEntity.ok(isPoliceUnitUsed);
+    }
+
+    @GetMapping("/check-status/{email}")
+    public String checkStatus(@PathVariable String email) {
+        Member member = memberService.getMemberEmail(email);
+        if (member == null) {
+            return "NOT_FOUND"; // 사용자 없음
+        } else if (member.getRole() == Role.WITHDRAWN) {
+            return "WITHDRAWN"; // 탈퇴자
+        } else {
+            return "ACTIVE"; // 정상 사용자
+        }
     }
 
     // 광역청 목록 가져오기

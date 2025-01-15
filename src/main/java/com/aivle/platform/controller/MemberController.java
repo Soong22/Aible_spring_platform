@@ -1,6 +1,8 @@
 package com.aivle.platform.controller;
 
+import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
+import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.exception.MemberCreationFailedException;
@@ -15,7 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +37,8 @@ public class MemberController {
 
     private final MemberService memberService;
     private final PoliceUnitService policeUnitService;
+
+    private final PasswordEncoder passwordEncoder;
 
     // 회원가입 GET
     @GetMapping("/member/register")
@@ -180,5 +189,60 @@ public class MemberController {
             return "error/error";
         }
     }
+
+//    @PostMapping("/custom-login")
+//    public String login(@RequestParam String email, @RequestParam String password, Model model) {
+//        log.error("Login0: User {} authenticated", email);
+//        // 사용자 조회
+//        Member member = memberService.getMemberEmail(email);
+////        password =passwordEncoder.encode(password);
+//
+//        if (member == null) {
+//            log.error("Login1: User {} authenticated", email);
+//            model.addAttribute("error", "이메일 또는 비밀번호가 잘못되었습니다.");
+//            return "login"; // 로그인 페이지로 리다이렉트
+//        }
+//
+//        // 탈퇴자 상태 확인
+//        if (member.getRole() == Role.WITHDRAWN) {
+//            log.error("Login2: User {} authenticated", email);
+//            model.addAttribute("error", "탈퇴한 사용자입니다.");
+//            return "login";
+//        }
+//
+//        // 비밀번호 검증
+//        if (!passwordEncoder.matches(password, member.getPassword())) {
+//            log.error("Login3: User {} authenticated", email);
+//            model.addAttribute("error", "이메일 또는 비밀번호가 잘못되었습니다.");
+//            return "login";
+//        }
+//
+//        // 인증된 사용자 정보 생성
+//        UserDetails userDetails = User.builder()
+//                .username(member.getEmail())
+//                .password(member.getPassword())
+//                .roles(member.getRole().name())
+//                .build();
+//
+//        // Authentication 객체 생성
+//        UsernamePasswordAuthenticationToken authentication =
+//                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//
+//        // SecurityContext에 설정
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        log.info("Login successful: User {} authenticated", email);
+//
+//        // SecurityContext 상태 확인
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth != null) {
+//            log.info("Current authentication: {}", auth);
+//        } else {
+//            log.error("Authentication failed to set in SecurityContext");
+//        }
+//
+//        // 로그인 성공 후 리다이렉트
+//        return "redirect:/"; // 홈 페이지로 리다이렉트
+//    }
 
 }

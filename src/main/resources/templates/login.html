@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>로그인</h1>
+<form id="login-form" action="/process-login" method="post" onsubmit="checkStatusAndSubmit(event)">
+    <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="username" required><br>
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required><br>
+    <button type="submit">로그인</button>
+</form>
+
+<!-- JavaScript를 HTML 맨 뒤로 이동 -->
+<script>
+    async function checkStatusAndSubmit(event) {
+        event.preventDefault(); // 기본 폼 제출 방지
+
+        const email = document.getElementById("email").value;
+        const response = await fetch(`/api/check-status/${encodeURIComponent(email)}`);
+
+        if (response.ok) {
+            const status = await response.text();
+
+            if (status === "WITHDRAWN") {
+                alert("탈퇴한 사용자입니다.");
+                return; // 폼 제출 중단
+            } else if (status === "NOT_FOUND") {
+                alert("등록되지 않은 이메일입니다.");
+                return; // 폼 제출 중단
+            }
+
+            // 상태가 "ACTIVE"인 경우 폼 제출
+            document.getElementById("login-form").submit();
+        } else {
+            alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        }
+    }
+</script>
+</body>
+</html>

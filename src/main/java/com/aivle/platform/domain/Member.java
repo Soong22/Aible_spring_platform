@@ -49,6 +49,9 @@ public class Member {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Board> boards = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
     // 알림 발신자 관계 (Notification.sender_id)
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
     private List<Notification> sentNotifications = new ArrayList<>();

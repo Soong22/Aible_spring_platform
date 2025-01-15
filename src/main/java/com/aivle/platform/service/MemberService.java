@@ -10,6 +10,7 @@ import com.aivle.platform.repository.MemberRepository;
 
 import com.aivle.platform.repository.PoliceUnitRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -52,6 +54,11 @@ public class MemberService {
     private Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_id: " + memberId));
+    }
+
+    public Member getMemberEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. email: " + email));
     }
 
     @Transactional(readOnly = true)
@@ -148,7 +155,7 @@ public class MemberService {
                 policeUnit.setMember(null);
             }
 
-//            memberRepository.delete(member);
+            // memberRepository.delete(member);
         } catch (Exception e) {
             throw new MemberDeletionFailedException("회원 삭제에 실패했습니다.", e);
         }
@@ -156,6 +163,7 @@ public class MemberService {
 
     // 회원 인증 처리 메소드
     public static void addMemberInfoToModel(Model model, Authentication authentication) {
+
         if (authentication != null) {
             String username = authentication.getName();
             boolean isUser = authentication.getAuthorities().stream()

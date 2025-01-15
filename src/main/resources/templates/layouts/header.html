@@ -41,8 +41,23 @@
                     <a class="nav-link active" aria-current="page" href="/login">로그인</a>
                 </li>
 
+<!--                <li class="nav-item" th:if="${isUser or isAdmin}">-->
+<!--&lt;!&ndash;                    <a class="nav-link active" aria-current="page" href="/logout">로그아웃</a>&ndash;&gt;-->
+<!--                    <form action="/logout" method="post">-->
+<!--                        &lt;!&ndash; CSRF 토큰 (Hidden) &ndash;&gt;-->
+<!--                        <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">-->
+<!--                        <button type="submit">Logout</button>-->
+<!--                    </form>-->
+
+<!--                </li>-->
+
+                <!-- 로그아웃 버튼 -->
                 <li class="nav-item" th:if="${isUser or isAdmin}">
-                    <a class="nav-link active" aria-current="page" href="/logout">로그아웃</a>
+                    <form action="/logout" method="post" style="display: inline;">
+                        <!-- CSRF 토큰 (Hidden) -->
+                        <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
+                        <button class="nav-link active btn btn-link" type="submit">로그아웃</button>
+                    </form>
                 </li>
 
             </ul>

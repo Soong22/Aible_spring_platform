@@ -16,6 +16,11 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login"; // `login.html`로 이동
+    }
+
     @GetMapping("/mypage")
     public String mypageForm(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);

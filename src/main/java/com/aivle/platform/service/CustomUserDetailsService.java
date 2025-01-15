@@ -24,10 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 탈퇴자면 예외 발생 → 로그인 거부
         if (member.getRole() == Role.WITHDRAWN) {
-            // Spring Security가 제공하는 DisabledException 등 사용 가능
             throw new DisabledException("탈퇴한 사용자입니다.");
-
-            // or throw new UsernameNotFoundException("탈퇴한 사용자입니다.");
         }
 
         // UserDetails 객체 생성 (Spring Security가 요구하는 형식)

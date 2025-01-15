@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,6 +38,12 @@ public class Board {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)
+    private List<Image> images = new ArrayList<>();
 
 
 }
