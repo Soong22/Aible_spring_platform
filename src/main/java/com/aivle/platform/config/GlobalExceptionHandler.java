@@ -1,4 +1,4 @@
-package com.aivle.platform.exception;
+package com.aivle.platform.config;
 
 import com.aivle.platform.service.MemberService;
 import org.springframework.security.core.Authentication;

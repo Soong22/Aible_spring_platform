@@ -1,14 +1,12 @@
 package com.aivle.platform.controller;
 
-import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
-import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.dto.response.MemberResponseDto;
-import com.aivle.platform.exception.MemberCreationFailedException;
-import com.aivle.platform.exception.MemberDeletionFailedException;
-import com.aivle.platform.exception.MemberNotFoundException;
-import com.aivle.platform.exception.MemberUpdateFailedException;
+import com.aivle.platform.exception.member.MemberCreationFailedException;
+import com.aivle.platform.exception.member.MemberDeletionFailedException;
+import com.aivle.platform.exception.member.MemberNotFoundException;
+import com.aivle.platform.exception.member.MemberUpdateFailedException;
 import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.PoliceUnitService;
 import jakarta.validation.Valid;
@@ -17,12 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +30,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private final PoliceUnitService policeUnitService;
-
-    private final PasswordEncoder passwordEncoder;
 
     // 회원가입 GET
     @GetMapping("/member/register")

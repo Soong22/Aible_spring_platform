@@ -1,7 +1,7 @@
 package com.aivle.platform.service;
 
 import com.aivle.platform.domain.PoliceUnit;
-import com.aivle.platform.exception.PoliceUnitNotFoundException;
+import com.aivle.platform.exception.police_unit.PoliceUnitNotFoundException;
 import com.aivle.platform.repository.PoliceUnitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

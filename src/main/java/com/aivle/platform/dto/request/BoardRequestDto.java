@@ -1,10 +1,13 @@
 package com.aivle.platform.dto.request;
 
+import com.aivle.platform.domain.Board;
+import com.aivle.platform.domain.Image;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -23,5 +26,23 @@ public class BoardRequestDto {
 
     @Size(max = 5, message = "이미지는 최대 5개까지 첨부할 수 있습니다.")
     private List<String> imageUrls;
+
+
+    public static Board toEntity(BoardRequestDto request) {
+        Board board = new Board();
+        board.setTitle(request.getTitle());
+        board.setContent(request.getContent());
+
+        // 상위 게시판에서 유저 주입
+
+        List<Image> images = request.getImageUrls().stream()
+                .map(url -> new Image(board, url))
+                .collect(Collectors.toList());
+
+        board.setImages(images);
+
+        return board;
+    }
+
 
 }

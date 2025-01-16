@@ -30,5 +30,19 @@ public class Image {
     @JoinColumn(name = "notification_id")
     private Notification notification;
 
+    public Image(Board board, String imageUrl) {
+        this.board = board;
+        this.imageUrl = imageUrl;
+    }
+
+    public Image(Comment comment, String imageUrl) {
+        this.comment = comment;
+        this.imageUrl = imageUrl;
+    }
+
+    public Image(Notification notification, String imageUrl) {
+        this.notification = notification;
+        this.imageUrl = imageUrl;
+    }
 
 }

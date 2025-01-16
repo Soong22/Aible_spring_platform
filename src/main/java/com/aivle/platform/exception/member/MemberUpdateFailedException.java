@@ -1,8 +1,13 @@
-package com.aivle.platform.exception;
+package com.aivle.platform.exception.member;
 
 public class MemberUpdateFailedException extends RuntimeException {
 
-    // 메시지 전달을 위한 생성자
+    // 메세지 전달을 위한 기본 생성자
+    public MemberUpdateFailedException() {
+        super("회원 수정에 실패하였습니다.");
+    }
+
+    // 메세지 전달을 위한 생성자
     public MemberUpdateFailedException(String message) {
         super(message);
     }

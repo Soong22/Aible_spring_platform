@@ -5,7 +5,8 @@ import com.aivle.platform.domain.PoliceUnit;
 import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.dto.response.MemberResponseDto;
-import com.aivle.platform.exception.*;
+import com.aivle.platform.exception.member.*;
+import com.aivle.platform.exception.police_unit.PoliceUnitNotFoundException;
 import com.aivle.platform.repository.MemberRepository;
 
 import com.aivle.platform.repository.PoliceUnitRepository;
@@ -47,7 +48,8 @@ public class MemberService {
 
             return memberRepository.save(member);
         } catch (Exception e) {
-            throw new MemberCreationFailedException("회원가입에 실패하였습니다: ", e.getCause());
+            throw new MemberCreationFailedException("회원 가입에 실패하였습니다: " + e.getMessage(), e);
+
         }
     }
 
@@ -120,7 +122,7 @@ public class MemberService {
 
             return MemberResponseDto.fromEntity(memberRepository.save(member));
         } catch (Exception e) {
-            throw new MemberUpdateFailedException("회원 수정에 실패하였습니다.", e.getCause());
+            throw new MemberUpdateFailedException("회원 수정에 실패하였습니다: " + e.getMessage(), e.getCause());
         }
     }
 
@@ -157,7 +159,7 @@ public class MemberService {
 
             // memberRepository.delete(member);
         } catch (Exception e) {
-            throw new MemberDeletionFailedException("회원 삭제에 실패했습니다.", e);
+            throw new MemberDeletionFailedException("회원 삭제에 실패했습니다: " + e.getMessage(), e.getCause());
         }
     }
 
