@@ -34,6 +34,9 @@ public class Board {
     @Column(nullable = false)
     private Status status;
 
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer viewCount = 0; // 초기값 설정
+
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
