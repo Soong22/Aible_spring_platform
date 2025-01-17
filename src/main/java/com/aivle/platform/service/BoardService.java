@@ -34,4 +34,35 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
+//    @Transactional(readOnly = true)
+//    public
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

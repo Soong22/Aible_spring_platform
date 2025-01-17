@@ -1,5 +1,6 @@
 package com.aivle.platform.dto.response;
 
+import com.aivle.platform.domain.Board;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -34,5 +35,19 @@ public class BoardResponseDto {
     private List<CommentResponseDto> comments = new ArrayList<>(); // 이건 댓글리스폰스로 가지고오기
 
     private List<String> imageUrls;
+
+
+    public static BoardResponseDto fromEntity(Board board) {
+//        return new BoardResponseDto(
+//                board.getBoardId(),
+//                board.getTitle(),
+//                board.getContent(),
+//                board.getCreatedAt(),
+//                board.getUpdatedAt(),
+//                board.getStatus().get
+//        );
+
+         return null;
+    }
 
 }
