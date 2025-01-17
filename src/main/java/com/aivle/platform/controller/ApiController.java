@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ApiController {
+
     private final MemberService memberService;
     private final PoliceUnitService policeUnitService;
 

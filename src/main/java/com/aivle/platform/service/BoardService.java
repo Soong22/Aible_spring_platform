@@ -13,17 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class BoardService {
+
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
     // CRUD
-
     // 게시판 작성
     @Transactional
     public Board createBoard(BoardRequestDto request, Member member) {
@@ -34,6 +33,5 @@ public class BoardService {
 
         return boardRepository.save(board);
     }
-
 
 }

@@ -33,4 +33,5 @@ public class MemberResponseDto {
                 member.getPoliceUnit() != null ? member.getPoliceUnit().getPoliceUnitId() : null // 경찰서 ID 반환
         );
     }
+
 }
