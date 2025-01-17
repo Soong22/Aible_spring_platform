@@ -4,13 +4,17 @@ import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.Status;
 import com.aivle.platform.dto.request.BoardRequestDto;
+import com.aivle.platform.exception.image.FileSaveException;
 import com.aivle.platform.repository.BoardRepository;
 import com.aivle.platform.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -21,6 +25,27 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+
+    // 기능
+    public String saveFileAndGetUrl(MultipartFile file) {
+        // 프로젝트 루트 디렉토리 내의 static/uploads 디렉토리에 저장
+        String saveDir = new File("src/main/resources/static/uploads").getAbsolutePath() + "/";
+
+        // Ensure the save directory exists
+        File directory = new File(saveDir);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        try {
+            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            File savedFile = new File(saveDir + filename);
+            file.transferTo(savedFile);
+            return "/uploads/" + filename;
+        } catch (IOException e) {
+            throw new FileSaveException("파일 저장 중 오류가 발생했습니다.", e);
+        }
+    }
 
     // CRUD
     // 게시판 작성
@@ -33,34 +58,6 @@ public class BoardService {
 
         return boardRepository.save(board);
     }
-
-//    @Transactional(readOnly = true)
-//    public
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

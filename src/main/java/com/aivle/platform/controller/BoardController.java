@@ -52,7 +52,7 @@ public class BoardController {
         log.error("컨트롤러에서의 이전 개수{}", request);
 
         List<String> photoUrls = photoFiles.stream()
-                .map(this::saveFileAndGetUrl)
+                .map(boardService::saveFileAndGetUrl)
                 .collect(Collectors.toList());
 
         request.setImageUrls(photoUrls);
@@ -64,24 +64,6 @@ public class BoardController {
         return "redirect:/";
     }
 
-    private String saveFileAndGetUrl(MultipartFile file) {
-        // 프로젝트 루트 디렉토리 내의 static/uploads 디렉토리에 저장
-        String saveDir = new File("src/main/resources/static/uploads").getAbsolutePath() + "/";
 
-        // Ensure the save directory exists
-        File directory = new File(saveDir);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        try {
-            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            File savedFile = new File(saveDir + filename);
-            file.transferTo(savedFile);
-            return "/uploads/" + filename;
-        } catch (IOException e) {
-            throw new FileSaveException("파일 저장 중 오류가 발생했습니다.", e);
-        }
-    }
 
 }
