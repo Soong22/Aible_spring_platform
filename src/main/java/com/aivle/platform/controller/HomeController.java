@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // `login.html`로 이동
+        return "member/login"; // `login.html`로 이동
     }
 
     @GetMapping("/mypage")

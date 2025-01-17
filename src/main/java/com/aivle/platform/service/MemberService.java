@@ -165,9 +165,10 @@ public class MemberService {
 
     // 회원 인증 처리 메소드
     public static void addMemberInfoToModel(Model model, Authentication authentication) {
-
         if (authentication != null) {
-            String username = authentication.getName();
+            String userName = authentication.getName();
+            // 이메일 이라서 나중에 변경필요 static으로 이메일을 통한 이름반환가능, 이메일은 고유해서 중복 x
+
             boolean isUser = authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_USER"));
             boolean isAdmin = authentication.getAuthorities().stream()
@@ -175,7 +176,7 @@ public class MemberService {
 
             model.addAttribute("isUser", isUser);
             model.addAttribute("isAdmin", isAdmin);
-            model.addAttribute("username", username);
+            model.addAttribute("userName", userName);
         } else {
             model.addAttribute("isUser", false);
             model.addAttribute("isAdmin", false);

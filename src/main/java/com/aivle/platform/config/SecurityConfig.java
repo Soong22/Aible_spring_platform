@@ -41,6 +41,7 @@ public class SecurityConfig {
 
                 // 인증이 필요한 경로
                 .requestMatchers("/member/**").authenticated()
+                .requestMatchers("/board/register").authenticated()
 
                 // 관리자 권한이 필요한 경로
                 .requestMatchers("/members").hasRole("ADMIN")

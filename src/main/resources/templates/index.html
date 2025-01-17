@@ -15,7 +15,12 @@
 <!-- Main Content -->
 <div class="container mt-4">
     <h1>메인 페이지</h1>
-    <p>공사 중 .....</p>
+
+    <!-- 로그인 상태에 따라 회원정보 표시 -->
+    <p th:if="${isUser or isAdmin}">
+        <strong>회원정보:</strong> <span th:text="${userName}">로그인한 사용자</span>
+    </p>
+
 </div>
 
 <!-- Footer -->

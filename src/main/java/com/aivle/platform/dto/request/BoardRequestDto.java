@@ -5,9 +5,14 @@ import com.aivle.platform.domain.Image;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+
+@Slf4j
 
 @Getter
 @Setter
@@ -35,6 +40,8 @@ public class BoardRequestDto {
 
         // 상위 게시판에서 유저 주입
 
+        log.error("개수{}", request.getImageUrls().size());
+
         List<Image> images = request.getImageUrls().stream()
                 .map(url -> new Image(board, url))
                 .collect(Collectors.toList());
@@ -44,5 +51,7 @@ public class BoardRequestDto {
         return board;
     }
 
-
 }
+
+
+

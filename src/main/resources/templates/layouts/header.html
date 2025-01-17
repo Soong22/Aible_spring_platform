@@ -32,6 +32,11 @@
                     <a class="nav-link active" aria-current="page" href="/mypage">마이페이지</a>
                 </li>
 
+                <!-- 로그인 상태에 따른 조건 -->
+                <li class="nav-item" th:if="${isUser or isAdmin}">
+                    <a class="nav-link active" aria-current="page" href="/board/register">게시판 작성</a>
+                </li>
+
                 <li class="nav-item" th:if="${isAdmin}">
                     <a class="nav-link active" aria-current="page" href="/adminpage">관리자 페이지</a>
                 </li>
@@ -40,16 +45,6 @@
                 <li class="nav-item" th:if="${!isUser and !isAdmin}">
                     <a class="nav-link active" aria-current="page" href="/login">로그인</a>
                 </li>
-
-<!--                <li class="nav-item" th:if="${isUser or isAdmin}">-->
-<!--&lt;!&ndash;                    <a class="nav-link active" aria-current="page" href="/logout">로그아웃</a>&ndash;&gt;-->
-<!--                    <form action="/logout" method="post">-->
-<!--                        &lt;!&ndash; CSRF 토큰 (Hidden) &ndash;&gt;-->
-<!--                        <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">-->
-<!--                        <button type="submit">Logout</button>-->
-<!--                    </form>-->
-
-<!--                </li>-->
 
                 <!-- 로그아웃 버튼 -->
                 <li class="nav-item" th:if="${isUser or isAdmin}">
