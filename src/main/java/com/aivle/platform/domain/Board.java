@@ -48,4 +48,9 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Image> images = new ArrayList<>();
 
+
+    public String getStatusDescription() {
+        return status.getDescription();
+    }
+
 }
