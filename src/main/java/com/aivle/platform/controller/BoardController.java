@@ -2,27 +2,24 @@ package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.dto.request.BoardRequestDto;
-import com.aivle.platform.exception.image.FileSaveException;
+import com.aivle.platform.dto.response.BoardResponseDto;
 import com.aivle.platform.service.BoardService;
 import com.aivle.platform.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
@@ -45,25 +42,46 @@ public class BoardController {
             @Valid
             @ModelAttribute("request") BoardRequestDto request,
             @RequestPart("photoFiles") List<MultipartFile> photoFiles,
-            Authentication authentication,
-            Model model) {
+            Authentication authentication) {
         Member member = memberService.getMemberEmail(authentication.getName());
-
-        log.error("컨트롤러에서의 이전 개수{}", request);
 
         List<String> photoUrls = photoFiles.stream()
                 .map(boardService::saveFileAndGetUrl)
                 .collect(Collectors.toList());
 
         request.setImageUrls(photoUrls);
-
-        log.error("컨트롤러에서의 이후 개수{}", request);
-
         boardService.createBoard(request, member);
 
         return "redirect:/";
     }
 
+
+    @GetMapping("/boards")
+    public String getBoards(Model model, Authentication authentication,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "3") int size) {
+        try {
+            MemberService.addMemberInfoToModel(model, authentication);
+
+            // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
+            Pageable pageable = PageRequest.of(page, size);
+
+            // 페이징된 게시판 목록 조회
+            Page<BoardResponseDto> boards = boardService.getAllBoards(pageable);
+
+
+            // 모델에 멤버 목록과 페이징 정보 추가
+            model.addAttribute("boards", boards); // 멤버 목록
+            model.addAttribute("currentPage", page); // 현재 페이지
+            model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
+            model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
+
+            return "board/boards"; // register.html 페이지로 반환
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+    }
 
 
 }

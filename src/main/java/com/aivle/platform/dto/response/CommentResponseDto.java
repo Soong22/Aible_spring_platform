@@ -35,17 +35,17 @@ public class CommentResponseDto {
 
     private List<String> imageUrls;
 
-    public static CommentResponseDto fromEntity(Comment comment, Member member, PoliceUnit policeUnit) {
+    public static CommentResponseDto fromEntity(Comment comment) {
         return new CommentResponseDto(
                 comment.getCommentId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
-                member.getMemberName(),
-                policeUnit.getDeptName(),
-                policeUnit.getStationName(),
-                policeUnit.getPoliceUnitName(),
-                policeUnit.getPoliceUnitTypeDescription(),
+                comment.getMember().getMemberName(),
+                comment.getMember().getPoliceUnit().getDeptName(),
+                comment.getMember().getPoliceUnit().getStationName(),
+                comment.getMember().getPoliceUnit().getPoliceUnitName(),
+                comment.getMember().getPoliceUnit().getPoliceUnitTypeDescription(),
                 comment.getBoard().getBoardId(),
                 comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null,
                 comment.getImages() != null ? comment.getImages().stream()

@@ -11,7 +11,6 @@ import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.PoliceUnitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -49,13 +48,12 @@ public class MemberController {
             memberService.createMember(request);
             return "redirect:/";
         } catch (MemberCreationFailedException e) {
+
             // 실패 시 다시 회원가입으로 리다이렉트
-            log.error("에러: {}", e.getMessage());
             return "redirect:/member/register";
         } catch (Exception e) {
-            // 예상못한 에러의 경우 에러페이지로 리다이렉트
-            log.error("에러: {}", e.getMessage());
 
+            // 예상못한 에러의 경우 에러페이지로 리다이렉트
             model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
             return "error/error";
         }
@@ -65,7 +63,7 @@ public class MemberController {
     @GetMapping("/members")
     public String getMembers(Model model, Authentication authentication,
                              @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "10") int size) {
+                             @RequestParam(defaultValue = "5") int size) {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
 
@@ -77,16 +75,15 @@ public class MemberController {
 
             // 경찰서 정보를 추가적으로 조회
             Map<Long, PoliceUnit> policeUnits = members.getContent().stream()
-                    .filter(member -> member.getPoliceUnitId() != null) // policeUnitId가 있는 멤버만 처리
-                    .map(member -> member.getPoliceUnitId())
-                    .distinct() // 중복 제거
+                    .map(MemberResponseDto::getPoliceUnitId) // policeUnitId가 있는 멤버만 처리
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toMap(
                             id -> id,
-                            id -> policeUnitService.getPoliceUnitById(id)
+                            policeUnitService::getPoliceUnitById
                     ));
 
             // 모델에 멤버 목록과 페이징 정보 추가
-            model.addAttribute("members", members.getContent()); // 멤버 목록
+            model.addAttribute("members", members); // 멤버 목록
             model.addAttribute("policeUnits", policeUnits); // 경찰서 정보 맵
             model.addAttribute("currentPage", page); // 현재 페이지
             model.addAttribute("totalPages", members.getTotalPages()); // 전체 페이지 수

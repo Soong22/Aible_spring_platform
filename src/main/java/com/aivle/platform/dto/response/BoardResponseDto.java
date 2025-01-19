@@ -2,13 +2,13 @@ package com.aivle.platform.dto.response;
 
 import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Image;
-import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -40,8 +40,7 @@ public class BoardResponseDto {
 
     private List<String> imageUrls;
 
-
-    public static BoardResponseDto fromEntity(Board board, Member member, PoliceUnit policeUnit) {
+    public static BoardResponseDto fromEntity(Board board) {
         return new BoardResponseDto(
                 board.getBoardId(),
                 board.getTitle(),
@@ -50,20 +49,31 @@ public class BoardResponseDto {
                 board.getUpdatedAt(),
                 board.getStatusDescription(),
                 board.getViewCount(),
-                member.getMemberName(),                           // 게시판 작성자의 Member 정보
-                policeUnit.getDeptName(),                        // 게시판 작성자의 경찰청 정보
-                policeUnit.getStationName(),                     // 게시판 작성자의 경찰서 정보
-                policeUnit.getPoliceUnitName(),                  // 게시판 작성자의 지구대/파출소 정보
-                policeUnit.getPoliceUnitTypeDescription(),       // 게시판 작성자의 지구대/파출소 유형
+                board.getMember().getMemberName(),                           // 게시판 작성자의 Member 정보
+
+//                board.getMember().getPoliceUnit().getDeptName(),                        // 게시판 작성자의 경찰청 정보
+//                board.getMember().getPoliceUnit().getStationName(),                     // 게시판 작성자의 경찰서 정보
+//                board.getMember().getPoliceUnit().getPoliceUnitName(),                  // 게시판 작성자의 지구대/파출소 정보
+//                board.getMember().getPoliceUnit().getPoliceUnitTypeDescription(),       // 게시판 작성자의 지구대/파출소 유형
+
+                // 경찰청 정보 - null 방지
+                Optional.ofNullable(board.getMember().getPoliceUnit())
+                        .map(PoliceUnit::getDeptName)
+                        .orElse("알 수 없음"),
+                Optional.ofNullable(board.getMember().getPoliceUnit())
+                        .map(PoliceUnit::getStationName)
+                        .orElse("알 수 없음"),
+                Optional.ofNullable(board.getMember().getPoliceUnit())
+                        .map(PoliceUnit::getPoliceUnitName)
+                        .orElse("알 수 없음"),
+                Optional.ofNullable(board.getMember().getPoliceUnit())
+                        .map(PoliceUnit::getPoliceUnitTypeDescription)
+                        .orElse("알 수 없음"),
 
                 // 댓글 매핑 - 댓글 작성자 정보 기반으로 매핑
                 board.getComments() != null
                         ? board.getComments().stream()
-                        .map(comment -> CommentResponseDto.fromEntity(
-                                comment,
-                                comment.getMember(),               // 댓글 작성자의 Member 정보
-                                comment.getMember().getPoliceUnit()// 댓글 작성자의 PoliceUnit 정보
-                        ))
+                        .map(CommentResponseDto::fromEntity)
                         .collect(Collectors.toList())
                         : List.of(),
 
@@ -75,6 +85,5 @@ public class BoardResponseDto {
                         : List.of()
         );
     }
-
 
 }

@@ -13,16 +13,3 @@ public enum Status {
     private final String description;
 
 }
-
-/*
-@Getter
-@AllArgsConstructor
-public enum Status {
-    GENERAL("자유"),
-    PENDING("확인대기"),
-    COMPLETED("확인완료");
-
-    private final String description;
-}
-
- */

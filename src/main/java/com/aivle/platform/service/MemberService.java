@@ -8,10 +8,8 @@ import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.exception.member.*;
 import com.aivle.platform.exception.police_unit.PoliceUnitNotFoundException;
 import com.aivle.platform.repository.MemberRepository;
-
 import com.aivle.platform.repository.PoliceUnitRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -22,7 +20,6 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -58,6 +55,7 @@ public class MemberService {
                 .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_id: " + memberId));
     }
 
+    @Transactional(readOnly = true)
     public Member getMemberEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. email: " + email));
@@ -76,8 +74,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberResponseDto getMemberById(Long memberId) {
-        Member member = getMember(memberId);
-        return MemberResponseDto.fromEntity(member);
+        return MemberResponseDto.fromEntity(getMember(memberId));
     }
 
     @Transactional(readOnly = true)
