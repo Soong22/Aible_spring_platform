@@ -1,8 +1,11 @@
 package com.aivle.platform.controller;
 
+import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Member;
+import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
+import com.aivle.platform.exception.board.BoardNotFoundException;
 import com.aivle.platform.service.BoardService;
 import com.aivle.platform.service.MemberService;
 import jakarta.validation.Valid;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -59,7 +63,7 @@ public class BoardController {
     @GetMapping("/boards")
     public String getBoards(Model model, Authentication authentication,
                             @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "3") int size) {
+                            @RequestParam(defaultValue = "5") int size) {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
 
@@ -77,6 +81,35 @@ public class BoardController {
             model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
 
             return "board/boards"; // register.html 페이지로 반환
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+    }
+
+    @GetMapping("/board/{boardId}")
+    public String getBoard(@PathVariable("boardId") Long boardId, Model model, Authentication authentication) {
+        try{
+            MemberService.addMemberInfoToModel(model, authentication);
+            BoardResponseDto board = boardService.getBoardById(boardId);
+
+            Long id = boardService.getBoard(boardId).getMember().getMemberId();
+
+            if(authentication != null) {
+                Member member = memberService.getMemberEmail(authentication.getName());
+
+                if (member.getRole() == Role.ADMIN ||
+                        Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())
+                ) {
+                    model.addAttribute("isTrue", true);
+                }
+            }
+
+            model.addAttribute("board", board);
+
+            return "board/board";
+        } catch (BoardNotFoundException e) {
+            return "redirect:/boards";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
             return "error/error";

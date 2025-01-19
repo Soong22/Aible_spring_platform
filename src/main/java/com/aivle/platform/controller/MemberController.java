@@ -103,14 +103,13 @@ public class MemberController {
             MemberService.addMemberInfoToModel(model, authentication);
             MemberResponseDto member = memberService.getMemberById(memberId);
 
-            PoliceUnit policeUnit = null;
-
             if (member.getPoliceUnitId() != null) {
-                policeUnit = policeUnitService.getPoliceUnitById(member.getPoliceUnitId());
+                // 경찰서 정보 맵
+                model.addAttribute("policeUnit",
+                        policeUnitService.getPoliceUnitById(member.getPoliceUnitId()));
             }
 
             model.addAttribute("member", member);
-            model.addAttribute("policeUnit", policeUnit); // 경찰서 정보 맵
 
             return "member/member";
         } catch (MemberNotFoundException e) {

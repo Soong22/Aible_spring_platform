@@ -9,6 +9,7 @@ import com.aivle.platform.exception.board.BoardNotFoundException;
 import com.aivle.platform.exception.image.FileSaveException;
 import com.aivle.platform.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -47,7 +49,8 @@ public class BoardService {
         }
     }
 
-    private Board getBoard(Long boardId) {
+    @Transactional
+    public Board getBoard(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
     }
@@ -64,9 +67,12 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
-    @Transactional(readOnly = true)
     public BoardResponseDto getBoardById(Long boardId) {
-        return BoardResponseDto.fromEntity(getBoard(boardId));
+        Board board = getBoard(boardId);
+        board.setViewCount(board.getViewCount() + 1);
+        boardRepository.save(board);
+
+        return BoardResponseDto.fromEntity(board);
     }
 
     @Transactional(readOnly = true)
