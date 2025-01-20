@@ -36,11 +36,19 @@ public class BoardRequestDto {
 
         // 상위 게시판에서 유저 주입
 
-        List<Image> images = request.getImageUrls().stream()
-                .map(url -> new Image(board, url))
-                .collect(Collectors.toList());
+//        List<Image> images = request.getImageUrls().stream()
+//                .map(url -> new Image(board, url))
+//                .collect(Collectors.toList());
+//
+//        board.setImages(images);
 
-        board.setImages(images);
+        // 이미지가 있는 경우에만 처리
+        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
+            List<Image> images = request.getImageUrls().stream()
+                    .map(url -> new Image(board, url))
+                    .collect(Collectors.toList());
+            board.setImages(images);
+        }
 
         return board;
     }

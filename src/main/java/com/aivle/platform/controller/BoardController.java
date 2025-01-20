@@ -4,12 +4,16 @@ import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.BoardRequestDto;
+import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
 import com.aivle.platform.exception.board.BoardNotFoundException;
+import com.aivle.platform.exception.board.BoardUpdateFailedException;
+import com.aivle.platform.exception.member.MemberUpdateFailedException;
 import com.aivle.platform.service.BoardService;
 import com.aivle.platform.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +23,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
@@ -45,20 +50,27 @@ public class BoardController {
     public String registerBoard(
             @Valid
             @ModelAttribute("request") BoardRequestDto request,
-            @RequestPart("photoFiles") List<MultipartFile> photoFiles,
+            @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles,
             Authentication authentication) {
         Member member = memberService.getMemberEmail(authentication.getName());
 
-        List<String> photoUrls = photoFiles.stream()
-                .map(boardService::saveFileAndGetUrl)
-                .collect(Collectors.toList());
+        // 이미지 파일 리스트가 null이거나 비어 있을 경우 처리
+        List<String> photoUrls = new ArrayList<>();
+        if (photoFiles != null && !photoFiles.isEmpty()) {
+            photoUrls = photoFiles.stream()
+                    .filter(file -> !file.isEmpty()) // 빈 파일 필터링
+                    .map(boardService::saveFileAndGetUrl)
+                    .collect(Collectors.toList());
+        }
 
+        // 이미지 URL 리스트를 요청 DTO에 설정
         request.setImageUrls(photoUrls);
+
+        // 게시판 저장
         boardService.createBoard(request, member);
 
-        return "redirect:/";
+        return "redirect:/boards";
     }
-
 
     @GetMapping("/boards")
     public String getBoards(Model model, Authentication authentication,
@@ -89,13 +101,13 @@ public class BoardController {
 
     @GetMapping("/board/{boardId}")
     public String getBoard(@PathVariable("boardId") Long boardId, Model model, Authentication authentication) {
-        try{
+        try {
             MemberService.addMemberInfoToModel(model, authentication);
             BoardResponseDto board = boardService.getBoardById(boardId);
 
             Long id = boardService.getBoard(boardId).getMember().getMemberId();
 
-            if(authentication != null) {
+            if (authentication != null) {
                 Member member = memberService.getMemberEmail(authentication.getName());
 
                 if (member.getRole() == Role.ADMIN ||
@@ -115,6 +127,89 @@ public class BoardController {
             return "error/error";
         }
     }
+
+    // 게시판수정 GET
+    @GetMapping("/board/edit/{boardId}")
+    public String editBoardForm(@PathVariable("boardId") Long boardId, Model model, Authentication authentication) {
+        try {
+            MemberService.addMemberInfoToModel(model, authentication);
+
+            BoardResponseDto response = boardService.getBoardById(boardId);
+
+            model.addAttribute("response", response);
+            model.addAttribute("request", new BoardRequestDto());
+
+            return "board/edit";
+        } catch (BoardNotFoundException e) {
+            return "redirect:/boards";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+    }
+
+    // 게시판수정 POST
+    @PostMapping("/board/edit/{boardId}")
+    public String editBoard(
+            @PathVariable("boardId") Long boardId,
+            @Valid @ModelAttribute("request") BoardRequestDto request,
+            @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles, // 새 이미지 파일
+            Model model) {
+        try {
+//            log.error("request_controller:{}", request);
+
+            // 이미지 파일 리스트가 null이거나 비어 있을 경우 처리
+            List<String> photoUrls = new ArrayList<>();
+            if (photoFiles != null && !photoFiles.isEmpty()) {
+                photoUrls = photoFiles.stream()
+                        .filter(file -> !file.isEmpty()) // 빈 파일 필터링
+                        .map(boardService::saveFileAndGetUrl)
+                        .collect(Collectors.toList());
+            }
+
+            // 이미지 URL 리스트를 요청 DTO에 설정
+            request.setImageUrls(photoUrls);
+
+            boardService.updateBoard(boardId, request);
+
+            return "redirect:/board/" + boardId;  // 수정 후 회원 상세 조회 페이지로 리디렉션
+        } catch (BoardUpdateFailedException e) {
+            return "redirect:/boards";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+
+    }
+
+    /*
+    // 게시판작성 POST
+    @PostMapping("/board/register")
+    public String registerBoard(
+            @Valid
+            @ModelAttribute("request") BoardRequestDto request,
+            @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles,
+            Authentication authentication) {
+        Member member = memberService.getMemberEmail(authentication.getName());
+
+        // 이미지 파일 리스트가 null이거나 비어 있을 경우 처리
+        List<String> photoUrls = new ArrayList<>();
+        if (photoFiles != null && !photoFiles.isEmpty()) {
+            photoUrls = photoFiles.stream()
+                    .filter(file -> !file.isEmpty()) // 빈 파일 필터링
+                    .map(boardService::saveFileAndGetUrl)
+                    .collect(Collectors.toList());
+        }
+
+        // 이미지 URL 리스트를 요청 DTO에 설정
+        request.setImageUrls(photoUrls);
+
+        // 게시판 저장
+        boardService.createBoard(request, member);
+
+        return "redirect:/boards";
+    }
+     */
 
 
 }
