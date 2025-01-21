@@ -12,7 +12,7 @@ COPY build/libs/platform-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 
 # 기본 실행 명령어 설정 (개발 단계에서는 기본 프로파일 사용)
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+#ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 # 주석 예시:
-# ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "/app.jar"]
+ ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "/app.jar"]
