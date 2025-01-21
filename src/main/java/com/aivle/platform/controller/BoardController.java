@@ -4,6 +4,7 @@ import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
+import com.aivle.platform.exception.board.BoardDeletionFailedException;
 import com.aivle.platform.exception.board.BoardNotFoundException;
 import com.aivle.platform.exception.board.BoardUpdateFailedException;
 import com.aivle.platform.service.BoardService;
@@ -183,5 +184,20 @@ public class BoardController {
             return "error/error";
         }
     }
+
+    // 게시판삭제 POST
+    @PostMapping("/board/delete/{boardId}")
+    public String deleteBoard(@PathVariable("boardId") Long boardId, Model model) {
+        try {
+            boardService.deleteBoard(boardId);
+            return "redirect:/boards";
+        } catch (BoardDeletionFailedException e) {
+            return "redirect:/board/" + boardId;
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+    }
+
 
 }
