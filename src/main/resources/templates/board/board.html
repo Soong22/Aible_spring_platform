@@ -15,7 +15,7 @@
 
         .board-container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 40px auto;
             background: white;
             padding: 20px;
             border-radius: 10px;
@@ -39,11 +39,18 @@
             color: #6c757d;
         }
 
+        .board-images {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start; /* 이미지를 중앙 정렬 */
+        }
+
         .board-image {
-            width: 50%;
-            height: auto;
-            display: block;
-            margin: 20px auto;
+            width: 60%; /* 폼의 폭의 3/4 */
+            height: 60%; /* 폭과 동일한 높이 */
+            object-fit: cover; /* 이미지 비율 유지 */
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -52,6 +59,9 @@
             font-size: 16px;
             line-height: 1.6;
             margin-top: 20px;
+            white-space: pre-wrap; /* 줄바꿈 및 공백 유지 */
+            word-wrap: break-word; /* 긴 단어를 줄바꿈 */
+            overflow-wrap: break-word;
         }
 
         .divider {
@@ -112,17 +122,16 @@
         </p>
     </div>
 
-    <!-- 대표 이미지 -->
-    <div th:if="${board.imageUrls.size() > 0}">
-        <img th:src="${board.imageUrls[0]}" alt="게시글 이미지" class="board-image">
+    <!-- 이미지 목록 -->
+    <div class="board-images" th:if="${board.imageUrls.size() > 0}">
+        <img th:each="imageUrl : ${board.imageUrls}" th:src="${imageUrl}" alt="게시글 이미지" class="board-image">
     </div>
 
     <!-- 게시글 내용 -->
-    <div class="board-content" th:text="${board.content}">
+    <div class="board-content" th:utext="${#strings.replace(board.content, '\n', '<br>')}">
         게시글 내용이 여기에 표시됩니다.
     </div>
 
-    <!-- 수정/삭제 버튼 -->
     <!-- 수정/삭제 버튼 -->
     <div class="board-actions" th:if="${isTrue}">
         <button class="btn btn-primary" th:onclick="|location.href='/board/edit/' + ${board.boardId}|">수정</button>
@@ -132,20 +141,25 @@
         </form>
     </div>
 
-
     <!-- 구분선 -->
     <div class="divider"></div>
 
+
+    <!--    나중에 댓글 구현시 여기 수정 필요-->
     <!-- 댓글 섹션 -->
     <div class="comments-section">
         <h3>댓글</h3>
         <div th:each="comment : ${board.comments}" class="comment-card">
             <div class="comment-author" th:text="${comment.authorName}">댓글 작성자</div>
-            <div class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}">2025.01.17 17:00</div>
+            <div class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}">2025.01.17
+                17:00
+            </div>
             <p th:text="${comment.content}">댓글 내용</p>
         </div>
         <p th:if="${board.comments.size() == 0}" class="text-muted">댓글이 없습니다.</p>
     </div>
+
+
 </div>
 
 <!-- 푸터 아래 추가 여백 -->

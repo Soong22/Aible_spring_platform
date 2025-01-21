@@ -36,8 +36,8 @@ public class SecurityConfig {
         // 권한 설정
         http.authorizeHttpRequests(authorize -> authorize
                 // 인증 없이 접근 가능한 경로
-                .requestMatchers("/", "/error", "/api/**", "/logout").permitAll()
-                .requestMatchers("/member/register", "/mypage", "/favicon.ico", "process-login").permitAll()
+                .requestMatchers("/", "/error", "/api/**").permitAll()
+                .requestMatchers("/member/register", "/mypage", "/favicon.ico").permitAll()
 
                 // 인증이 필요한 경로
                 .requestMatchers("/member/**").authenticated()

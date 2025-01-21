@@ -49,12 +49,7 @@ public class BoardResponseDto {
                 board.getUpdatedAt(),
                 board.getStatusDescription(),
                 board.getViewCount(),
-                board.getMember().getMemberName(),                           // 게시판 작성자의 Member 정보
-
-//                board.getMember().getPoliceUnit().getDeptName(),                        // 게시판 작성자의 경찰청 정보
-//                board.getMember().getPoliceUnit().getStationName(),                     // 게시판 작성자의 경찰서 정보
-//                board.getMember().getPoliceUnit().getPoliceUnitName(),                  // 게시판 작성자의 지구대/파출소 정보
-//                board.getMember().getPoliceUnit().getPoliceUnitTypeDescription(),       // 게시판 작성자의 지구대/파출소 유형
+                board.getMember().getMemberName(),  // 게시판 작성자의 Member 정보
 
                 // 경찰청 정보 - null 방지
                 Optional.ofNullable(board.getMember().getPoliceUnit())

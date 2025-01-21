@@ -3,13 +3,18 @@ USE platform;
 
 DESC board;
 
+
 DELETE FROM board;
+
 
 DELETE FROM image;
 
+
 SELECT * FROM board;
 
+
 SELECT * FROM image;
+
 
 INSERT INTO board (
     view_count, board_id, created_at, member_id, updated_at, title, content, status

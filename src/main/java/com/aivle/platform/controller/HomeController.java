@@ -17,10 +17,13 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
         return "member/login"; // `login.html`로 이동
     }
 
+    // 아직 구현x
     @GetMapping("/mypage")
     public String mypageForm(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);

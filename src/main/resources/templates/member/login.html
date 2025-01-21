@@ -1,21 +1,107 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>로그인</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            width: 350px;
+            background-color: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            /*color: #4caf50;*/
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .btn-login {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #007bff;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .text-muted {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-<h1>로그인</h1>
-<form id="login-form" action="/process-login" method="post" onsubmit="checkStatusAndSubmit(event)">
-    <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
-    <label for="email">이메일:</label>
-    <input type="email" id="email" name="username" required><br>
-    <label for="password">비밀번호:</label>
-    <input type="password" id="password" name="password" required><br>
-    <button type="submit">로그인</button>
-</form>
+<div class="login-container">
+    <h1>로그인</h1>
 
-<!-- JavaScript를 HTML 맨 뒤로 이동 -->
+    <!-- 에러 메시지 -->
+    <div th:if="${param.error}" class="error-message">
+        아이디 또는 비밀번호가 잘못되었습니다.
+    </div>
+
+    <form id="login-form" action="/process-login" method="post" onsubmit="checkStatusAndSubmit(event)">
+
+        <!-- CSRF 토큰 -->
+        <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
+
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" id="email" name="username" class="form-control" placeholder="아이디 또는 이메일" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호" required>
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me">
+            <label class="form-check-label" for="rememberMe">로그인 상태 유지</label>
+        </div>
+
+        <button type="submit" class="btn btn-login">로그인</button>
+    </form>
+
+    <div class="text-muted">
+        <a href="/find-password" class="text-decoration-none">비밀번호 찾기</a> |
+        <a href="/signup" class="text-decoration-none">회원가입</a>
+    </div>
+</div>
+
 <script>
     async function checkStatusAndSubmit(event) {
         event.preventDefault(); // 기본 폼 제출 방지
@@ -40,7 +126,6 @@
             alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
         }
     }
-
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +18,7 @@
         }
 
         #previewList {
-            margin-top: 10px;
+            margin-top: 40px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
@@ -92,6 +92,10 @@
             display: flex;
             justify-content: space-between;
         }
+
+        .footer-padding {
+            height: 70px;
+        }
     </style>
     <script>
         // 뒤로가기 시 강제 새로고침
@@ -109,23 +113,26 @@
 <div class="form-container">
     <h1>게시판 작성</h1>
 
-    <form th:action="@{/board/register}" method="post" enctype="multipart/form-data"  th:object="${request}">
+    <form action="/board/register" method="post" enctype="multipart/form-data">
+        <!-- CSRF 토큰 (Hidden) -->
+        <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
+
         <!-- 제목 -->
         <div class="mb-3">
             <label for="title" class="form-label">제목</label>
-            <input type="text" id="title" name="title" class="form-control" th:field="*{title}" required minlength="1" maxlength="50">
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            <input type="text" id="title" name="title" class="form-control" required minlength="1" maxlength="50">
         </div>
 
         <!-- 내용 -->
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
-            <textarea id="content" name="content" rows="15" class="form-control" th:field="*{content}" required minlength="1" maxlength="10000"></textarea>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+            <textarea id="content" name="content" rows="15" class="form-control" required minlength="1"
+                      maxlength="10000"></textarea>
         </div>
 
         <!-- 이미지 파일 -->
         <div class="file-input-wrapper">
+            <small class="text-muted">최대 5장까지 첨부 가능합니다.</small>
             <label for="photoFiles">사진/동영상 첨부하기</label>
             <input type="file" id="photoFiles" name="photoFiles" multiple>
         </div>
@@ -141,6 +148,9 @@
     </form>
 </div>
 
+<!-- 푸터 아래 추가 여백 -->
+<div class="footer-padding"></div>
+
 <!-- Footer -->
 <div th:replace="~{layouts/footer :: footer}"></div>
 
@@ -152,6 +162,13 @@
         // 새 파일 선택 시 이미지 미리보기 추가
         photoFilesInput.addEventListener("change", function () {
             const files = Array.from(photoFilesInput.files);
+
+            // 이미지가 5장 초과 시 경고 메시지 표시
+            if (files.length > 5) {
+                alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
+                photoFilesInput.value = ""; // 선택된 파일 초기화
+                return;
+            }
 
             files.forEach(file => {
                 const reader = new FileReader();

@@ -2,8 +2,6 @@ package com.aivle.platform.dto.response;
 
 import com.aivle.platform.domain.Comment;
 import com.aivle.platform.domain.Image;
-import com.aivle.platform.domain.Member;
-import com.aivle.platform.domain.PoliceUnit;
 import lombok.*;
 
 import java.time.LocalDateTime;
