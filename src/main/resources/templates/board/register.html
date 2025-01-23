@@ -113,7 +113,9 @@
 <div class="form-container">
     <h1>게시판 작성</h1>
 
-    <form action="/board/register" method="post" enctype="multipart/form-data">
+<!--    <form action="/board/register" method="post" enctype="multipart/form-data">-->
+    <form id="boardForm" action="/board/register" method="post" enctype="multipart/form-data">
+
         <!-- CSRF 토큰 (Hidden) -->
         <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
 
@@ -155,6 +157,57 @@
 <div th:replace="~{layouts/footer :: footer}"></div>
 
 <script>
+    // 폼 검증 함수 정의
+    function setupFormValidation(formId, titleId, contentId) {
+        // 폼 요소 가져오기
+        const form = document.getElementById(formId);
+        const titleInput = document.getElementById(titleId);
+        const contentTextarea = document.getElementById(contentId);
+
+        if (!form || !titleInput || !contentTextarea) {
+            console.error('폼 요소를 찾을 수 없습니다. ID를 확인해주세요.');
+            return;
+        }
+
+        // 폼 제출 이벤트 리스너 추가
+        form.addEventListener('submit', function(event) {
+            // 제목과 내용의 값 가져오기
+            const title = titleInput.value;
+            const content = contentTextarea.value;
+
+            // 공백을 제외한 문자 수 계산
+            const titleNonWhitespaceCount = title.replace(/\s/g, '').length;
+            const contentNonWhitespaceCount = content.replace(/\s/g, '').length;
+
+            // 검증 플래그
+            let isValid = true;
+            let errorMessage = '';
+
+            // 제목 검증
+            if (titleNonWhitespaceCount < 1) {
+                isValid = false;
+                errorMessage += '제목: 공백을 제외한 최소 1자 이상의 제목을 입력해주세요.\n';
+            }
+
+            // 내용 검증
+            if (contentNonWhitespaceCount < 1) {
+                isValid = false;
+                errorMessage += '내용: 공백을 제외한 최소 1자 이상의 내용을 입력해주세요.\n';
+            }
+
+            // 검증 실패 시 경고 메시지 표시 및 폼 제출 방지
+            if (!isValid) {
+                alert(errorMessage);
+                event.preventDefault();
+            }
+        });
+    }
+
+    // 폼 검증 함수 호출
+    document.addEventListener('DOMContentLoaded', function() {
+        setupFormValidation('boardForm', 'title', 'content');
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
         const photoFilesInput = document.getElementById("photoFiles");
         const previewList = document.getElementById("previewList");

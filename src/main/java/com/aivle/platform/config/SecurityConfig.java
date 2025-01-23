@@ -37,11 +37,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                 // 인증 없이 접근 가능한 경로
                 .requestMatchers("/", "/error", "/api/**").permitAll()
-                .requestMatchers("/member/register", "/mypage", "/favicon.ico").permitAll()
+                .requestMatchers("/images/**").permitAll()
+                .requestMatchers("/member/register", "/mypage").permitAll()
 
                 // 인증이 필요한 경로
                 .requestMatchers("/member/**").authenticated()
-                .requestMatchers("/board/**", "/boards").authenticated()
+                .requestMatchers("/board/**", "/boards", "/comment/**", "/comments").authenticated()
 
                 // 관리자 권한이 필요한 경로
                 .requestMatchers("/members").hasRole("ADMIN")

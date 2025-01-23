@@ -7,7 +7,6 @@ import com.aivle.platform.domain.Status;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
 import com.aivle.platform.exception.board.BoardNotFoundException;
-import com.aivle.platform.exception.image.FileSaveException;
 import com.aivle.platform.repository.BoardRepository;
 import com.aivle.platform.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,13 +29,12 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Board getBoard(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
     }
 
-    @Transactional
     public Board createBoard(BoardRequestDto request, Member member) {
         Board board = BoardRequestDto.toEntity(request);
         board.setMember(member);
@@ -89,28 +84,6 @@ public class BoardService {
 
     public void deleteBoard(Long boardId) {
         boardRepository.delete(getBoard(boardId));
-    }
-
-
-    // 파일 저장 및 URL 반환
-    public String saveFileAndGetUrl(MultipartFile file) {
-        // 프로젝트 루트 디렉토리 내의 static/uploads 디렉토리에 저장
-        String saveDir = new File("src/main/resources/static/uploads").getAbsolutePath() + "/";
-
-        // Ensure the save directory exists
-        File directory = new File(saveDir);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        try {
-            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            File savedFile = new File(saveDir + filename);
-            file.transferTo(savedFile);
-            return "/uploads/" + filename;
-        } catch (IOException e) {
-            throw new FileSaveException("파일 저장 중 오류가 발생했습니다.", e);
-        }
     }
 
 }

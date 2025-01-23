@@ -1,6 +1,5 @@
 package com.aivle.platform.dto.request;
 
-import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Comment;
 import com.aivle.platform.domain.Image;
 import jakarta.validation.constraints.NotBlank;
@@ -27,25 +26,25 @@ public class CommentRequestDto {
 
     private Long parentCommentId;
 
-    @Size(max = 5, message = "이미지는 최대 5개까지 첨부할 수 있습니다.")
     private List<String> imageUrls;
 
-    public static Comment toEntity(CommentRequestDto request, Board board) {
+    public static Comment toEntity(CommentRequestDto request) {
         Comment comment = new Comment();
         comment.setContent(request.getContent());
-        comment.setBoard(board);
+
+        // 보드는 컨트롤러에서 받기
 
         // 상위 게시판에서 유저 주입
 
         // 상위 댓글의 경우 서비스단에 생성
-        // static으로 아이디로 comment찾는거 생성 후 여기에 대입하기
 
+        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
+            List<Image> images = request.getImageUrls().stream()
+                    .map(url -> new Image(comment, url))
+                    .collect(Collectors.toList());
 
-        List<Image> images = request.getImageUrls().stream()
-                .map(url -> new Image(comment, url))
-                .collect(Collectors.toList());
-
-        comment.setImages(images);
+            comment.setImages(images);
+        }
 
         return comment;
     }

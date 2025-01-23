@@ -8,6 +8,7 @@ import com.aivle.platform.exception.board.BoardDeletionFailedException;
 import com.aivle.platform.exception.board.BoardNotFoundException;
 import com.aivle.platform.exception.board.BoardUpdateFailedException;
 import com.aivle.platform.service.BoardService;
+import com.aivle.platform.service.FileService;
 import com.aivle.platform.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,7 @@ public class BoardController {
         if (photoFiles != null && !photoFiles.isEmpty()) {
             photoUrls = photoFiles.stream()
                     .filter(file -> !file.isEmpty()) // 빈 파일 필터링
-                    .map(boardService::saveFileAndGetUrl)
+                    .map(FileService::saveFileAndGetUrl)
                     .collect(Collectors.toList());
         }
 
@@ -106,6 +107,7 @@ public class BoardController {
             if (authentication != null) {
                 Member member = memberService.getMemberEmail(authentication.getName());
 
+                model.addAttribute("memberName", member.getMemberName());
                 if (member.getRole() == Role.ADMIN ||
                         Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())
                 ) {
@@ -158,7 +160,7 @@ public class BoardController {
             if (photoFiles != null && !photoFiles.isEmpty()) {
                 photoUrls = photoFiles.stream()
                         .filter(file -> !file.isEmpty()) // 빈 파일 필터링
-                        .map(boardService::saveFileAndGetUrl) // 로컬 디스크 등에 저장 후 URL 반환
+                        .map(FileService::saveFileAndGetUrl) // 로컬 디스크 등에 저장 후 URL 반환
                         .toList();
             }
 

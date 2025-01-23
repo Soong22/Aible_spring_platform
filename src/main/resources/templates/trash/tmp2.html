@@ -1,0 +1,92 @@
+<!-- 댓글 목록 -->
+<div th:each="comment : ${board.comments}" class="mb-3">
+    <div class="p-3 border rounded bg-light">
+        <div class="fw-bold" th:text="${comment.memberName}">작성자</div>
+        <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
+
+        <!-- "답글쓰기" 버튼 -->
+        <span class="ms-2 text-muted">
+                    <a href="javascript:void(0);"
+                       class="reply-btn text-muted text-decoration-none"
+                       th:attr="data-comment-id=${comment.commentId}">답글쓰기
+                    </a>
+                </span>
+
+        <div th:text="${comment.content}">댓글 내용</div>
+
+        <!-- 숨겨진 대댓글 작성 폼 -->
+        <div class="reply-form mt-2" style="display: none;" th:attr="data-comment-id=${comment.commentId}">
+            <form th:action="@{/comment/register}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="parentCommentId" th:value="${comment.commentId}">
+                <input type="hidden" name="boardId" th:value="${board.boardId}">
+
+                <textarea name="content" rows="2" class="form-control mb-2" placeholder="답글을 입력하세요"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm">등록</button>
+                <button type="button" class="btn btn-secondary btn-sm cancel-reply">취소</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- 숨겨진 대댓글 작성 폼 -->
+<div class="reply-form mt-2" style="display: none;" th:attr="data-comment-id=${comment.commentId}">
+    <form th:action="@{/comment/register}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="parentCommentId" th:value="${comment.commentId}">
+        <input type="hidden" name="boardId" th:value="${board.boardId}">
+
+        <textarea name="content" rows="2" class="form-control mb-2" placeholder="답글을 입력하세요"></textarea>
+        <button type="submit" class="btn btn-primary btn-sm">등록</button>
+        <button type="button" class="btn btn-secondary btn-sm cancel-reply">취소</button>
+    </form>
+</div>
+
+
+
+
+
+
+<!-- 댓글 및 대댓글 렌더링 -->
+<div th:each="comment : ${board.comments}">
+    <!-- 최상위 댓글만 렌더링 -->
+    <div th:if="${comment.parentCommentId == null}" class="mb-3">
+        <!-- 댓글 카드 -->
+        <div class="p-3 border rounded bg-light">
+            <div class="fw-bold" th:text="${comment.memberName}">작성자</div>
+            <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
+            <div th:text="${comment.content}">댓글 내용</div>
+
+            <!-- "답글쓰기" 버튼 -->
+            <button class="reply-btn btn btn-link p-0" th:attr="data-comment-id=${comment.commentId}">답글쓰기</button>
+
+            <!-- 대댓글 렌더링 -->
+            <div th:insert="~{this :: renderReplies(comment, board.comments)}"></div>
+
+            <!-- 숨겨진 대댓글 작성 폼 -->
+            <div class="reply-form mt-2" style="display: none;" th:attr="data-comment-id=${comment.commentId}">
+                <form th:action="@{/comment/register}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="parentCommentId" th:value="${comment.commentId}">
+                    <input type="hidden" name="boardId" th:value="${board.boardId}">
+
+                    <textarea name="content" rows="2" class="form-control mb-2" placeholder="답글을 입력하세요"></textarea>
+                    <button type="submit" class="btn btn-primary btn-sm">등록</button>
+                    <button type="button" class="btn btn-secondary btn-sm cancel-reply">취소</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

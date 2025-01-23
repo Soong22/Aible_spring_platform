@@ -26,7 +26,6 @@ public class BoardRequestDto {
     @Size(min = 1, max = 10000, message = "내용은 1자에서 10000자 사이여야 합니다.")
     private String content;
 
-//    @Size(max = 5, message = "이미지는 최대 5개까지 첨부할 수 있습니다.")
     private List<String> imageUrls;
 
     public static Board toEntity(BoardRequestDto request) {

@@ -1,4 +1,4 @@
-package com.aivle.platform.exception.image;
+package com.aivle.platform.exception.file;
 
 public class FileSaveException extends RuntimeException {
 

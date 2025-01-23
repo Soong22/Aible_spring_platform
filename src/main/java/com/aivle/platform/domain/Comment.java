@@ -40,7 +40,7 @@ public class Comment {
     @JoinColumn(name = "comment_id2")
     private Comment parentComment;
 
-    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Image> images = new ArrayList<>();
 
 

@@ -45,4 +45,5 @@ public class MemberRequestDto {
         member.setPoliceUnit(policeUnit);
         return member;
     }
+
 }
