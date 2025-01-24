@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final CustomSessionExpiredStrategy customSessionExpiredStrategy;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -64,6 +65,14 @@ public class SecurityConfig {
         http.logout(logout -> logout
                 .permitAll() // 로그아웃 접근 허용
                 .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트
+        );
+
+        // 중복 로그인 차단을 위한 세션 관리
+        http.sessionManagement(session -> session
+                .maximumSessions(1) // 세션 최대 허용 수: 1
+//                .maxSessionsPreventsLogin(true) // 새로운 로그인 차단
+                .maxSessionsPreventsLogin(false) // 기존 세션 만료, 새로운 로그인 허용
+                .expiredSessionStrategy(customSessionExpiredStrategy) // 커스텀 전략 적용
         );
 
         return http.build();
