@@ -38,7 +38,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                 // 인증 없이 접근 가능한 경로
                 .requestMatchers("/", "/error", "/api/**").permitAll()
-                .requestMatchers("/images/**").permitAll()
+                .requestMatchers("/css/**", "/images/**", "/js/**").permitAll()
                 .requestMatchers("/member/register", "/mypage").permitAll()
 
                 // 인증이 필요한 경로
@@ -64,7 +64,7 @@ public class SecurityConfig {
         // 로그아웃 설정
         http.logout(logout -> logout
                 .permitAll() // 로그아웃 접근 허용
-                .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트
+                .logoutSuccessUrl("/login?logout=true") // 로그아웃 성공 시 리다이렉트
         );
 
         // 중복 로그인 차단을 위한 세션 관리

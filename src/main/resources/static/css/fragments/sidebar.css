@@ -1,0 +1,209 @@
+.team24-sidebar {
+    width: 80px;
+    height: 100%;
+    background-color: #003366;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    z-index: 10000;
+}
+
+/* 첫 번째 메뉴 - 100px 간격(공통) */
+.team24-sidebar ul li:nth-child(1) {
+    margin-top: 70px;
+}
+
+/* 두 번째 ~ 여섯 번째 메뉴 - 30px 간격(공통) */
+.team24-sidebar ul li:nth-child(2),
+.team24-sidebar ul li:nth-child(3),
+.team24-sidebar ul li:nth-child(4),
+.team24-sidebar ul li:nth-child(5),
+.team24-sidebar ul li:nth-child(6) {
+    margin-top: 30px;
+}
+
+/* 사이드바가 열렸을 때 너비 확장 (공통) */
+.team24-sidebar.open {
+    width: 250px;
+    overflow-x: hidden; /* 수평 스크롤 감춤 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+}
+
+/* 기본 UL 스타일 (공통) */
+.team24-sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto; /* 내부 스크롤 */
+    position: relative;
+}
+
+/* 메인 메뉴(li) 스타일 (공통) */
+.team24-sidebar ul li {
+    width: 100%;
+    display: block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+/* 호버/포커스 시 (공통) */
+.team24-sidebar ul li:hover,
+.team24-sidebar ul li:focus-within {
+    background-color: transparent;
+}
+
+/* 메뉴 버튼 (공통) */
+.team24-menu-item > a.team24-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 30px;
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    min-height: 45px;
+}
+
+/* 텍스트 스타일 (공통) */
+.team24-sidebar ul li .team24-text {
+    display: none;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.team24-sidebar.open ul li .team24-text {
+    display: inline-block;
+}
+
+/* 서브메뉴 (공통) */
+.team24-sidebar ul li .team24-sub-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    background-color: #003366;
+    border-radius: 5px;
+    transition: max-height 0.8s ease, opacity 0.8s ease;
+    z-index: 100;
+}
+
+/* 서브메뉴 활성화 (.active) (공통) */
+.team24-sidebar ul li.active .team24-sub-menu {
+    opacity: 1;
+}
+
+/* 서브메뉴 항목 스타일 (공통) */
+.team24-sidebar ul li .team24-sub-menu li {
+    padding: 10px 15px;
+    margin: 0;
+}
+
+/* 서브메뉴 링크 (공통) */
+.team24-sidebar ul li .team24-sub-menu li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    display: block;
+    text-align: left;
+    white-space: nowrap; /* 한 줄로 표시 (자동 줄바꿈 방지) */
+}
+
+/* 서브 메뉴 항목 호버 효과 (공통) */
+.team24-sidebar ul li .team24-sub-menu li a:hover {
+    background-color: transparent;
+    color: #ffe374;
+}
+
+/* toggle 버튼 (공통) */
+.team24-toggle-btn {
+    font-size: 32px;
+    color: #fff;
+    background: none;
+    border: none;
+    position: absolute;
+    top: 12px;
+    left: 21px;
+    cursor: pointer;
+    z-index: 102;
+}
+
+/* 컨테이너 기본 상태 */
+.team24-container {
+    margin-left: 0; /* 초기 값 */
+    transition: margin-left 1s ease; /* 0.3초 동안 margin-left 변경 시 부드럽게 */
+}
+
+.team24-sidebar-footer {
+    margin-left: 0; /* 초기 값 */
+    transition: margin-left 1s ease; /* 0.3초 동안 margin-left 변경 시 부드럽게 */
+}
+
+/* 사이드바가 열렸을 때 헤더/컨테이너 이동 (공통) */
+.team24-sidebar.open ~ .team24-header {
+    left: 250px;
+}
+
+.team24-sidebar.open ~ .team24-container {
+    margin-left: 250px;
+    transition: margin-left 0.5s ease; /* 컨테이너 부드럽게 이동 */
+}
+
+.team24-sidebar.open ~ .team24-sidebar-footer {
+    margin-left: 120px;
+    transition: margin-left 0.5s ease; /* 컨테이너 부드럽게 이동 */
+}
+
+/* 링크 기본 색상 (공통) */
+.team24-sidebar a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* 메인 메뉴 호버 글씨 */
+.team24-sidebar a:hover {
+    color: #ffe374;
+}
+
+/* 메뉴 버튼 글씨 조정 */
+.team24-menu-link {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 활성화된 메뉴 호버 색상 유지 */
+.team24-menu-item.active a.team24-menu-link {
+    color: #ffe374;
+}
+
+/* 활성화된 서브 메뉴 호버 색상 유지 */
+.team24-sidebar ul li.active .team24-sub-menu li a.active {
+    color: #ffe374 !important; /* active 상태로 유지 */
+}
+
+/* ---------------------------------------- */
+/* 메인 사이드바 전용 스타일 (오버라이드)   */
+/* ---------------------------------------- */
+#team24-sidebarMain ul li .team24-sub-menu li a,
+.team24-sidebar-main ul li .team24-sub-menu li a {
+    padding: 5px 43px;
+}
+
+/* ---------------------------------------- */
+/* 관리자 사이드바 전용 스타일 (오버라이드) */
+/* ---------------------------------------- */
+#team24-sidebarAdmin ul li .team24-sub-menu li a,
+.team24-sidebar-admin ul li .team24-sub-menu li a {
+    padding: 5px 43px;
+}
+
+.team24-divider {
+    width: 100%; /* 가로로 꽉 채움 */
+    height: 1px; /* 구분선 두께 */
+    background-color: #b4b4b4; /* 연한 회색 */
+    margin: 10px 0; /* 구분선 위아래 여백 */
+}

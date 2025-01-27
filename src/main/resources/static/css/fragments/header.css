@@ -1,0 +1,89 @@
+.team24-header {
+    border-left: 1px solid #b4b4b4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003366;
+    color: #fff;
+    padding: 10px 20px;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 80px; /* 초기 사이드바 너비 */
+    right: 0;
+    z-index: 20; /* 사이드바보다 높게 설정하여 항상 위에 표시 */
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: left 0.3s ease; /* 좌측 이동 시 부드러운 전환 효과 */
+}
+
+.team24-greeting {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* 아이콘과 텍스트 간의 간격 */
+    margin-left: 20px; /* 전체 `.greeting`을 우측으로 이동 */
+}
+
+/* 이미지 원래 크기 복원 및 수평 중앙 정렬 */
+.team24-greeting img {
+    width: 30px; /* 원래 크기 */
+    height: 34px; /* 원래 크기 */
+    object-fit: contain; /* 비율 유지 */
+    vertical-align: middle; /* 수평 중앙 정렬 */
+}
+
+.team24-btn-outline-light {
+    color: #fff;
+    padding: 5px 10px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    /* border: 1px solid #fff;
+    border-radius: 5px; */
+}
+
+.team24-btn-outline-light:hover {
+    color: #ffe374;
+}
+
+.team24-header a {
+    display: inline-block; /* a 태그의 기본 크기를 줄이기 위해 inline-block 사용 */
+    text-decoration: none; /* 링크 기본 밑줄 제거 */
+}
+
+
+/* 헤더의 버튼 그룹 */
+.team24-header-buttons {
+    float: right; /* 버튼을 우측 정렬 */
+}
+
+.team24-btn-outline-light:hover {
+    background-color: #fff;
+    color: #003366;
+}
+
+/* 버튼 스타일 */
+.team24-custom-button {
+    display: inline-block;
+    padding: 8px 15px;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 14px;
+    text-align: center;
+    margin-left: 10px; /* 버튼 간 여백 */
+    cursor: pointer;
+}
+
+.team24-custom-button:hover {
+    background-color: #0073e6;
+    color: white; /* 마우스 오버 시 색상 반전 */
+}
+
+/* 로그아웃 폼 스타일 */
+.team24-logout-form {
+    display: inline-block;
+    margin: 0;
+}
