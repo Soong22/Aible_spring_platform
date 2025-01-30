@@ -114,5 +114,19 @@
             </ul>
         </li>
 
+        <!-- 회원관리 메뉴 -->
+        <!-- 관리자 메뉴 -->
+        <li class="team24-menu-item" th:if="${isAdmin}">
+            <a href="#" class="team24-menu-link" aria-label="회원관리">
+                <i class="fas fa-clipboard menu-icon" aria-hidden="true" tabindex="0" role="button"
+                   aria-label="게시판"></i>
+                <span class="team24-text">회원 관리</span>
+            </a>
+            <ul class="team24-sub-menu">
+                <li><a href="/members">전체유저조회</a></li>
+                <li><a href="/boards">게시판2</a></li>
+            </ul>
+        </li>
+
     </ul>
 </div>

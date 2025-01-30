@@ -60,7 +60,14 @@ INSERT INTO member (
       (NOW(), 5, 5, NULL, '010-1234-5678', '유저4', 'user4@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
       (NOW(), 6, 6, NULL, '010-1234-5678', '유저5', 'user5@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
       (NOW(), 7, 7, NULL, '010-1234-5678', '유저6', 'user6@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
-      (NOW(), 8, 8, NULL, '010-1234-5678', '유저7', 'user7@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER');
+      (NOW(), 8, 8, NULL, '010-1234-5678', '유저7', 'user7@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 9, 9, NULL, '010-1234-5678', '유저8', 'user8@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 10, 10, NULL, '010-1234-5678', '유저9', 'user9@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 11, 11, NULL, '010-1234-5678', '유저10', 'user10@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 12, 12, NULL, '010-1234-5678', '유저11', 'user11@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 13, 13, NULL, '010-1234-5678', '유저12', 'user12@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 14, 14, NULL, '010-1234-5678', '유저13', 'user13@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER')
+;
 
 
 
@@ -68,9 +75,28 @@ INSERT INTO board (
     view_count, board_id, created_at, member_id, updated_at, title, content, status
 ) VALUES
       -- 한참 지난 작성일 (2024-12-01)
-      (0, NULL, '2024-12-01 10:00:00.000000', 1, NULL, '오래된 작성', '이 글은 한참 전에 작성되었습니다.', 'GENERAL'),
+      (11, 1, '2024-12-01 10:00:00.000000', 1, NULL, '오래된 작성', '이 글은 한참 전에 작성되었습니다.', 'GENERAL'),
       -- 몇 시간 전 작성일 (3시간 전)
-      (0, NULL, DATE_SUB(NOW(), INTERVAL 3 HOUR), 2, NULL, '몇 시간 전 작성', '이 글은 3시간 전에 작성되었습니다.', 'PENDING'),
+      (12, 2, DATE_SUB(NOW(), INTERVAL 3 HOUR), 2, NULL, '몇 시간 전 작성', '이 글은 3시간 전에 작성되었습니다.', 'PENDING'),
       -- 몇 분 전 작성일 (10분 전)
-      (0, NULL, DATE_SUB(NOW(), INTERVAL 10 MINUTE), 3, NULL, '몇 분 전 작성', '이 글은 10분 전에 작성되었습니다.', 'COMPLETED');
+      (13, 3, DATE_SUB(NOW(), INTERVAL 10 MINUTE), 3, NULL, '몇 분 전 작성', '이 글은 10분 전에 작성되었습니다.', 'COMPLETED'),
+      -- 한참 지난 작성일 (2024-12-01)
+      (14, 4, NOW(), 4, NULL, '오래된 작성', '이 글은 한참 전에 작성되었습니다.', 'GENERAL'),
+      -- 몇 시간 전 작성일 (3시간 전)
+      (15, 5, DATE_ADD(NOW(), INTERVAL 3 HOUR), 5, NULL, '몇 시간 후 수정', '이 글은 3시간 후에 수정되었습니다.', 'PENDING'),
+      -- 몇 분 전 작성일 (10분 전)
+      (16, 6, DATE_ADD(NOW(), INTERVAL 10 MINUTE), 1, NULL, '몇 분 후 수전', '이 글은 10분 후에 수정되었습니다.', 'COMPLETED'),
+      -- 한참 지난 작성일 (2024-12-01)
+      (17, 7, NOW(), 2, NULL, '테스트1', '테스트1로 작성되었습니다.', 'GENERAL'),
+      -- 몇 시간 전 작성일 (3시간 전)
+      (18, 8, NOW(), 3, NULL, '테스트2', '테스트2로 작성되었습니다.', 'PENDING'),
+      -- 몇 분 전 작성일 (10분 전)
+      (19, 9, NOW(), 4, NULL, '테스트3', '테스트3로 작성되었습니다.', 'COMPLETED'),
+      -- 한참 지난 작성일 (2024-12-01)
+      (20, 10, NOW(), 5, NULL, '테스트4', '테스트4로 작성되었습니다.', 'GENERAL'),
+      -- 몇 시간 전 작성일 (3시간 전)
+      (21, 11, NOW(), 1, NULL, '테스트5', '테스트5로 작성되었습니다.', 'PENDING'),
+      -- 몇 분 전 작성일 (10분 전)
+      (22, 12, NOW(), 2, NULL, '테스트6', '테스트6로 작성되었습니다.', 'COMPLETED')
+;
 

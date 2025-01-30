@@ -63,7 +63,7 @@ public class MemberController {
     @GetMapping("/members")
     public String getMembers(Model model, Authentication authentication,
                              @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "5") int size) {
+                             @RequestParam(defaultValue = "10") int size) {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
 
@@ -129,12 +129,18 @@ public class MemberController {
             model.addAttribute("response", response);
             model.addAttribute("request", new MemberRequestDto());
 
-            PoliceUnit policeUnit = policeUnitService.getPoliceUnitById(response.getPoliceUnitId());
-            if (policeUnit != null) {
+            if (response.getPoliceUnitId() != null) {
+                PoliceUnit policeUnit = policeUnitService.getPoliceUnitById(response.getPoliceUnitId());
+
                 model.addAttribute("selectedPoliceUnitId", policeUnit.getPoliceUnitId());
                 model.addAttribute("selectedDeptName", policeUnit.getDeptName());
                 model.addAttribute("selectedStationName", policeUnit.getStationName());
                 model.addAttribute("selectedPoliceUnitName", policeUnit.getPoliceUnitName());
+            } else {
+                model.addAttribute("selectedPoliceUnitId", null);
+                model.addAttribute("selectedDeptName", null);
+                model.addAttribute("selectedStationName", null);
+                model.addAttribute("selectedPoliceUnitName", null);
             }
 
             return "member/edit";

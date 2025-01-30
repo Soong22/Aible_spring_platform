@@ -66,12 +66,12 @@ public class ApiController {
     public ResponseEntity<PoliceUnit> getPoliceUnitByMemberId(@PathVariable Long memberId) {
         MemberResponseDto response = memberService.getMemberById(memberId);
 
-        PoliceUnit policeUnit = policeUnitService.getPoliceUnitById(response.getPoliceUnitId());
-
-        if (policeUnit == null) {
-            return ResponseEntity.notFound().build();
+        if (response.getPoliceUnitId() != null) {
+            PoliceUnit policeUnit = policeUnitService.getPoliceUnitById(response.getPoliceUnitId());
+            return ResponseEntity.ok(policeUnit);
+        } else {
+            return ResponseEntity.noContent().build(); // 🔥 404 → 204 변경
         }
-        return ResponseEntity.ok(policeUnit);
     }
 
 }

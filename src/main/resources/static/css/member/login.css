@@ -2,13 +2,16 @@
     width: 100%;
     max-width: 400px;
     padding: 25px;
-    background: linear-gradient(145deg, #ffffff, #f2f2f2); /* 부드러운 흰색 그라데이션 */
+    /*background: linear-gradient(145deg, #ffffff, #f2f2f2); !* 부드러운 흰색 그라데이션 *!*/
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* 더 깊은 그림자 */
     text-align: center;
     /* 중앙 정렬 */
     /*align-items: center;*/
     margin: 200px auto auto;
+
+    background-color: white;
+    border: 1px solid #e9ecef;
 }
 
 /* 로그인 폼 */
