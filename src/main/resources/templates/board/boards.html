@@ -126,6 +126,39 @@
             color: white;
         }
 
+        /* 페이지 버튼 호버 시 색상 변경 */
+        .pagination .page-link:hover {
+            background-color: #0073e6; /* 조금 더 밝은 파란색 */
+            border-color: #0073e6;
+            color: white;
+        }
+
+
+        .pagination-container {
+            position: relative;
+            display: flex;
+            justify-content: center; /* 페이지네이션을 중앙에 둠 */
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        /* 작성하기 버튼을 왼쪽 끝에 고정 */
+        .btn-create {
+            position: absolute;
+            left: 0;
+            background-color: #003366;
+            color: white;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .btn-create:hover {
+            background-color: #0073e6;
+            color: white;
+        }
+
     </style>
 
     <script>
@@ -215,25 +248,34 @@
 
         </div>
 
-        <!-- 페이징 -->
-        <nav th:if="${boards.totalPages > 1}" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${boards.hasPrevious() ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{/boards(page=${boards.number - 1})}" aria-label="이전">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, boards.totalPages - 1)}"
-                    th:classappend="${pageNum == boards.number ? 'active' : ''}">
-                    <a class="page-link" th:href="@{/boards(page=${pageNum})}" th:text="${pageNum + 1}"></a>
-                </li>
-                <li class="page-item" th:classappend="${boards.hasNext() ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{/boards(page=${boards.number + 1})}" aria-label="다음">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <!-- 페이징 & 작성하기 버튼 컨테이너 -->
+        <div class="pagination-container">
+            <!-- 작성하기 버튼 -->
+            <a href="/board/register" class="btn btn-create">작성하기</a>
+
+            <!-- 기존 페이지네이션 -->
+            <nav th:if="${boards.totalPages > 1}">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${boards.hasPrevious() ? '' : 'disabled'}">
+                        <a class="page-link" th:href="@{/boards(page=${boards.number - 1})}" aria-label="이전">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, boards.totalPages - 1)}"
+                        th:classappend="${pageNum == boards.number ? 'active' : ''}">
+                        <a class="page-link" th:href="@{/boards(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${boards.hasNext() ? '' : 'disabled'}">
+                        <a class="page-link" th:href="@{/boards(page=${boards.number + 1})}" aria-label="다음">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
+
     </div>
 </div>
 

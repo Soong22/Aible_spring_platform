@@ -102,3 +102,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (isDarkMode) {
+        document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+        document.documentElement.setAttribute("data-theme", "light");
+    }
+});
+

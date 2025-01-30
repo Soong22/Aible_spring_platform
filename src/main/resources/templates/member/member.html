@@ -85,15 +85,12 @@
         /* 버튼 컨테이너 */
         .button-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* 좌측(수정+탈퇴) + 우측(목록) */
             padding-top: 20px;
         }
 
         /* 버튼 크기 조정 (폭 2배, 높이 50% 증가) */
         .btn-primary, .btn-success, .btn-danger {
-            background-color: #003366 !important;
-            border-color: #003366 !important;
-            color: white !important;
             width: 100px;
             height: 40px;
             font-size: 1.2rem;
@@ -102,17 +99,24 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            color: white !important;
         }
 
-        /* 삭제 버튼만 빨간색 */
+        /* 수정 버튼 (초록색) */
+        .btn-success {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+
+        .btn-success:hover {
+            background-color: #218838 !important;
+            border-color: #1e7e34 !important;
+        }
+
+        /* 탈퇴 버튼 (빨간색) */
         .btn-danger {
             background-color: #dc3545 !important;
             border-color: #dc3545 !important;
-        }
-
-        .btn-primary:hover, .btn-success:hover {
-            background-color: #002855 !important;
-            border-color: #002855 !important;
         }
 
         .btn-danger:hover {
@@ -120,15 +124,27 @@
             border-color: #b52a37 !important;
         }
 
-        /* 버튼 정렬 */
-        .left-buttons {
-            align-items: center;
+        /* 목록 버튼 (파란색) */
+        .btn-primary {
+            background-color: #003366 !important;
+            border-color: #003366 !important;
         }
 
-        .right-buttons {
+        .btn-primary:hover {
+            background-color: #0073e6 !important;
+            border-color: #0073e6 !important;
+        }
+
+        /* 버튼 정렬 */
+        .left-buttons {
             display: flex;
             gap: 15px;
         }
+
+        .right-buttons {
+            align-items: center;
+        }
+
 
     </style>
 
@@ -200,9 +216,8 @@
 
         <!-- 버튼 -->
         <div class="button-container">
-            <button class="btn btn-primary btn-sm left-buttons" th:onclick="|location.href='/members'|">목록</button>
-
-            <div class="right-buttons">
+            <!-- 좌측: 수정 + 탈퇴 버튼 -->
+            <div class="left-buttons">
                 <button class="btn btn-success btn-sm"
                         th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정
                 </button>
@@ -211,7 +226,12 @@
                     <button type="submit" class="btn btn-danger btn-sm">탈퇴</button>
                 </form>
             </div>
+
+            <!-- 우측: 목록 버튼 -->
+            <button class="btn btn-primary btn-sm right-buttons" th:onclick="|location.href='/members'|">목록</button>
         </div>
+
+
     </div>
 </div>
 
