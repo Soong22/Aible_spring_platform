@@ -49,9 +49,9 @@ public class FileService {
     }
 
     //    @Scheduled(cron = "0 0 3 * * ?") // 매일 새벽 3시에 실행
-    @Scheduled(fixedRate = 10000) // 10초마다 실행 (밀리초 단위)
+    @Scheduled(fixedRate = 100000) // 100초마다 실행 (밀리초 단위)
     public void cleanUpUnusedFiles() {
-        log.info("10초마다 불필요한 사진 삭제 서비스 실행 중: {}", LocalDateTime.now());
+        log.info("100초마다 불필요한 사진 삭제 서비스 실행 중: {}", LocalDateTime.now());
         String saveDir = new File("src/main/resources/static/uploads").getAbsolutePath() + "/";
         File directory = new File(saveDir);
 

@@ -381,7 +381,7 @@
     </script>
     <script>
         function scrollToComments() {
-            const commentSection = document.querySelector('.comments-section');
+            const commentSection = document.querySelector('.btn');
             if (commentSection) {
                 commentSection.scrollIntoView({behavior: 'smooth'});
             }
@@ -451,7 +451,8 @@
                 <button class="btn btn-edit" th:if="${isTrue}"
                         th:onclick="|location.href='/board/edit/' + ${board.boardId}|">수정
                 </button>
-                <form th:action="@{/board/delete/{boardId}(boardId=${board.boardId})}" method="post"
+
+                <form th:if="${isTrue}" th:action="@{/board/delete/{boardId}(boardId=${board.boardId})}" method="post"
                       onsubmit="return confirm('정말로 삭제하시겠습니까?');" class="d-inline">
                     <button type="submit" class="btn btn-delete">삭제</button>
                 </form>
@@ -459,9 +460,7 @@
 
             <!-- 우측: 목록 버튼 -->
             <button class="btn btn-list" onclick="location.href='/boards'">목록</button>
-
         </div>
-
 
         <hr/>
 
@@ -509,7 +508,11 @@
                     </div>
 
                     <!-- 우측: 목록 버튼 -->
-                    <button class="btn btn-list" onclick="location.href='/boards'">목록</button>
+<!--                    <button class="btn btn-list" onclick="location.href='/boards'">목록</button>-->
+
+                    <!-- 우측: 목록 버튼 -->
+                    <button type="button" class="btn btn-list" onclick="location.href='/boards'">목록</button>
+
                 </div>
 
             </form>

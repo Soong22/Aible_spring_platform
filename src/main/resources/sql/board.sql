@@ -6,6 +6,7 @@ DESC board;
 
 DELETE FROM board;
 
+DELETE FROM comment;
 
 DELETE FROM image;
 
