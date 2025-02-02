@@ -12,7 +12,6 @@
     <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
 
     <style>
@@ -508,7 +507,7 @@
                     </div>
 
                     <!-- 우측: 목록 버튼 -->
-<!--                    <button class="btn btn-list" onclick="location.href='/boards'">목록</button>-->
+                    <!--                    <button class="btn btn-list" onclick="location.href='/boards'">목록</button>-->
 
                     <!-- 우측: 목록 버튼 -->
                     <button type="button" class="btn btn-list" onclick="location.href='/boards'">목록</button>
@@ -526,15 +525,30 @@
         <div th:if="${comment != null}">
             <div class="p-3 border rounded bg-light mb-2">
                 <div class="fw-bold" th:text="${comment.memberName}">작성자</div>
+                <!--여기에 소속 표시하기-->
                 <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
 
                 <!-- "답글쓰기" 버튼 -->
                 <span class="ms-2 text-muted">
-                <a href="javascript:void(0);"
-                   class="reply-btn text-muted text-decoration-none"
-                   th:attr="data-comment-id=${comment.commentId}">답글쓰기
-                </a>
-            </span>
+                    <a href="javascript:void(0);"
+                       class="reply-btn text-muted text-decoration-none"
+                       th:attr="data-comment-id=${comment.commentId}">답글쓰기
+                    </a>
+
+                    <!-- 현재 사용자가 댓글 작성자인 경우에만 "수정" 및 "삭제" 버튼 표시 -->
+                    <span th:if="${currentMemberId} == ${comment.memberId}">
+                        |
+                        <a href="javascript:void(0);"
+                           class="edit-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}">수정
+                        </a>
+                        |
+                        <a href="javascript:void(0);"
+                           class="delete-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}">삭제
+                        </a>
+                    </span>
+                </span>
 
                 <div th:text="${comment.content}">댓글 내용</div>
 
@@ -649,11 +663,11 @@
                 if (files.length > 5) {
                     alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
                     photoFilesInput.value = ""; // 선택된 파일 초기화
-                    previewList.innerHTML = "";
+                    // previewList.innerHTML = "";
                     return;
                 }
 
-                previewList.innerHTML = ""; // 기존 미리보기 제거
+                // previewList.innerHTML = ""; // 기존 미리보기 제거
 
                 files.forEach(file => {
                     const reader = new FileReader();
@@ -684,13 +698,13 @@
                     alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
                     this.value = ""; // 선택된 파일 초기화
                     if (previewList2) {
-                        previewList2.innerHTML = "";
+                        // previewList2.innerHTML = "";
                     }
                     return;
                 }
 
                 if (previewList2) {
-                    previewList2.innerHTML = ""; // 기존 미리보기 제거
+                    // previewList2.innerHTML = ""; // 기존 미리보기 제거
                 }
 
                 files.forEach(file => {

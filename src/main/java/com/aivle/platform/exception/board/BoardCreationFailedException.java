@@ -4,7 +4,7 @@ public class BoardCreationFailedException extends RuntimeException {
 
     // 메세지 전달을 위한 기본 생성자
     public BoardCreationFailedException() {
-        super("게시판을 찾을 수 없습니다.");
+        super("게시글 작성에 실패 하였습니다.");
     }
 
     // 메세지 전달을 위한 생성자

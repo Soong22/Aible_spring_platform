@@ -202,51 +202,94 @@
     document.addEventListener("DOMContentLoaded", function () {
         const photoFilesInput = document.getElementById("photoFiles");
         const previewList = document.getElementById("previewList");
-        const boardId = document.body.getAttribute("data-board-id"); // boardId 값 가져오기
+        const boardId = document.body.getAttribute("data-board-id"); // ✅ 현재 게시글 ID 가져오기
 
-        // 기존 이미지 수 확인
-        const existingImageCount = document.querySelectorAll('#previewList .preview-item').length;
+        let selectedFiles = []; // ✅ 새로 추가된 파일 배열
+        let existingFiles = []; // ✅ 기존 이미지 배열
 
-        // 새 파일 선택 시 이미지 미리보기 추가
+        // ✅ 기존 이미지 목록을 가져와 배열로 저장
+        document.querySelectorAll('#previewList .preview-item input[name="existingImageUrls"]').forEach(input => {
+            existingFiles.push(input.value);
+        });
+
+        // ✅ 페이지 로드 후 강제 `updatePreview()` 실행 (기존 이미지와 DOM 동기화)
+        updatePreview();
+
+        // ✅ 새 파일 선택 시 기존 이미지 개수를 고려하여 미리보기 추가
         photoFilesInput.addEventListener("change", function () {
-            const files = Array.from(photoFilesInput.files);
-            const totalImages = existingImageCount + files.length;
+            const newFiles = Array.from(photoFilesInput.files);
+            const totalImages = existingFiles.length + selectedFiles.length + newFiles.length;
 
-            // 이미지가 5장 초과 시 경고 메시지 표시
+            // ✅ 기존 이미지 + 새 이미지 포함해서 5장 초과 여부 확인
             if (totalImages > 5) {
                 alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
-                photoFilesInput.value = ""; // 선택된 파일 초기화
                 return;
             }
 
-            files.forEach(file => {
+            // ✅ 새 파일을 배열에 추가
+            selectedFiles = selectedFiles.concat(newFiles);
+            updatePreview();
+        });
+
+        function updatePreview() {
+            previewList.innerHTML = ""; // ✅ 기존 미리보기 초기화
+
+            // ✅ 기존 이미지 렌더링 유지 (개별 삭제 가능)
+            existingFiles.forEach((file, index) => {
+                const previewItem = document.createElement("div");
+                previewItem.classList.add("preview-item");
+                previewItem.innerHTML = `
+                <img src="${file}" alt="기존 이미지">
+                <input type="hidden" name="existingImageUrls" value="${file}">
+                <button type="button" onclick="removeExistingImage(${index})">X</button>
+            `;
+                previewList.appendChild(previewItem);
+            });
+
+            // ✅ 새 이미지 렌더링
+            selectedFiles.forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const previewItem = document.createElement("div");
                     previewItem.classList.add("preview-item");
                     previewItem.innerHTML = `
-            <img src="${e.target.result}" alt="새 이미지">
-            <button type="button" onclick="removePreview(this)">X</button>
-          `;
+                    <img src="${e.target.result}" alt="새 이미지">
+                    <button type="button" onclick="removePreview(${index})">X</button>
+                `;
                     previewList.appendChild(previewItem);
                 };
                 reader.readAsDataURL(file);
             });
-        });
 
-        // 미리보기에서 이미지 제거
-        window.removePreview = function (button) {
-            const previewItem = button.parentElement;
-            previewList.removeChild(previewItem);
+            updateFileInput();
+        }
+
+        function updateFileInput() {
+            // ✅ `DataTransfer` 객체를 사용해 `input` 값을 갱신 (새로운 파일 유지)
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            photoFilesInput.files = dataTransfer.files;
+        }
+
+        // ✅ 기존 이미지 개별 삭제 처리 (초기 동기화 문제 해결)
+        window.removeExistingImage = function (index) {
+            existingFiles.splice(index, 1); // ✅ 배열에서 해당 이미지 즉시 삭제
+            updatePreview(); // ✅ 미리보기 업데이트
+        };
+
+        // ✅ 새 이미지 삭제 처리
+        window.removePreview = function (index) {
+            selectedFiles.splice(index, 1); // ✅ 배열에서 해당 파일 제거
+            updatePreview();
         };
 
         window.cancelRegistration = function () {
             if (confirm("작성을 취소하시겠습니까?")) {
-                window.location.href = "/board/" + boardId;  // boardId를 포함한 URL로 이동
+                window.location.href = "/board/" + boardId; // ✅ 수정 취소 시 해당 게시글로 이동
             }
         };
-
     });
+
 </script>
 </body>
 </html>

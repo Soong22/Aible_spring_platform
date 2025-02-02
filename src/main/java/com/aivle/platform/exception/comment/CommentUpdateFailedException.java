@@ -4,7 +4,7 @@ public class CommentUpdateFailedException extends RuntimeException {
 
     // 메세지 전달을 위한 기본 생성자
     public CommentUpdateFailedException() {
-        super("게시판 수정에 실패하였습니다.");
+        super("댓글 수정에 실패하였습니다.");
     }
 
     // 메세지 전달을 위한 생성자

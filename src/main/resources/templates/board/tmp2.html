@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${board.title} + ' : 게시판'">게시글</title>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- 프로젝트 내 CSS (필요 시 추가) -->
+    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
+
+    <style>
+        /* ===== 공통 레이아웃 ===== */
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .board-container {
+            max-width: 800px;
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== 게시글 상단 ===== */
+        .board-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .board-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #dee2e6;
+            object-fit: cover;
+        }
+
+        .author-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .author-meta {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .board-meta-container {
+            display: flex;
+            justify-content: space-between; /* ✅ 왼쪽(작성일+조회) + 오른쪽(댓글 개수) */
+            align-items: center; /* ✅ 세로 정렬 */
+        }
+
+        .board-meta {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0; /* ✅ 줄바꿈 방지 */
+        }
+
+        .edited-text {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .comment-count {
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+
+            /*주석여부체크*/
+            justify-content: flex-end; /* ✅ 오른쪽 정렬 */
+        }
+
+        .comment-count:hover {
+            text-decoration: underline; /* ✅ 마우스 오버 시 강조 */
+        }
+
+        /* ===== 게시글 본문 ===== */
+        .board-content {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-top: 20px;
+            white-space: pre-wrap; /* 줄바꿈 및 공백 유지 */
+            word-wrap: break-word; /* 긴 단어를 줄바꿈 */
+            overflow-wrap: break-word;
+        }
+
+        .board-images {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+
+            /*주석여부체크*/
+            justify-content: flex-start; /* 이미지를 중앙 정렬 */
+        }
+
+        .board-image {
+            width: 50%; /* 폼의 폭의 3/4 */
+            height: 50%; /* 폭과 동일한 높이 */
+            object-fit: cover; /* 이미지 비율 유지 */
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== 게시글 하단 버튼 ===== */
+        .board-buttons {
+            display: flex;
+            justify-content: space-between;
+
+            /*주석여부체크*/
+            align-items: center;
+
+            margin-top: 20px;
+        }
+
+        .btn-edit {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-list {
+            background-color: #003366;
+            color: white;
+        }
+
+        .btn-submit {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        /* ===== 댓글 & 대댓글 ===== */
+        .comments-section {
+            margin-top: 20px;
+        }
+
+        .comment-card {
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            background-color: #f8f9fa;
+            margin-bottom: 1rem;
+        }
+
+        .comment-view { /* 보여주는 영역 */
+        }
+
+        .comment-edit-form { /* 수정폼 영역 */
+            display: none;
+        }
+
+        .comment-images {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .comment-image {
+            width: 30%;
+            height: 30%;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== 이미지 미리보기 (댓글 작성/수정용) ===== */
+        #previewList {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .preview-item button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 12px;
+            color: white;
+            background-color: #dc3545;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 대댓글 미리보기 */
+        .preview-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .preview-list .preview-item {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .preview-list .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .preview-list .preview-item button {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 10px;
+            color: white;
+            background-color: #dc3545;
+            border: none;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== 모달(이미지 확대) ===== */
+        .image-modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        // 뒤로가기 시 강제 새로고침
+        if (performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
+            location.reload(true);
+        }
+
+        function scrollToComments() {
+            const commentSection = document.querySelector('.btn');
+            if (commentSection) {
+                commentSection.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+    </script>
+</head>
+<body>
+
+<!-- CSRF 토큰 -->
+<input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
+
+<!-- 사이드바 (원하는 경우 주석 처리 가능) -->
+<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
+
+<!-- 헤더 (원하는 경우 주석 처리 가능) -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<div class="team24-container">
+    <div class="board-container">
+        <!-- 게시글 정보 -->
+        <div class="board-header">
+            <h1 class="board-title" th:text="${board.title}">게시글 제목</h1>
+            <div class="author-info">
+                <img src="/images/noImage.png" class="author-image" alt="프로필 이미지">
+                <div>
+                    <div class="author-name" th:text="${board.memberName}">작성자</div>
+                    <div class="author-meta">
+                        <span th:text="${board.policeUnitName} + ' ' + ${board.policeUnitType}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="board-meta-container">
+                <div class="board-meta">
+                    <span th:text="${#temporals.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
+                    <span th:if="${board.updatedAt != null}" class="edited-text">(수정됨)</span>
+                    · 조회 <span th:text="${board.viewCount}"></span>
+                </div>
+                <div class="comment-count" onclick="scrollToComments()">
+                    💬 댓글 <span th:text="${board.comments.size()}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 게시글 본문 -->
+        <div class="board-content"
+             th:utext="${#strings.replace(board.content, '\n', '<br>')}">
+            게시글 내용
+        </div>
+        <div class="board-images" th:if="${board.imageUrls.size() > 0}">
+            <img th:each="imageUrl : ${board.imageUrls}"
+                 th:src="${imageUrl}"
+                 alt="게시글 이미지"
+                 class="board-image">
+        </div>
+
+        <!-- 수정/삭제 버튼 -->
+        <div class="board-buttons">
+            <div>
+                <button class="btn btn-edit" th:if="${isTrue}"
+                        th:onclick="|location.href='/board/edit/' + ${board.boardId}|">
+                    수정
+                </button>
+                <form th:if="${isTrue}"
+                      th:action="@{/board/delete/{boardId}(boardId=${board.boardId})}"
+                      method="post"
+                      onsubmit="return confirm('정말로 삭제하시겠습니까?');"
+                      class="d-inline">
+                    <button type="submit" class="btn btn-delete">삭제</button>
+                </form>
+            </div>
+            <button class="btn btn-list"
+                    onclick="location.href='/boards'">목록
+            </button>
+        </div>
+
+        <hr/>
+
+        <!-- 댓글 영역 -->
+        <div class="mt-4">
+            <div class="comments-section mt-4">
+                <h3>댓글 목록</h3>
+                <!-- 루트 댓글들 -->
+                <div th:each="comment : ${board.comments}">
+                    <div th:insert="~{::commentFragment(
+              comment=${comment},
+              boardId=${board.boardId},
+              memberName=${memberName},
+              currentMemberId=${currentMemberId}
+          )}"></div>
+                </div>
+            </div>
+
+            <!-- 새 댓글 작성 폼 -->
+            <form th:action="@{/comment/register}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="mb-3">
+                <div class="mb-3">
+                    <label for="content" class="form-label"
+                           th:text="'작성자: ' + ${memberName}">작성자: ~</label>
+                    <textarea id="content" name="content" rows="3"
+                              class="form-control"
+                              required minlength="1" maxlength="1000"></textarea>
+                </div>
+                <input type="hidden" id="boardId" name="boardId"
+                       th:value="${board.boardId}"/>
+
+                <div id="previewList" class="mb-3"></div>
+
+                <input type="file" id="photoFiles" name="photoFiles"
+                       multiple style="display:none;">
+
+                <div class="comment-buttons">
+                    <div class="left-group">
+                        <button type="button" class="btn p-1 border"
+                                onclick="document.getElementById('photoFiles').click()">
+                            <img src="/images/camera.png"
+                                 alt="카메라아이콘"
+                                 style="width:30px; height:30px;">
+                        </button>
+                        <button type="submit" class="btn btn-submit">등록</button>
+                    </div>
+                    <button type="button" class="btn btn-list"
+                            onclick="location.href='/boards'">목록
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ▼ 댓글 프래그먼트 (재귀) ▼ -->
+    <div th:fragment="commentFragment(comment, boardId, memberName, currentMemberId)">
+        <div th:if="${comment != null}">
+            <!-- 부모 댓글을 표시하는 영역(카드) -->
+            <div class="comment-card"><!-- 부모 댓글 카드 시작 -->
+                <!-- ▼ 댓글 보기 영역 ▼ -->
+                <div class="comment-view" th:attr="data-comment-id=${comment.commentId}">
+                    <div class="fw-bold">
+                        <span th:text="${comment.memberName}">작성자</span>
+                    </div>
+                    <span class="text-muted"
+                          th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}">
+                    2025.01.01 12:00
+                </span>
+
+                    <span class="ms-2 text-muted">
+                    <a href="javascript:void(0);"
+                       class="reply-btn text-muted text-decoration-none"
+                       th:attr="data-comment-id=${comment.commentId}">답글쓰기
+                    </a>
+
+                    <span th:if="${currentMemberId} == ${comment.memberId}">
+                        |
+                        <a href="javascript:void(0);"
+                           class="edit-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}">수정
+                        </a>
+                        |
+                        <a href="javascript:void(0);"
+                           class="delete-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
+                        </a>
+                    </span>
+                </span>
+
+                    <div th:text="${comment.content}">댓글 내용</div>
+                    <div th:if="${comment.imageUrls.size() > 0}">
+                        <div class="comment-images">
+                            <img th:each="imageUrl : ${comment.imageUrls}"
+                                 th:src="${imageUrl}"
+                                 alt="댓글 이미지"
+                                 class="comment-image">
+                        </div>
+                    </div>
+                </div>
+                <!-- ▼ 댓글 수정 폼 ▼ -->
+                <div class="comment-edit-form"
+                     th:attr="data-comment-id=${comment.commentId}"
+                     style="display:none;">
+                    <form th:action="@{/comment/edit/{commentId}(commentId=${comment.commentId})}"
+                          method="post"
+                          enctype="multipart/form-data"
+                          class="mb-3">
+                        <div class="mb-3">
+                            <label th:for="'editContent-' + ${comment.commentId}"
+                                   class="form-label"
+                                   th:text="'작성자: ' + ${memberName}">
+                            </label>
+                            <textarea th:id="'editContent-' + ${comment.commentId}"
+                                      name="content"
+                                      rows="3"
+                                      class="form-control"
+                                      required minlength="1" maxlength="1000"
+                                      th:text="${comment.content}"></textarea>
+                        </div>
+
+                        <input type="hidden" name="boardId" th:value="${boardId}"/>
+
+                        <!-- 기존 이미지 표시 -->
+                        <div th:if="${comment.imageUrls.size() > 0}" class="mb-3">
+                            <label class="form-label">기존 이미지:</label>
+                            <div class="comment-images">
+                                <img th:each="imageUrl : ${comment.imageUrls}"
+                                     th:src="${imageUrl}"
+                                     alt="댓글 이미지"
+                                     class="comment-image">
+                            </div>
+                            <input type="hidden"
+                                   name="existingImageUrls"
+                                   th:value="${comment.imageUrls}"/>
+                        </div>
+
+                        <!-- 새 이미지 업로드 -->
+                        <div class="mb-3">
+                            <label class="form-label">새 이미지 업로드:</label>
+                            <div th:id="'previewEditList-' + ${comment.commentId}"
+                                 class="preview-list mb-3">
+                            </div>
+                            <input type="file"
+                                   th:id="'editPhotoFiles-' + ${comment.commentId}"
+                                   name="photoFiles"
+                                   multiple
+                                   style="display:none;">
+                            <button type="button"
+                                    class="btn p-1 border"
+                                    th:onclick="'document.getElementById(\'editPhotoFiles-' + ${comment.commentId} + '\').click()'">
+                                <img src="/images/camera.png"
+                                     alt="카메라아이콘"
+                                     style="width:30px; height:30px;">
+                            </button>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-sm">수정</button>
+                        <button type="button" class="btn btn-secondary btn-sm cancel-edit">취소</button>
+                    </form>
+                </div>
+
+                <!-- 숨겨진 대댓글 작성 폼 -->
+                <div class="reply-form mt-2" style="display: none;" th:attr="data-comment-id=${comment.commentId}">
+                    <form th:action="@{/comment/register}" method="post" enctype="multipart/form-data" class="mb-3">
+                        <!-- 내용 -->
+                        <div class="mb-3">
+                            <label th:for="'replyContent-' + ${comment.commentId}" class="form-label"
+                                   th:text="'작성자: ' + ${memberName}">
+                            </label>
+                            <textarea th:id="'replyContent-' + ${comment.commentId}" name="content" rows="3"
+                                      class="form-control" required minlength="1" maxlength="1000">
+                            </textarea>
+                        </div>
+
+                        <!-- 게시글 ID를 함께 전송 -->
+                        <input type="hidden" name="boardId" th:value="${boardId}"/>
+
+                        <!-- 부모 댓글 ID를 전송 -->
+                        <input type="hidden" name="parentCommentId" th:value="${comment.commentId}"/>
+
+                        <!-- 이미지 미리보기 -->
+                        <div th:id="'previewList2-' + ${comment.commentId}" class="preview-list mb-3"></div>
+
+                        <!-- 숨겨진 파일 입력 -->
+                        <input type="file" th:id="'photoFiles2-' + ${comment.commentId}" name="photoFiles" multiple
+                               style="display:none;" class="reply-photoFiles"
+                               th:attr="data-comment-id=${comment.commentId}"/>
+
+                        <!-- 카메라 아이콘 버튼 -->
+                        <button type="button" class="btn p-1 border"
+                                th:onclick="'document.getElementById(\'photoFiles2-' + ${comment.commentId} + '\').click()'">
+                            <img src="/images/camera.png" alt="카메라아이콘"
+                                 style="width:30px; height:30px;">
+                        </button>
+
+                        <button type="submit" class="btn btn-primary btn-sm">등록</button>
+                        <button type="button" class="btn btn-secondary btn-sm cancel-reply">취소</button>
+                    </form>
+
+                </div>
+            </div><!-- 부모 댓글 카드 끝 -->
+
+            <!-- ▼ 대댓글 목록 (각각 독립된 카드) ▼
+                 ms-4 같은 클래스가 있으면 '들여쓰기' 형태로 보이고,
+                 없으면 전부 같은 레벨로 보입니다. -->
+            <div th:if="${comment.children.size() > 0}">
+                <div th:each="child : ${comment.children}">
+                    <!-- 자식도 똑같이 commentFragment를 호출해 '별도 카드'로 렌더링 -->
+                    <div th:insert="~{::commentFragment(
+                    comment=${child},
+                    boardId=${boardId},
+                    memberName=${memberName},
+                    currentMemberId=${currentMemberId}
+                )}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 아래 추가 공간 -->
+<div class="team24-footer-padding"></div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- JavaScript -->
+<script src="/js/fragments/sidebar.js"></script>
+<script src="/js/fragments/scrollbar.js"></script>
+
+<script>
+    // 1) 뒤로가기 시 강제 새로고침 (이미 있음)
+    // 2) 댓글 작성 폼 검증
+    document.addEventListener('DOMContentLoaded', function () {
+        const commentForms = document.querySelectorAll('form[action="/comment/register"]');
+        commentForms.forEach(form => {
+            const textarea = form.querySelector('textarea[name="content"]');
+            if (!textarea) return;
+            form.addEventListener('submit', function (e) {
+                const content = textarea.value;
+                if (content.replace(/\s/g, '').length < 1) {
+                    alert('공백 제외 1자 이상 작성해야 합니다.');
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+
+    // 3) 새 댓글 작성 시 이미지 미리보기
+    document.addEventListener('DOMContentLoaded', function () {
+        const photoFilesInput = document.getElementById("photoFiles");
+        const previewList = document.getElementById("previewList");
+        if (photoFilesInput && previewList) {
+            photoFilesInput.addEventListener("change", function () {
+                const files = Array.from(photoFilesInput.files);
+                if (files.length > 5) {
+                    alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
+                    photoFilesInput.value = "";
+                    previewList.innerHTML = "";
+                    return;
+                }
+                previewList.innerHTML = "";
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const div = document.createElement("div");
+                        div.classList.add("preview-item");
+                        div.innerHTML = `
+                        <img src="${e.target.result}" alt="새 이미지">
+                        <button type="button" onclick="removePreview(this)">X</button>
+                      `;
+                        previewList.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+
+        // 대댓글(답글) 이미지 업로드 미리보기 (클래스 reply-photoFiles)
+        document.querySelectorAll('.reply-photoFiles').forEach(fileInput => {
+            fileInput.addEventListener('change', function () {
+                const commentId = this.getAttribute('data-comment-id');
+                const previewList2 = document.getElementById(`previewList2-${commentId}`);
+                const files = Array.from(this.files);
+                if (files.length > 5) {
+                    alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
+                    this.value = "";
+                    if (previewList2) previewList2.innerHTML = "";
+                    return;
+                }
+                if (previewList2) previewList2.innerHTML = "";
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const div = document.createElement("div");
+                        div.classList.add("preview-item");
+                        div.innerHTML = `
+                        <img src="${e.target.result}" alt="새 이미지">
+                        <button type="button" onclick="removePreview(this)">X</button>
+                      `;
+                        previewList2.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        });
+
+        // "답글쓰기" 버튼 -> 해당 댓글의 .reply-form 열기
+        document.querySelectorAll('.reply-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const cid = this.getAttribute('data-comment-id');
+                const replyForm = document.querySelector(`.reply-form[data-comment-id="${cid}"]`);
+                document.querySelectorAll('.reply-form').forEach(f => f.style.display = 'none');
+                if (replyForm) replyForm.style.display = 'block';
+            });
+        });
+
+        // "수정" 버튼 -> 보기 영역 숨기고, 수정 폼 열기
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const cid = this.getAttribute('data-comment-id');
+                const viewDiv = document.querySelector(`.comment-view[data-comment-id="${cid}"]`);
+                const editDiv = document.querySelector(`.comment-edit-form[data-comment-id="${cid}"]`);
+                if (viewDiv && editDiv) {
+                    viewDiv.style.display = 'none';
+                    editDiv.style.display = 'block';
+                }
+            });
+        });
+
+        // "취소" 버튼 클릭 이벤트
+        document.querySelectorAll('.cancel-reply').forEach(button => {
+            button.addEventListener('click', function () {
+                const replyForm = this.closest('.reply-form');
+                if (replyForm) {
+                    replyForm.style.display = 'none'; // 폼 숨기기
+                }
+            });
+        });
+
+        // 수정 폼에서 "취소" -> 원상 복귀
+        document.querySelectorAll('.cancel-edit').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const editForm = this.closest('.comment-edit-form');
+                if (editForm) {
+                    const cid = editForm.getAttribute('data-comment-id');
+                    editForm.style.display = 'none';
+                    const viewDiv = document.querySelector(`.comment-view[data-comment-id="${cid}"]`);
+                    if (viewDiv) viewDiv.style.display = 'block';
+                }
+            });
+        });
+
+        // 수정 폼 이미지 미리보기
+        document.querySelectorAll('.comment-edit-form input[name="photoFiles"]').forEach(input => {
+            input.addEventListener('change', function () {
+                const editForm = this.closest('.comment-edit-form');
+                const cid = editForm.getAttribute('data-comment-id');
+                const previewEdit = editForm.querySelector(`#previewEditList-${cid}`);
+                const files = Array.from(this.files);
+                if (files.length > 5) {
+                    alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
+                    this.value = "";
+                    if (previewEdit) previewEdit.innerHTML = "";
+                    return;
+                }
+                if (previewEdit) previewEdit.innerHTML = "";
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const div = document.createElement("div");
+                        div.classList.add("preview-item");
+                        div.innerHTML = `
+                        <img src="${e.target.result}" alt="새 이미지">
+                        <button type="button" onclick="removePreview(this)">X</button>
+                      `;
+                        previewEdit.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        });
+
+        // "삭제" 버튼
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const commentId = this.getAttribute('data-comment-id');
+                const boardId = this.getAttribute('data-board-id');
+                const csrfToken = document.querySelector('input[name="_csrf"]').value;
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    const form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/comment/delete';
+                    const cIdInput = document.createElement('input');
+                    cIdInput.type = 'hidden';
+                    cIdInput.name = 'commentId';
+                    cIdInput.value = commentId;
+                    form.appendChild(cIdInput);
+                    const bIdInput = document.createElement('input');
+                    bIdInput.type = 'hidden';
+                    bIdInput.name = 'boardId';
+                    bIdInput.value = boardId;
+                    form.appendChild(bIdInput);
+                    const csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_csrf';
+                    csrf.value = csrfToken;
+                    form.appendChild(csrf);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // 미리보기에서 X 누르면 제거
+    function removePreview(btn) {
+        const previewItem = btn.parentElement;
+        if (previewItem && previewItem.parentElement) {
+            previewItem.parentElement.removeChild(previewItem);
+        }
+    }
+
+    // 이미지 팝업 모달
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        if (!modal || !modalImg) return;
+
+        const images = document.querySelectorAll(".board-image, .comment-image");
+        images.forEach(img => {
+            img.addEventListener('click', function () {
+                modal.style.display = "flex";
+                modalImg.src = this.src;
+            });
+        });
+
+        window.closeModal = function () {
+            modal.style.display = "none";
+        };
+        modal.addEventListener("click", function (e) {
+            if (e.target === modal || e.target === modalImg) {
+                closeModal();
+            }
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && modal.style.display === "flex") {
+                closeModal();
+            }
+        });
+    });
+</script>
+
+<!-- 이미지 모달 -->
+<div id="imageModal" class="image-modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.aivle.platform.controller;
 
+import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.BoardRequestDto;
@@ -66,9 +67,9 @@ public class BoardController {
         request.setImageUrls(photoUrls);
 
         // 게시판 저장
-        boardService.createBoard(request, member);
+        Board board = boardService.createBoard(request, member);
 
-        return "redirect:/boards";
+        return "redirect:/board/" + board.getBoardId();
     }
 
     @GetMapping("/boards")
@@ -108,6 +109,8 @@ public class BoardController {
                 Member member = memberService.getMemberEmail(authentication.getName());
 
                 model.addAttribute("memberName", member.getMemberName());
+                model.addAttribute("currentMemberId", member.getMemberId()); // 현재 사용자 ID 추가
+
                 if (member.getRole() == Role.ADMIN ||
                         Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())
                 ) {

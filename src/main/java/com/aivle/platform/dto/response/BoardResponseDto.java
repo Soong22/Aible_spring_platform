@@ -5,6 +5,7 @@ import com.aivle.platform.domain.Image;
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -55,13 +56,12 @@ public class BoardResponseDto {
         // 2) 작성자, 경찰청 정보
         Member member = board.getMember();
         response.setMemberName(member.getMemberName());
-        PoliceUnit policeUnit = member.getPoliceUnit();
 
-        if (policeUnit != null) {
-            response.setDeptName(policeUnit.getDeptName());
-            response.setStationName(policeUnit.getStationName());
-            response.setPoliceUnitName(policeUnit.getPoliceUnitName());
-            response.setPoliceUnitType(policeUnit.getPoliceUnitTypeDescription());
+        if (member.getPoliceUnit() != null) {
+            response.setDeptName(member.getPoliceUnit().getDeptName());
+            response.setStationName(member.getPoliceUnit().getStationName());
+            response.setPoliceUnitName(member.getPoliceUnit().getPoliceUnitName());
+            response.setPoliceUnitType(member.getPoliceUnit().getPoliceUnitTypeDescription());
         } else {
             response.setDeptName("알 수 없음");
             response.setStationName("알 수 없음");

@@ -4,7 +4,7 @@ public class BoardNotFoundException extends RuntimeException {
 
     // 메세지 전달을 위한 기본 생성자
     public BoardNotFoundException() {
-        super("유저를 찾을 수 없습니다.");
+        super("게시글을 찾을 수 없습니다.");
     }
 
     // 메세지 전달을 위한 생성자

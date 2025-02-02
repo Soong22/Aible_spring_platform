@@ -1,7 +1,9 @@
 package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Board;
+import com.aivle.platform.domain.Comment;
 import com.aivle.platform.domain.Member;
+import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.CommentRequestDto;
 import com.aivle.platform.exception.comment.CommentUpdateFailedException;
 import com.aivle.platform.service.BoardService;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -65,8 +68,11 @@ public class CommentController {
             @Valid @ModelAttribute("request") CommentRequestDto request,
             @RequestParam(value = "existingImageUrls", required = false) List<String> existingImageUrls,
             @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles, // 새 이미지 파일
+            Authentication authentication,
             Model model) {
         try {
+            Member member = memberService.getMemberEmail(authentication.getName());
+
             // 1) 새로 업로드된 파일을 실제 저장하고 그 URL 리스트를 만든다
             List<String> photoUrls = new ArrayList<>();
             if (photoFiles != null && !photoFiles.isEmpty()) {
@@ -87,10 +93,9 @@ public class CommentController {
             request.setImageUrls(finalImageUrls);
 
             // 4) 서비스 호출
-            commentService.updateComment(commentId, request);
+            commentService.updateComment(commentId, request, member);
 
             return "redirect:/board/" + request.getBoardId();
-
         } catch (CommentUpdateFailedException e) {
             return "redirect:/board/" + request.getBoardId();
         } catch (Exception e) {
@@ -98,6 +103,25 @@ public class CommentController {
             return "error/error";
         }
     }
+
+    // 댓글삭제 POST
+    @PostMapping("/comment/delete")
+    public String deleteComment(
+            @RequestParam("commentId") Long commentId,
+            @RequestParam("boardId") Long boardId,
+            Authentication authentication,
+            Model model) {
+        try {
+            Member member = memberService.getMemberEmail(authentication.getName());
+            commentService.deleteComment(commentId, member);
+
+            return "redirect:/board/" + boardId;
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+    }
+
 
 
 }

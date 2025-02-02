@@ -2,6 +2,7 @@ package com.aivle.platform.dto.response;
 
 import com.aivle.platform.domain.Comment;
 import com.aivle.platform.domain.Image;
+import com.aivle.platform.domain.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ public class CommentResponseDto {
     // 수정일의 경우 없으면 표시x
     private LocalDateTime updatedAt;
 
+    private Long memberId; // 멤버 아이디
+    private String memberRole; // 멤버상태, 댓글에서 탈퇴자 표시를 위함
     private String memberName; // 회원이름
     private String deptName; // 소속경찰청명 - 선택사항
     private String stationName; // 소속경찰서명 - 선택사항
@@ -54,11 +57,24 @@ public class CommentResponseDto {
         response.setCreatedAt(comment.getCreatedAt());
         response.setUpdatedAt(comment.getUpdatedAt());
 
+        // 2) 작성자, 경찰청 정보
+        Member member = comment.getMember();
+
+        response.setMemberId(member.getMemberId());
+        response.setMemberRole(member.getRoleDescription());
         response.setMemberName(comment.getMember().getMemberName());
-        response.setDeptName(comment.getMember().getPoliceUnit().getDeptName());
-        response.setStationName(comment.getMember().getPoliceUnit().getStationName());
-        response.setPoliceUnitName(comment.getMember().getPoliceUnit().getPoliceUnitName());
-        response.setPoliceUnitType(comment.getMember().getPoliceUnit().getPoliceUnitTypeDescription());
+
+        if (member.getPoliceUnit() != null) {
+            response.setDeptName(member.getPoliceUnit().getDeptName());
+            response.setStationName(member.getPoliceUnit().getStationName());
+            response.setPoliceUnitName(member.getPoliceUnit().getPoliceUnitName());
+            response.setPoliceUnitType(member.getPoliceUnit().getPoliceUnitTypeDescription());
+        } else {
+            response.setDeptName("알 수 없음");
+            response.setStationName("알 수 없음");
+            response.setPoliceUnitName("알 수 없음");
+            response.setPoliceUnitType("알 수 없음");
+        }
 
         response.setBoardId(comment.getBoard().getBoardId());
 
