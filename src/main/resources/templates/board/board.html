@@ -537,6 +537,15 @@
                 <div class="fw-bold" th:text="${comment.memberName}">작성자</div>
                 <!--여기에 소속 표시하기-->
                 <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
+                <span th:if="${comment.updatedAt != null}" class="edited-text">(수정됨)</span>
+
+
+
+                <div class="board-meta">
+                    <span th:text="${#temporals.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
+                    <span th:if="${board.updatedAt != null}" class="edited-text">(수정됨)</span>
+                    · 조회 <span th:text="${board.viewCount}"></span>
+                </div>
 
                 <!-- "답글쓰기" 버튼 -->
                 <span class="ms-2 text-muted">
