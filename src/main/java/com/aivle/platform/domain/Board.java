@@ -1,5 +1,6 @@
 package com.aivle.platform.domain;
 
+import com.aivle.platform.domain.type.Status;
 import jakarta.persistence.*;
 import lombok.*;
 

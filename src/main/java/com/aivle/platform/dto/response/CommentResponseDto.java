@@ -24,6 +24,9 @@ public class CommentResponseDto {
     // 수정일의 경우 없으면 표시x
     private LocalDateTime updatedAt;
 
+    // 댓글 상태 새로 추가
+    private String commentStatus;
+
     private Long memberId; // 멤버 아이디
     private String memberRole; // 멤버상태, 댓글에서 탈퇴자 표시를 위함
     private String memberName; // 회원이름
@@ -57,6 +60,10 @@ public class CommentResponseDto {
         response.setCreatedAt(comment.getCreatedAt());
         response.setUpdatedAt(comment.getUpdatedAt());
 
+        // 새로 추가함
+        response.setCommentStatus(comment.getCommentStatus().name());
+
+
         // 2) 작성자, 경찰청 정보
         Member member = comment.getMember();
 
@@ -70,10 +77,10 @@ public class CommentResponseDto {
             response.setPoliceUnitName(member.getPoliceUnit().getPoliceUnitName());
             response.setPoliceUnitType(member.getPoliceUnit().getPoliceUnitTypeDescription());
         } else {
-            response.setDeptName("알 수 없음");
-            response.setStationName("알 수 없음");
-            response.setPoliceUnitName("알 수 없음");
-            response.setPoliceUnitType("알 수 없음");
+            response.setDeptName("탈퇴자");
+            response.setStationName("탈퇴자");
+            response.setPoliceUnitName("탈퇴자");
+            response.setPoliceUnitType("탈퇴자");
         }
 
         response.setBoardId(comment.getBoard().getBoardId());

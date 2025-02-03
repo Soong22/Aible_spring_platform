@@ -1,6 +1,8 @@
 package com.aivle.platform.service;
 
 import com.aivle.platform.domain.*;
+import com.aivle.platform.domain.type.CommentStatus;
+import com.aivle.platform.domain.type.Role;
 import com.aivle.platform.dto.request.CommentRequestDto;
 import com.aivle.platform.dto.response.CommentResponseDto;
 import com.aivle.platform.exception.comment.CommentDeletionFailedException;
@@ -38,6 +40,9 @@ public class CommentService {
         Comment comment = CommentRequestDto.toEntity(request);
         comment.setMember(member);
         comment.setCreatedAt(LocalDateTime.now());
+
+        comment.setCommentStatus(CommentStatus.ACTIVE);
+
         comment.setMember(member);
         comment.setBoard(board);
 
@@ -93,6 +98,7 @@ public class CommentService {
             imageRepository.deleteAll(comment.getImages());
             comment.getImages().clear();
             comment.setContent("삭제된 댓글입니다.");
+            comment.setCommentStatus(CommentStatus.DELETED);
             // 나중에 생성일, 수정일 모두 널 처리해서 프론트 해서 널이면 표시안하게 하기
 
             commentRepository.save(comment);

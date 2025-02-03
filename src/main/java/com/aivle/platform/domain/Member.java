@@ -1,5 +1,6 @@
 package com.aivle.platform.domain;
 
+import com.aivle.platform.domain.type.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

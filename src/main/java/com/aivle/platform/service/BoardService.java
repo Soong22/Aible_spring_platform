@@ -3,7 +3,7 @@ package com.aivle.platform.service;
 import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Image;
 import com.aivle.platform.domain.Member;
-import com.aivle.platform.domain.Status;
+import com.aivle.platform.domain.type.Status;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
 import com.aivle.platform.exception.board.BoardNotFoundException;

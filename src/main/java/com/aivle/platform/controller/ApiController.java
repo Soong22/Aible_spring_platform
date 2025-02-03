@@ -2,7 +2,7 @@ package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
-import com.aivle.platform.domain.Role;
+import com.aivle.platform.domain.type.Role;
 import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.PoliceUnitService;

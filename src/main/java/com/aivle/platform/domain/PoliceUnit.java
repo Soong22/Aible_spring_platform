@@ -1,5 +1,6 @@
 package com.aivle.platform.domain;
 
+import com.aivle.platform.domain.type.PoliceUnitType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

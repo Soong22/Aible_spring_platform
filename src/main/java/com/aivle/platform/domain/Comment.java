@@ -1,5 +1,6 @@
 package com.aivle.platform.domain;
 
+import com.aivle.platform.domain.type.CommentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,11 @@ public class Comment {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    // 댓글 상태 새로 추가함
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CommentStatus commentStatus;
 
 
     @ManyToOne

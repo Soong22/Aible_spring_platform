@@ -1,9 +1,7 @@
 package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Board;
-import com.aivle.platform.domain.Comment;
 import com.aivle.platform.domain.Member;
-import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.CommentRequestDto;
 import com.aivle.platform.exception.comment.CommentUpdateFailedException;
 import com.aivle.platform.service.BoardService;
@@ -21,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j

@@ -2,7 +2,6 @@ package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Member;
-import com.aivle.platform.domain.Role;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
 import com.aivle.platform.exception.board.BoardDeletionFailedException;
@@ -110,15 +109,19 @@ public class BoardController {
 
                 model.addAttribute("memberName", member.getMemberName());
                 model.addAttribute("currentMemberId", member.getMemberId()); // 현재 사용자 ID 추가
-                model.addAttribute("memberRole", member.getRole()); // 현재 사용자 권한확인
+                model.addAttribute("memberRole", member.getRole().name()); // 현재 사용자 권한확인
 
-                log.error("role: {}", member.getRole());
-
-                if (member.getRole() == Role.ADMIN ||
-                        Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())
-                ) {
+                if (Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())) {
                     model.addAttribute("isTrue", true);
+                } else {
+                    model.addAttribute("isTrue", false);
                 }
+
+//                if (member.getRole() == Role.ADMIN ||
+//                        Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())
+//                ) {
+//                    model.addAttribute("isTrue", true);
+//                }
             }
 
             model.addAttribute("board", board);

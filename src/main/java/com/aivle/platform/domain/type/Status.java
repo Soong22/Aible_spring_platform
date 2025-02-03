@@ -1,4 +1,4 @@
-package com.aivle.platform.domain;
+package com.aivle.platform.domain.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

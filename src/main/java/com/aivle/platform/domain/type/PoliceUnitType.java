@@ -1,14 +1,14 @@
-package com.aivle.platform.domain;
+package com.aivle.platform.domain.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Role {
-    USER("사용자"),
+public enum PoliceUnitType {
     ADMIN("관리자"),
-    WITHDRAWN("탈퇴자");
+    DISTRICT("지구대"),
+    OUTPOST("파출소");
 
     private final String description;
 

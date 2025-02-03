@@ -63,10 +63,10 @@ public class BoardResponseDto {
             response.setPoliceUnitName(member.getPoliceUnit().getPoliceUnitName());
             response.setPoliceUnitType(member.getPoliceUnit().getPoliceUnitTypeDescription());
         } else {
-            response.setDeptName("알 수 없음");
-            response.setStationName("알 수 없음");
-            response.setPoliceUnitName("알 수 없음");
-            response.setPoliceUnitType("알 수 없음");
+            response.setDeptName("탈퇴자");
+            response.setStationName("탈퇴자");
+            response.setPoliceUnitName("탈퇴자");
+            response.setPoliceUnitType("탈퇴자");
         }
 
         // 3) 댓글(Flat → 트리) 빌드

@@ -57,8 +57,8 @@
         }
 
         .author-image {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background-color: #dee2e6;
             object-fit: cover;
@@ -66,11 +66,11 @@
 
         .author-name {
             font-weight: bold;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .author-meta {
-            font-size: 14px;
+            font-size: 16px;
             color: #6c757d;
         }
 
@@ -82,14 +82,14 @@
         }
 
         .board-meta {
-            font-size: 14px;
+            font-size: 17px;
             color: #6c757d;
             margin: 0;
         }
 
         .edited-text {
             color: #dc3545;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
         }
 
@@ -171,8 +171,8 @@
 
         /* 댓글 개수 표시 */
         .comment-count {
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 18px;
+            /*font-weight: bold;*/
             color: black;
             display: flex;
             align-items: center;
@@ -182,7 +182,8 @@
         }
 
         .comment-count:hover {
-            text-decoration: underline;
+            /*text-decoration: underline;*/
+            color: #0073e6;
         }
 
         /* 댓글(또는 대댓글) 내부 이미지 */
@@ -398,6 +399,37 @@
                 commentSection.scrollIntoView({behavior: 'smooth'});
             }
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateElements = document.querySelectorAll('.relative-time');
+
+            dateElements.forEach(element => {
+                const createdAt = element.dataset.createdAt;
+                if (!createdAt) return;
+
+                const createdDate = new Date(createdAt);
+                const now = new Date();
+                const diffInMilliseconds = now - createdDate;
+
+                const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+                const diffInHours = Math.floor(diffInMinutes / 60);
+                const diffInDays = Math.floor(diffInHours / 24);
+
+                let relativeTime = "";
+                if (diffInDays >= 1) {
+                    relativeTime = `${diffInDays}일 전`;
+                } else if (diffInHours >= 1) {
+                    relativeTime = `${diffInHours}시간 전`;
+                } else if (diffInMinutes >= 1) {
+                    relativeTime = `${diffInMinutes}분 전`;
+                } else {
+                    relativeTime = "방금 전";
+                }
+
+                element.textContent = relativeTime;
+            });
+        });
+
     </script>
 
     <!-- Font Awesome -->
@@ -422,11 +454,13 @@
 
             <!-- 작성자 정보 + 프로필 이미지 -->
             <div class="author-info">
-                <img src="/images/noImage.png" class="author-image" alt="프로필 이미지">
+                <img src="/images/default_image.jpg" class="author-image" alt="프로필 이미지">
                 <div>
                     <div class="author-name" th:text="${board.memberName}">작성자</div>
                     <div class="author-meta">
-                        <span th:text="${board.policeUnitName} + ' ' + ${board.policeUnitType}"></span>
+                        <span th:if="${board.policeUnitName == '탈퇴자' or board.policeUnitType == '탈퇴자'}">탈퇴자</span>
+                        <span th:unless="${board.policeUnitName == '탈퇴자' or board.policeUnitType == '탈퇴자'}"
+                              th:text="${board.policeUnitName} + ' ' + ${board.policeUnitType}"></span>
                     </div>
                 </div>
             </div>
@@ -442,7 +476,6 @@
                     💬 <span>댓글 </span><span th:text="${board.comments.size()}"></span>
                 </div>
             </div>
-
 
         </div>
 
@@ -465,10 +498,14 @@
                         th:onclick="|location.href='/board/edit/' + ${board.boardId}|">수정
                 </button>
 
-                <form th:if="${isTrue}" th:action="@{/board/delete/{boardId}(boardId=${board.boardId})}" method="post"
+
+<!--                <form th:if="${isTrue}"-->
+                <form th:if="${memberRole == 'ADMIN' or isTrue}"
+                      th:action="@{/board/delete/{boardId}(boardId=${board.boardId})}" method="post"
                       onsubmit="return confirm('정말로 삭제하시겠습니까?');" class="d-inline">
                     <button type="submit" class="btn btn-delete">삭제</button>
                 </form>
+
             </div>
 
             <!-- 우측: 목록 버튼 -->
@@ -536,19 +573,14 @@
             <div class="p-3 border rounded bg-light mb-2">
                 <div class="fw-bold" th:text="${comment.memberName}">작성자</div>
                 <!--여기에 소속 표시하기-->
-                <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
-                <span th:if="${comment.updatedAt != null}" class="edited-text">(수정됨)</span>
+                <span class="relative-time text-muted" th:attr="data-created-at=${comment.createdAt}"></span>
 
+<!--                <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>-->
+                <span th:if="${(comment.updatedAt != null) and comment.commentStatus != 'DELETED'}" class="edited-text">(수정됨)</span>
 
-
-                <div class="board-meta">
-                    <span th:text="${#temporals.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
-                    <span th:if="${board.updatedAt != null}" class="edited-text">(수정됨)</span>
-                    · 조회 <span th:text="${board.viewCount}"></span>
-                </div>
 
                 <!-- "답글쓰기" 버튼 -->
-                <span class="ms-2 text-muted">
+                <span class="ms-2 text-muted" th:if="${comment.commentStatus != 'DELETED'}">
                     <a href="javascript:void(0);"
                        class="reply-btn text-muted text-decoration-none"
                        th:attr="data-comment-id=${comment.commentId}">답글쓰기
@@ -559,13 +591,13 @@
                     <span th:if="${currentMemberId == comment.memberId}">
                         |
                         <a href="javascript:void(0);"
-                            class="reply-edit-btn text-muted text-decoration-none"
-                            th:attr="data-comment-id=${comment.commentId}">수정
+                           class="reply-edit-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}">수정
                         </a>
                         |
                         <a href="javascript:void(0);"
-                            class="delete-btn text-muted text-decoration-none"
-                            th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
+                           class="delete-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
                         </a>
                     </span>
 
@@ -573,8 +605,8 @@
                     <span th:if="${#strings.trim(memberRole) == 'ADMIN' and currentMemberId != comment.memberId}">
                         |
                         <a href="javascript:void(0);"
-                            class="delete-btn text-muted text-decoration-none"
-                            th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
+                           class="delete-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
                         </a>
                     </span>
 
@@ -704,7 +736,6 @@
                         </form>
                     </div>
                 </div>
-
 
 
             </div>
@@ -1171,7 +1202,6 @@
             });
         });
     });
-
 
 
 </script>

@@ -1,7 +1,7 @@
 package com.aivle.platform.service;
 
 import com.aivle.platform.domain.Member;
-import com.aivle.platform.domain.Role;
+import com.aivle.platform.domain.type.Role;
 import com.aivle.platform.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.DisabledException;
