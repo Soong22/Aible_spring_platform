@@ -212,29 +212,43 @@
             existingFiles.push(input.value);
         });
 
-        // ✅ 페이지 로드 후 강제 `updatePreview()` 실행 (기존 이미지와 DOM 동기화)
+        // ✅ 페이지 로드 후 기존 이미지 렌더링
         updatePreview();
 
-        // ✅ 새 파일 선택 시 기존 이미지 개수를 고려하여 미리보기 추가
+        // ✅ 새 파일 선택 시 → 기존 이미지 개수를 고려
         photoFilesInput.addEventListener("change", function () {
-            const newFiles = Array.from(photoFilesInput.files);
-            const totalImages = existingFiles.length + selectedFiles.length + newFiles.length;
+            let newFiles = Array.from(photoFilesInput.files); // ★ let으로 선언해야 재할당 가능
 
-            // ✅ 기존 이미지 + 새 이미지 포함해서 5장 초과 여부 확인
+            // 현재까지 합산된 이미지 수
+            const currentCount = existingFiles.length + selectedFiles.length;
+            const totalImages = currentCount + newFiles.length;
+
+            // 만약 5장을 초과한다면 → 초과분 slice
             if (totalImages > 5) {
                 alert("이미지는 최대 5개까지만 첨부할 수 있습니다.");
-                return;
+
+                // 추가로 허용되는 개수
+                const allowed = 5 - currentCount;
+
+                // allowed가 음수가 아닌지(= 0 이상인지) 체크 후 slice
+                if (allowed > 0) {
+                    newFiles = newFiles.slice(0, allowed);
+                } else {
+                    // 이미 기존 + 선택된 파일로 5장을 넘긴 상태라면 이번엔 아무것도 추가 안 함
+                    newFiles = [];
+                }
             }
 
-            // ✅ 새 파일을 배열에 추가
+            // 새 파일을 배열에 추가
             selectedFiles = selectedFiles.concat(newFiles);
+
             updatePreview();
         });
 
         function updatePreview() {
-            previewList.innerHTML = ""; // ✅ 기존 미리보기 초기화
+            previewList.innerHTML = ""; // ✅ 전체 미리보기 초기화
 
-            // ✅ 기존 이미지 렌더링 유지 (개별 삭제 가능)
+            // ✅ 기존 이미지 렌더링 (개별 삭제 가능)
             existingFiles.forEach((file, index) => {
                 const previewItem = document.createElement("div");
                 previewItem.classList.add("preview-item");
@@ -261,34 +275,35 @@
                 reader.readAsDataURL(file);
             });
 
+            // ✅ input.files 업데이트 (폼 전송 시 반영)
             updateFileInput();
         }
 
         function updateFileInput() {
-            // ✅ `DataTransfer` 객체를 사용해 `input` 값을 갱신 (새로운 파일 유지)
             const dataTransfer = new DataTransfer();
             selectedFiles.forEach(file => dataTransfer.items.add(file));
             photoFilesInput.files = dataTransfer.files;
         }
 
-        // ✅ 기존 이미지 개별 삭제 처리 (초기 동기화 문제 해결)
+        // ✅ 기존 이미지 개별 삭제
         window.removeExistingImage = function (index) {
-            existingFiles.splice(index, 1); // ✅ 배열에서 해당 이미지 즉시 삭제
-            updatePreview(); // ✅ 미리보기 업데이트
+            existingFiles.splice(index, 1);
+            updatePreview();
         };
 
-        // ✅ 새 이미지 삭제 처리
+        // ✅ 새 이미지 개별 삭제
         window.removePreview = function (index) {
-            selectedFiles.splice(index, 1); // ✅ 배열에서 해당 파일 제거
+            selectedFiles.splice(index, 1);
             updatePreview();
         };
 
         window.cancelRegistration = function () {
             if (confirm("작성을 취소하시겠습니까?")) {
-                window.location.href = "/board/" + boardId; // ✅ 수정 취소 시 해당 게시글로 이동
+                window.location.href = "/board/" + boardId;
             }
         };
     });
+
 
 </script>
 </body>

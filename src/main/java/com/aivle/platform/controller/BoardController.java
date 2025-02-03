@@ -110,6 +110,9 @@ public class BoardController {
 
                 model.addAttribute("memberName", member.getMemberName());
                 model.addAttribute("currentMemberId", member.getMemberId()); // 현재 사용자 ID 추가
+                model.addAttribute("memberRole", member.getRole()); // 현재 사용자 권한확인
+
+                log.error("role: {}", member.getRole());
 
                 if (member.getRole() == Role.ADMIN ||
                         Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())

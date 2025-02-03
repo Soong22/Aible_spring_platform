@@ -546,29 +546,18 @@
                     </a>
 
                     <!-- 현재 사용자가 댓글 작성자인 경우에만 "수정" 및 "삭제" 버튼 표시 -->
-                    <!-- 1) [작성자]인 경우: 수정 & 삭제 버튼 표시 -->
-                    <span th:if="${currentMemberId == comment.memberId}">
+                    <span th:if="${(#strings.trim(memberRole) == 'ADMIN') || (currentMemberId == comment.memberId)}">
                         |
                         <a href="javascript:void(0);"
-                            class="reply-edit-btn text-muted text-decoration-none"
-                            th:attr="data-comment-id=${comment.commentId}">수정
+                           class="edit-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}">수정
                         </a>
                         |
                         <a href="javascript:void(0);"
-                            class="delete-btn text-muted text-decoration-none"
-                            th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
-                        </a>
-                    </span>
-
-                    <!-- 2) [관리자이면서, 작성자는 아닌 경우]: 삭제 버튼만 표시 -->
-                    <span th:if="${#strings.trim(memberRole) == 'ADMIN' and currentMemberId != comment.memberId}">
-                        |
-                        <a href="javascript:void(0);"
-                            class="delete-btn text-muted text-decoration-none"
-                            th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
+                           class="delete-btn text-muted text-decoration-none"
+                           th:attr="data-comment-id=${comment.commentId}, data-board-id=${boardId}">삭제
                         </a>
                     </span>
-
                 </span>
 
 
@@ -618,8 +607,7 @@
                             <input type="file"
                                    th:id="'photoFiles2-' + ${comment.commentId}"
                                    name="photoFiles"
-                                   multiple
-                                   style="display:none;"
+                                   multiple style="display:none;"
                                    class="reply-photoFiles"
                                    th:attr="data-comment-id=${comment.commentId}"/>
 
@@ -634,68 +622,68 @@
                                 <button type="submit" class="btn btn-primary btn-sm">등록</button>
                                 <button type="button" class="btn btn-secondary btn-sm cancel-reply">취소</button>
                             </div>
+
                         </form>
                     </div>
                 </div>
 
-                <!-- (대댓글) 수정 폼 -->
-                <div class="reply-edit-form mt-2" style="display: none;" th:attr="data-comment-id=${comment.commentId}">
+                <!-- (대댓글) 수정폼 (display:none → "수정" 버튼 클릭시 열림) -->
+                <div class="reply-edit-form" style="display: none;" th:attr="data-comment-id=${comment.commentId}">
                     <div class="reply-form-container">
-
                         <div class="reply-form-title">
-                            <span th:text="'작성자 ' + ${memberName}"></span>
+                            <span th:text="'댓글 수정 (작성자: ' + ${memberName} + ')'"></span>
                         </div>
 
+                        <!-- 댓글 수정 시, /comment/edit/{commentId} 로 POST -->
                         <form th:action="@{/comment/edit/{commentId}(commentId=${comment.commentId})}"
                               method="post" enctype="multipart/form-data" class="mb-3 reply-edit-form-element"
                               th:attr="data-comment-id=${comment.commentId}">
 
-                            <label for="content" style="display: block; width: 100%;">
-                                <textarea name="content" rows="3" class="form-control" required
-                                          style="width: 100%;" th:text="${comment.content}">
-                                </textarea>
-                            </label>
-
+                            <!-- 수정 대상 댓글ID + 게시글ID -->
                             <input type="hidden" name="boardId" th:value="${boardId}"/>
                             <input type="hidden" name="commentId" th:value="${comment.commentId}"/>
 
-                            <!-- 기존 이미지 미리보기: Thymeleaf 반복 -->
-                            <div th:id="'previewList3-' + ${comment.commentId}" class="preview-list mb-3">
-                                <div th:each="imageUrl, idxStat : ${comment.imageUrls}" class="preview-item">
-                                    <img th:src="${imageUrl}" alt="기존 이미지">
-                                    <input type="hidden" name="existingImageUrls" th:value="${imageUrl}"/>
-                                    <!-- 기존 이미지는 this 로 전달하여 DOM에서만 삭제 -->
-                                    <button type="button" onclick="removeReplyEditPreview(this)">X</button>
+                            <!-- (1) 수정할 댓글 내용 - 기존 텍스트 표시 -->
+                            <label style="display: block;">
+                                <textarea name="content" rows="3" class="form-control" required style="width: 100%;"
+                                          th:text="${comment.content}"></textarea>
+                            </label>
+
+                            <!-- (2) 기존 이미지 목록 (반복) & hidden 전송 -->
+                            <div th:id="'editPreviewList-' + ${comment.commentId}">
+                                <div th:each="imgUrl : ${comment.imageUrls}" class="preview-item">
+                                    <img th:src="${imgUrl}" alt="기존 이미지">
+                                    <!-- 기존 이미지 URL 전송 -->
+                                    <input type="hidden" name="existingImageUrls" th:value="${imgUrl}"/>
+                                    <button type="button" onclick="removeEditExistingImage(this)">X
+                                    </button>
                                 </div>
                             </div>
 
-                            <!-- 실제 파일 input (나중에 JS에서 DataTransfer로 채움) -->
-                            <input type="file"
-                                   th:id="'photoFiles3-' + ${comment.commentId}"
-                                   name="photoFiles"
-                                   multiple
-                                   style="display:none;"
-                                   class="reply-edit-photoFiles"
+                            <!-- (3) 새로 업로드할 파일 -->
+                            <input type="file" th:id="'editPhotoFiles-' + ${comment.commentId}" name="photoFiles"
+                                   multiple style="display:none;" class="reply-edit-photoFiles"
                                    th:attr="data-comment-id=${comment.commentId}"/>
 
+                            <!-- 새 파일 미리보기 표시할 영역 (선택적)-->
+                            <div th:id="'editNewPreviewList-' + ${comment.commentId}" class="mb-3"></div>
+
+                            <!-- (4) 카메라 + 수정완료 + 취소 버튼들 -->
                             <div class="reply-form-actions">
-                                <!-- 새 파일 선택(카메라) 버튼 -->
-                                <button type="button"
-                                        class="btn p-1 border reply-edit-choose-image-btn"
+                                <button type="button" class="btn p-1 border edit-choose-image-btn"
                                         th:attr="data-comment-id=${comment.commentId}">
-                                    <img src="/images/camera.png" style="width:30px; height:30px;">
+                                    <img src="/images/camera.png" alt="추가이미지" style="width:30px;height:30px;">
                                 </button>
 
-                                <button type="submit" class="btn btn-primary btn-sm">수정</button>
-                                <button type="button" class="btn btn-secondary btn-sm cancel-reply-edit"
-                                        th:attr="data-comment-id=${comment.commentId}">
-                                    취소
+                                <button type="submit" class="btn btn-primary btn-sm">수정완료</button>
+                                <button type="button"
+                                        class="btn btn-secondary btn-sm cancel-edit"
+                                        th:attr="data-comment-id=${comment.commentId}">취소
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
-
 
 
             </div>
@@ -887,21 +875,9 @@
         document.querySelectorAll('.reply-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const commentId = btn.getAttribute('data-comment-id');
-
                 document.querySelectorAll('.reply-form').forEach(f => f.style.display = 'none');
-                document.querySelectorAll('.reply-edit-form').forEach(f => f.style.display = 'none');
-
                 const targetForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
-
-
                 if (targetForm) targetForm.style.display = 'block';
-
-
-                const contentDiv = document.querySelector(`.comment-content[data-comment-id="${commentId}"]`);
-                if (contentDiv) {
-                    contentDiv.style.display = 'block';
-                }
-
             });
         });
 
@@ -993,153 +969,28 @@
 
 
     document.addEventListener('DOMContentLoaded', function () {
-
-        // 댓글별 새 파일 배열
-        let replyEditSelectedFilesMap = {};  // { commentId: [File, ...], ... }
-
-        // “카메라 아이콘” 클릭 → 임시 input 생성
-        document.querySelectorAll('.reply-edit-choose-image-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const commentId = btn.getAttribute('data-comment-id');
-
-                const tempInput = document.createElement('input');
-                tempInput.type = 'file';
-                tempInput.accept = 'image/*';
-                tempInput.multiple = true;
-                tempInput.style.display = 'none';
-                document.body.appendChild(tempInput);
-
-                tempInput.addEventListener('change', async function (e) {
-                    let newFiles = Array.from(e.target.files);
-
-                    // 현재 댓글에 이미 선택된 파일들
-                    if (!replyEditSelectedFilesMap[commentId]) {
-                        replyEditSelectedFilesMap[commentId] = [];
-                    }
-
-                    // (추가) 이미 DOM에 있는 'preview-item'(기존 + 새) 총 개수를 확인
-                    const previewList = document.getElementById(`previewList3-${commentId}`);
-                    const currentCount = previewList.querySelectorAll('.preview-item').length;
-                    const totalImages = currentCount + newFiles.length;
-
-                    // 최대 5장 제한
-                    if (totalImages > 5) {
-                        alert("이미지는 최대 5장까지 업로드 가능합니다.");
-                        // 초과분 잘라내기
-                        const allowed = 5 - currentCount;
-                        newFiles = newFiles.slice(0, allowed);
-                    }
-
-                    // 새 파일들 -> replyEditSelectedFilesMap[commentId] 에 추가
-                    replyEditSelectedFilesMap[commentId] =
-                        replyEditSelectedFilesMap[commentId].concat(newFiles);
-
-                    // 미리보기 업데이트
-                    updateReplyPreview2(commentId);
-
-                    document.body.removeChild(tempInput);
-                });
-
-                tempInput.click();
-            });
-        });
-
-        // 대댓글 미리보기 렌더링
-        async function updateReplyPreview2(commentId) {
-            const previewList = document.getElementById(`previewList3-${commentId}`);
-            if (!previewList) return;
-
-            // 1) 기존에 'JS로 추가한(previewItem[data-new="true"])' 미리보기만 제거
-            previewList.querySelectorAll('.preview-item[data-new="true"]')
-                .forEach(item => item.remove());
-
-            // 2) 새로 선택된 파일들만 다시 렌더링
-            const fileArr = replyEditSelectedFilesMap[commentId] || [];
-            for (let i = 0; i < fileArr.length; i++) {
-                const file = fileArr[i];
-                const dataURL = await readFileAsDataURL(file);
-
-                const previewItem = document.createElement("div");
-                previewItem.classList.add("preview-item");
-                // 새로 추가된 이미지는 data-new="true"로 표시
-                previewItem.setAttribute("data-new", "true");
-                previewItem.innerHTML = `
-                <img src="${dataURL}" alt="이미지">
-                <button type="button" onclick="removeReplyEditPreview('${commentId}', ${i})">X</button>
-            `;
-                previewList.appendChild(previewItem);
-            }
-        }
-
-        /**
-         * removeReplyEditPreview
-         * 1) (commentId, index) 가 넘어오면 -> 새로 추가한 이미지 삭제
-         * 2) (this) DOM 요소가 넘어오면 -> 기존 이미지 삭제
-         */
-        window.removeReplyEditPreview = function (arg1, arg2) {
-            // 2개 인자가 넘어온 경우: (commentId, index) → 새로 추가한 이미지 제거
-            if (typeof arg1 === 'string' && typeof arg2 === 'number') {
-                const commentId = arg1;
-                const index = arg2;
-                if (!replyEditSelectedFilesMap[commentId]) return;
-
-                replyEditSelectedFilesMap[commentId].splice(index, 1);
-                updateReplyPreview2(commentId);
-
-                // 1개 인자만 넘어온 경우: (this) → 기존 이미지 삭제
-            } else if (typeof arg1 === 'object') {
-                const buttonElem = arg1;
-                const previewItem = buttonElem.closest('.preview-item');
-                if (previewItem) {
-                    previewItem.remove();
-                }
-            }
-        };
-
-        // 폼 전송 시 -> 새로 선택된 파일을 DataTransfer에 담아 실제 input.files로
-        document.querySelectorAll('.reply-edit-form-element').forEach(form => {
-            form.addEventListener('submit', function (e) {
-                const commentId = form.getAttribute('data-comment-id');
-                const realInput = form.querySelector('.reply-edit-photoFiles');
-
-                // 새 파일이 없으면 그대로
-                if (!replyEditSelectedFilesMap[commentId] || replyEditSelectedFilesMap[commentId].length === 0) {
-                    return true;
-                }
-
-                const dataTransfer = new DataTransfer();
-                replyEditSelectedFilesMap[commentId].forEach(file => dataTransfer.items.add(file));
-                realInput.files = dataTransfer.files;
-            });
-        });
-
         /* -----------------------------------------------------------
-         * FileReader 유틸
-         * ----------------------------------------------------------- */
-        async function readFileAsDataURL(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.readAsDataURL(file);
-            });
-        }
+            (A) "수정" 버튼 -> 기존 댓글 내용(.comment-content) 숨기고,
+            수정 폼(.reply-edit-form) 열기
+            -----------------------------------------------------------
+            // "수정" 버튼 -> 보기 영역 숨기고, 수정 폼 열기
+        */
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
 
-        // “답글쓰기” 버튼 → 해당 대댓글 폼만 열기
-        document.querySelectorAll('.reply-edit-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const commentId = btn.getAttribute('data-comment-id');
-
-                // 다른 폼들 닫기
+                // 1) 다른 폼들(답글, 다른 수정폼)이 열려 있다면 닫기
+                //    -> 둘 다 열리는 문제 방지
                 document.querySelectorAll('.reply-form').forEach(f => f.style.display = 'none');
                 document.querySelectorAll('.reply-edit-form').forEach(f => f.style.display = 'none');
 
-                // 현재 댓글 내용 숨기기
+                // 2) 현재 댓글의 .comment-content 숨기기
                 const contentDiv = document.querySelector(`.comment-content[data-comment-id="${commentId}"]`);
                 if (contentDiv) {
                     contentDiv.style.display = 'none';
                 }
 
-                // 해당 댓글의 수정 폼 열기
+                // 3) 해당 댓글의 .reply-edit-form 열기
                 const editForm = document.querySelector(`.reply-edit-form[data-comment-id="${commentId}"]`);
                 if (editForm) {
                     editForm.style.display = 'block';
@@ -1147,22 +998,113 @@
             });
         });
 
-        // “취소” 버튼 → 폼 닫기
-        document.querySelectorAll('.cancel-reply-edit').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const commentId = btn.getAttribute('data-comment-id');
+        /* -----------------------------------------------------------
+           (B) "취소" 버튼 -> 원상 복귀
+           -----------------------------------------------------------
+           // 수정 폼에서 "취소" -> 원상 복귀
+        */
+        document.querySelectorAll('.cancel-edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
 
-                document.querySelectorAll('.reply-form').forEach(f => f.style.display = 'none');
-                document.querySelectorAll('.reply-edit-form').forEach(f => f.style.display = 'none');
+                // 1) 수정 폼 숨기기
+                const editForm = document.querySelector(`.reply-edit-form[data-comment-id="${commentId}"]`);
+                if (editForm) {
+                    editForm.style.display = 'none';
+                }
 
+                // 2) 다시 원래 댓글 내용(.comment-content) 보이기
                 const contentDiv = document.querySelector(`.comment-content[data-comment-id="${commentId}"]`);
                 if (contentDiv) {
                     contentDiv.style.display = 'block';
                 }
             });
         });
-    });
 
+
+        /* -----------------------------------------------------------
+           (C) 수정 폼: 기존/새 이미지 미리보기 처리
+           -----------------------------------------------------------
+           - 기존 이미지:
+             <input type="hidden" name="existingImageUrls" ... >
+             X버튼 → DOM에서 제거 → 서버로 전송 X
+           - 새 이미지:
+             "카메라 아이콘" 클릭 -> 임시 <input> -> FileReader 미리보기
+        */
+
+        // (C-1) 기존 이미지 X 버튼
+        // HTML에서 onclick="removeEditExistingImage(this)" 형태
+        window.removeEditExistingImage = function (btnElem) {
+            const previewItem = btnElem.closest('.preview-item');
+            if (previewItem) {
+                previewItem.remove();
+            }
+            // => 이렇게 하면 <input type="hidden" name="existingImageUrls">도 없어지므로
+            //    서버로 안 넘어감 → 삭제 처리
+        };
+
+        // (C-2) 새 이미지 추가
+        document.querySelectorAll('.edit-choose-image-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const commentId = this.getAttribute('data-comment-id');
+
+                // 임시 <input> 생성 (카메라 아이콘 방식을 그대로)
+                const tempInput = document.createElement('input');
+                tempInput.type = 'file';
+                tempInput.accept = 'image/*';
+                tempInput.multiple = true;
+                tempInput.style.display = 'none';
+                document.body.appendChild(tempInput);
+
+                tempInput.addEventListener('change', function (e) {
+                    let newFiles = Array.from(e.target.files);
+                    // (필요시) 5장 제한 검증도 가능
+
+                    // 새 이미지들 미리보기 추가
+                    newFiles.forEach(file => {
+                        addEditNewImage(commentId, file);
+                    });
+                    document.body.removeChild(tempInput);
+                });
+
+                tempInput.click();
+            });
+        });
+
+        // (C-3) 새 이미지 미리보기 추가
+        function addEditNewImage(commentId, file) {
+            const newPreviewList = document.getElementById(`editNewPreviewList-${commentId}`);
+            if (!newPreviewList) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                <img src="${reader.result}" alt="새 이미지">
+                <button type="button" onclick="removeEditNewImage(this)">X</button>
+                <!-- 여기서 "input type=hidden"을 넣어도 되고,
+                     or DataTransfer로 files에 바인딩해도 됩니다. -->
+            `;
+                newPreviewList.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // (C-4) 새 이미지 X 버튼
+        window.removeEditNewImage = function (btnElem) {
+            const item = btnElem.closest('.preview-item');
+            if (item) item.remove();
+        };
+
+        // (C-5) 실제 submit 시,
+        //       - 기존 이미지(남아있는 hidden) +
+        //       - 새 이미지(필요하다면 DataTransfer로 <input type="file">에 할당)
+        //       방식을 구현할 수도 있음.
+        //       => 게시판 수정처럼 "updateFileInput()" 로직이 필요하다면 추가.
+
+
+    });
 
 
 </script>
