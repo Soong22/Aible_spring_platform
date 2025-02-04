@@ -183,4 +183,64 @@ public class MemberController {
         }
     }
 
+
+    // 마이페이지 - 내 정보 조회 GET
+    @GetMapping("/mypage")
+    public String getMypage(Model model, Authentication authentication) {
+        try {
+            MemberService.addMemberInfoToModel(model, authentication);
+            MemberResponseDto member = memberService.getMemberByEmail(authentication.getName());
+
+            if (member.getPoliceUnitId() != null) {
+                // 경찰서 정보 맵
+                model.addAttribute("policeUnit",
+                        policeUnitService.getPoliceUnitById(member.getPoliceUnitId()));
+            }
+
+            model.addAttribute("member", member);
+
+            return "member/member";
+        } catch (MemberNotFoundException e) {
+            return "redirect:/members";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+    }
+
+
+    // 마이페이지 - 내 정보 수정 GET
+    @GetMapping("/mypage/edit")
+    public String editMypageForm(Model model, Authentication authentication) {
+        try {
+            MemberService.addMemberInfoToModel(model, authentication);
+            MemberResponseDto response = memberService.getMemberByEmail(authentication.getName());
+
+            model.addAttribute("response", response);
+            model.addAttribute("request", new MemberRequestDto());
+
+            if (response.getPoliceUnitId() != null) {
+                PoliceUnit policeUnit = policeUnitService.getPoliceUnitById(response.getPoliceUnitId());
+
+                model.addAttribute("selectedPoliceUnitId", policeUnit.getPoliceUnitId());
+                model.addAttribute("selectedDeptName", policeUnit.getDeptName());
+                model.addAttribute("selectedStationName", policeUnit.getStationName());
+                model.addAttribute("selectedPoliceUnitName", policeUnit.getPoliceUnitName());
+            } else {
+                model.addAttribute("selectedPoliceUnitId", null);
+                model.addAttribute("selectedDeptName", null);
+                model.addAttribute("selectedStationName", null);
+                model.addAttribute("selectedPoliceUnitName", null);
+            }
+
+            return "member/edit";
+        } catch (MemberNotFoundException e) {
+            return "redirect:/members";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+            return "error/error";
+        }
+    }
+
+
 }

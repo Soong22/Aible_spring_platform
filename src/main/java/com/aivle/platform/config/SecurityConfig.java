@@ -39,10 +39,10 @@ public class SecurityConfig {
                 // 인증 없이 접근 가능한 경로
                 .requestMatchers("/", "/error", "/api/**").permitAll()
                 .requestMatchers("/css/**", "/images/**", "/js/**").permitAll()
-                .requestMatchers("/member/register", "/mypage").permitAll()
+                .requestMatchers("/member/register").permitAll()
 
                 // 인증이 필요한 경로
-                .requestMatchers("/member/**").authenticated()
+                .requestMatchers("/member/**", "/mypage/**", "/cctv/**", "/notice_board/boards", "/region/**", "/index2").authenticated()
                 .requestMatchers("/board/**", "/boards", "/comment/**", "/comments").authenticated()
 
                 // 관리자 권한이 필요한 경로

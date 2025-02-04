@@ -1,0 +1,147 @@
+<!-- resources/templates/region/gwang.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>광산구 상세 페이지</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <!-- CSS 파일 참조 -->
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/scrollbar.css}">
+    <link rel="stylesheet" th:href="@{/css/police_table.css}"> <!-- 경찰서 테이블 전용 CSS -->
+    <!-- Font Awesome (필요 시) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+</head>
+
+<body>
+<!-- 사이드바 -->
+<div th:replace="~{fragments/sidebar2 :: sidebar}" id="sidebar"></div>
+
+<!-- 헤더 -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 메인 콘텐츠 -->
+<div class="container">
+    <div class="main-content">
+        <h1>광산구 상세 정보</h1>
+        <div class="content">
+            <table class="police-table" aria-label="광산구 경찰서 목록">
+                <thead>
+                <tr>
+                    <th>경찰서</th>
+                    <th>관서명</th>
+                    <th>구분</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr onclick="stationClick('수완 지구대')">
+                    <td>광주광산</td>
+                    <td>수완 지구대</td>
+                    <td>지구대</td>
+                </tr>
+                <tr onclick="stationClick('첨단 지구대')">
+                    <td>광주광산</td>
+                    <td>첨단 지구대</td>
+                    <td>지구대</td>
+                </tr>
+                <tr onclick="stationClick('우산 지구대')">
+                    <td>광주광산</td>
+                    <td>우산 지구대</td>
+                    <td>지구대</td>
+                </tr>
+                <tr onclick="stationClick('월곡 지구대')">
+                    <td>광주광산</td>
+                    <td>월곡 지구대</td>
+                    <td>지구대</td>
+                </tr>
+                <tr onclick="stationClick('도산 파출소')">
+                    <td>광주광산</td>
+                    <td>도산 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('송정 파출소')">
+                    <td>광주광산</td>
+                    <td>송정 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('하남 파출소')">
+                    <td>광주광산</td>
+                    <td>하남 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('비아 파출소')">
+                    <td>광주광산</td>
+                    <td>비아 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('평동 파출소')">
+                    <td>광주광산</td>
+                    <td>평동 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('동곡 파출소')">
+                    <td>광주광산</td>
+                    <td>동곡 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('삼도 파출소')">
+                    <td>광주광산</td>
+                    <td>삼도 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('본량 파출소')">
+                    <td>광주광산</td>
+                    <td>본량 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('임곡 파출소')">
+                    <td>광주광산</td>
+                    <td>임곡 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- 모달 창 -->
+<div id="supportModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>지원 요청</h2>
+        <form id="supportForm">
+            <label for="stationName">관서명:</label>
+            <input type="text" id="stationName" name="stationName" readonly>
+
+            <label for="photo">사진 업로드</label>
+            <div class="file-input-container">
+                <button type="button" id="fileSelectButton">파일 선택</button>
+                <span id="fileLabelText">선택된 파일 없음</span>
+                <input type="file" id="photo" name="photo" accept="image/*" multiple>
+            </div>
+            <ul id="fileList" class="file-list"></ul>
+
+            <label for="message">내용 작성:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+
+            <button type="submit" class="submit-button">전송</button>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="/js/sidebar.js"></script>
+<script src="/js/scrollbar.js"></script>
+<script src="/js/police_table.js"></script> <!-- 공통 JavaScript 파일 추가 -->
+<!-- 추가 JavaScript 파일이 필요하면 여기에 추가 -->
+</body>
+
+</html>
