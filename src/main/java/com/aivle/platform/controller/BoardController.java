@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,8 +79,11 @@ public class BoardController {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
 
+            // 최신 작성순 정렬 추가 (createdAt 기준 내림차순)
+//            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
             // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
-            Pageable pageable = PageRequest.of(page, size);
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
             // 페이징된 게시판 목록 조회
             Page<BoardResponseDto> boards = boardService.getAllBoards(pageable);
@@ -116,12 +120,6 @@ public class BoardController {
                 } else {
                     model.addAttribute("isTrue", false);
                 }
-
-//                if (member.getRole() == Role.ADMIN ||
-//                        Objects.equals(boardService.getBoard(boardId).getMember().getMemberId(), member.getMemberId())
-//                ) {
-//                    model.addAttribute("isTrue", true);
-//                }
             }
 
             model.addAttribute("board", board);
