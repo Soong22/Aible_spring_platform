@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>에러 페이지(4xx)</title>
+</head>
+<body>
+<h1>에러가 발생했습니다 (4xx 공통 페이지)</h1>
+<hr>
+<!-- 상태코드 -->
+<p><strong>Status Code:</strong> <span th:text="${status}"></span></p>
+<!-- 에러명 -->
+<p><strong>Error:</strong> <span th:text="${error}"></span></p>
+<!-- 에러 메세지 -->
+<p><strong>Message:</strong> <span th:text="${message}"></span></p>
+<!-- 에러 발생 경로 -->
+<p><strong>Path:</strong> <span th:text="${path}"></span></p>
+<p><strong>Custom:</strong> <span th:text="${customMessage}">기본 안내</span></p>
+
+<!-- 발생 시각 -->
+<!--<p><strong>Timestamp:</strong> <span th:text="${timestamp}"></span></p>-->
+</body>
+</html>

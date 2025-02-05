@@ -37,7 +37,7 @@ public class SecurityConfig {
         // 권한 설정
         http.authorizeHttpRequests(authorize -> authorize
                 // 인증 없이 접근 가능한 경로
-                .requestMatchers("/", "/error", "/api/**").permitAll()
+                .requestMatchers("/", "/error/**", "/api/**").permitAll()
                 .requestMatchers("/css/**", "/images/**", "/js/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
 

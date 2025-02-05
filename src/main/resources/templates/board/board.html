@@ -499,7 +499,7 @@
                 </button>
 
 
-<!--                <form th:if="${isTrue}"-->
+                <!--                <form th:if="${isTrue}"-->
                 <form th:if="${memberRole == 'ADMIN' or isTrue}"
                       th:action="@{/board/delete/{boardId}(boardId=${board.boardId})}" method="post"
                       onsubmit="return confirm('정말로 삭제하시겠습니까?');" class="d-inline">
@@ -575,12 +575,12 @@
                 <!--여기에 소속 표시하기-->
                 <span class="relative-time text-muted" th:attr="data-created-at=${comment.createdAt}"></span>
 
-<!--                <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>-->
+                <!--                <span class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>-->
                 <span th:if="${(comment.updatedAt != null) and comment.commentStatus != 'DELETED'}" class="edited-text">(수정됨)</span>
 
 
                 <!-- "답글쓰기" 버튼 -->
-                <span class="ms-2 text-muted" th:if="${comment.commentStatus != 'DELETED'}">
+                <span class="ms-2 text-muted">
                     <a href="javascript:void(0);"
                        class="reply-btn text-muted text-decoration-none"
                        th:attr="data-comment-id=${comment.commentId}">답글쓰기
@@ -588,7 +588,7 @@
 
                     <!-- 현재 사용자가 댓글 작성자인 경우에만 "수정" 및 "삭제" 버튼 표시 -->
                     <!-- 1) [작성자]인 경우: 수정 & 삭제 버튼 표시 -->
-                    <span th:if="${currentMemberId == comment.memberId}">
+                    <span th:if="${ (currentMemberId == comment.memberId) and (comment.commentStatus != 'DELETED')}">
                         |
                         <a href="javascript:void(0);"
                            class="reply-edit-btn text-muted text-decoration-none"
@@ -602,7 +602,8 @@
                     </span>
 
                     <!-- 2) [관리자이면서, 작성자는 아닌 경우]: 삭제 버튼만 표시 -->
-                    <span th:if="${#strings.trim(memberRole) == 'ADMIN' and currentMemberId != comment.memberId}">
+                    <span th:if="${(#strings.trim(memberRole) == 'ADMIN') and (currentMemberId != comment.memberId)
+                    and (comment.commentStatus != 'DELETED')}">
                         |
                         <a href="javascript:void(0);"
                            class="delete-btn text-muted text-decoration-none"

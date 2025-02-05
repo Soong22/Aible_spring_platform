@@ -99,7 +99,7 @@ public class MemberController {
     // 단건 조회
     @GetMapping("/member/{memberId}")
     public String getMember(@PathVariable("memberId") Long memberId, Model model, Authentication authentication) {
-        try {
+//        try {
             MemberService.addMemberInfoToModel(model, authentication);
             MemberResponseDto member = memberService.getMemberById(memberId);
 
@@ -112,12 +112,14 @@ public class MemberController {
             model.addAttribute("member", member);
 
             return "member/member";
-        } catch (MemberNotFoundException e) {
-            return "redirect:/members";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
-            return "error/error";
-        }
+//        } catch (MemberNotFoundException e) {
+////            return "redirect:/members";
+//            throw new MemberNotFoundException();
+//        } catch (Exception e) {
+//            throw new MemberNotFoundException("xptm");
+////            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
+////            return "error/error";
+//        }
     }
 
     // 회원수정 GET
