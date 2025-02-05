@@ -1,6 +1,7 @@
 package com.aivle.platform.config;
 
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -9,12 +10,9 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.ui.Model;
-
 import jakarta.validation.ConstraintViolationException;
 
 import java.io.PrintWriter;
@@ -23,8 +21,12 @@ import java.io.StringWriter;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    // application-*.yml에서 app.show-stacktrace 값을 읽어옴 (기본 false)
+    @Value("${app.show-stacktrace:false}")
+    private boolean showStackTrace;
+
     /**
-     * [1] 400 BadRequest (타입 변환 실패: 예. int 파라미터에 문자열 들어올 때)
+     * [1] 400 BadRequest (타입 변환 실패)
      */
     @ExceptionHandler(TypeMismatchException.class)
     public String handleTypeMismatchException(TypeMismatchException ex,
@@ -34,11 +36,11 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Bad Request");
         model.addAttribute("message", "타입 변환에 실패했습니다: " + ex.getMessage());
         model.addAttribute("path", request.getRequestURI());
-
-        // 스택 트레이스 옵션 (필요 시 주석 해제)
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        // 개발 환경일 때만 스택 트레이스 추가
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -52,10 +54,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Bad Request");
         model.addAttribute("message", "필수 파라미터가 누락되었습니다: " + ex.getParameterName());
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -69,10 +71,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Bad Request");
         model.addAttribute("message", "입력 값이 올바르지 않습니다.");
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -86,10 +88,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Bad Request");
         model.addAttribute("message", "입력 JSON이 유효하지 않습니다.");
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -103,10 +105,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Bad Request");
         model.addAttribute("message", "제약 조건을 위반한 값이 있습니다.");
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -120,10 +122,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Bad Request");
         model.addAttribute("message", ex.getMessage());
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -137,10 +139,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Not Found");
         model.addAttribute("message", "요청하신 페이지를 찾을 수 없습니다.");
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -154,10 +156,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Method Not Allowed");
         model.addAttribute("message", ex.getMessage());
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -168,33 +170,32 @@ public class GlobalExceptionHandler {
                                               HttpServletRequest request,
                                               HttpServletResponse response,
                                               Model model) {
-        // 혹은 response.setStatus(403)로 직접 세팅해도 됨
         model.addAttribute("status", 403);
         model.addAttribute("error", "Forbidden");
         model.addAttribute("message", "접근 권한이 없습니다.");
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
-     * [10] 404 (RuntimeException) 예시 - 커스텀 처리
+     * [10] 404 (RuntimeException) 예시
      */
     @ExceptionHandler(RuntimeException.class)
     public String handleRuntimeException(RuntimeException ex,
                                          HttpServletRequest request,
                                          Model model) {
-        // 예: 404로 처리하고 싶은 특정 RuntimeException 등
+        // 예: 특정 RuntimeException을 404로 처리하고 싶다면
         model.addAttribute("status", 404);
         model.addAttribute("error", "Not Found");
         model.addAttribute("message", ex.getMessage());
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**
@@ -208,10 +209,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Internal Server Error");
         model.addAttribute("message", ex.getMessage());
         model.addAttribute("path", request.getRequestURI());
-
-        model.addAttribute("trace", getStackTraceAsString(ex));
-
-        return "error/errorPage";
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
     }
 
     /**

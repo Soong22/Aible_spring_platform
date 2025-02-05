@@ -161,6 +161,16 @@
 
     </style>
 
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+
+    <script th:inline="javascript" th:if="${errorMessage != null}">
+        /*<![CDATA[*/
+        var msg = /*[[${errorMessage}]]*/ "";
+        alert(msg);
+        /*]]>*/
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const dateElements = document.querySelectorAll('.relative-time');
@@ -196,8 +206,7 @@
             location.href = `/board/${boardId}`;
         }
     </script>
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+
 </head>
 <body>
 

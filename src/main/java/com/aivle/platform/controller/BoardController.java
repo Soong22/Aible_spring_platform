@@ -4,6 +4,7 @@ import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
+import com.aivle.platform.exception.board.BoardCreationFailedException;
 import com.aivle.platform.exception.board.BoardDeletionFailedException;
 import com.aivle.platform.exception.board.BoardNotFoundException;
 import com.aivle.platform.exception.board.BoardUpdateFailedException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,59 +53,62 @@ public class BoardController {
             @Valid
             @ModelAttribute("request") BoardRequestDto request,
             @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles,
-            Authentication authentication) {
-        Member member = memberService.getMemberEmail(authentication.getName());
+            Authentication authentication, RedirectAttributes redirectAttributes) {
+        try {
+            Member member = memberService.getMemberEmail(authentication.getName());
 
-        // 이미지 파일 리스트가 null이거나 비어 있을 경우 처리
-        List<String> photoUrls = new ArrayList<>();
-        if (photoFiles != null && !photoFiles.isEmpty()) {
-            photoUrls = photoFiles.stream()
-                    .filter(file -> !file.isEmpty()) // 빈 파일 필터링
-                    .map(FileService::saveFileAndGetUrl)
-                    .collect(Collectors.toList());
+            // 이미지 파일 리스트가 null이거나 비어 있을 경우 처리
+            List<String> photoUrls = new ArrayList<>();
+            if (photoFiles != null && !photoFiles.isEmpty()) {
+                photoUrls = photoFiles.stream()
+                        .filter(file -> !file.isEmpty()) // 빈 파일 필터링
+                        .map(FileService::saveFileAndGetUrl)
+                        .collect(Collectors.toList());
+            }
+
+            // 이미지 URL 리스트를 요청 DTO에 설정
+            request.setImageUrls(photoUrls);
+
+            // 게시판 저장
+            Board board = boardService.createBoard(request, member);
+
+            return "redirect:/board/" + board.getBoardId();
+        } catch (BoardCreationFailedException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/board/register";
         }
-
-        // 이미지 URL 리스트를 요청 DTO에 설정
-        request.setImageUrls(photoUrls);
-
-        // 게시판 저장
-        Board board = boardService.createBoard(request, member);
-
-        return "redirect:/board/" + board.getBoardId();
     }
 
     @GetMapping("/boards")
     public String getBoards(Model model, Authentication authentication,
                             @RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "5") int size) {
-        try {
-            MemberService.addMemberInfoToModel(model, authentication);
 
-            // 최신 작성순 정렬 추가 (createdAt 기준 내림차순)
-//            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        MemberService.addMemberInfoToModel(model, authentication);
 
-            // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
-            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        // 최신 작성순 정렬 추가 (createdAt 기준 내림차순)
+        // Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-            // 페이징된 게시판 목록 조회
-            Page<BoardResponseDto> boards = boardService.getAllBoards(pageable);
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 페이징된 게시판 목록 조회
+        Page<BoardResponseDto> boards = boardService.getAllBoards(pageable);
 
 
-            // 모델에 멤버 목록과 페이징 정보 추가
-            model.addAttribute("boards", boards); // 멤버 목록
-            model.addAttribute("currentPage", page); // 현재 페이지
-            model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
-            model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("boards", boards); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
 
-            return "board/boards"; // register.html 페이지로 반환
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
-            return "error/error";
-        }
+        return "board/boards"; // register.html 페이지로 반환
+
     }
 
     @GetMapping("/board/{boardId}")
-    public String getBoard(@PathVariable("boardId") Long boardId, Model model, Authentication authentication) {
+    public String getBoard(@PathVariable("boardId") Long boardId, Model model,
+                           Authentication authentication, RedirectAttributes redirectAttributes) {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
             BoardResponseDto board = boardService.getBoardById(boardId);
@@ -126,16 +131,16 @@ public class BoardController {
 
             return "board/board";
         } catch (BoardNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/boards";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
-            return "error/error";
         }
+
     }
 
     // 게시판수정 GET
     @GetMapping("/board/edit/{boardId}")
-    public String editBoardForm(@PathVariable("boardId") Long boardId, Model model, Authentication authentication) {
+    public String editBoardForm(@PathVariable("boardId") Long boardId, Model model,
+                                Authentication authentication, RedirectAttributes redirectAttributes) {
         try {
             MemberService.addMemberInfoToModel(model, authentication);
 
@@ -146,10 +151,8 @@ public class BoardController {
 
             return "board/edit";
         } catch (BoardNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/boards";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
-            return "error/error";
         }
     }
 
@@ -159,8 +162,8 @@ public class BoardController {
             @PathVariable("boardId") Long boardId,
             @Valid @ModelAttribute("request") BoardRequestDto request,
             @RequestParam(value = "existingImageUrls", required = false) List<String> existingImageUrls,
-            @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles, // 새 이미지 파일
-            Model model) {
+            @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles,
+            RedirectAttributes redirectAttributes) {
         try {
             // 1) 새로 업로드된 파일을 실제 저장하고 그 URL 리스트를 만든다
             List<String> photoUrls = new ArrayList<>();
@@ -187,26 +190,21 @@ public class BoardController {
             return "redirect:/board/" + boardId;
 
         } catch (BoardUpdateFailedException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/boards";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
-            return "error/error";
         }
     }
 
     // 게시판삭제 POST
     @PostMapping("/board/delete/{boardId}")
-    public String deleteBoard(@PathVariable("boardId") Long boardId, Model model) {
+    public String deleteBoard(@PathVariable("boardId") Long boardId, RedirectAttributes redirectAttributes) {
         try {
             boardService.deleteBoard(boardId);
             return "redirect:/boards";
         } catch (BoardDeletionFailedException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/board/" + boardId;
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류가 발생했습니다.");
-            return "error/error";
         }
     }
-
 
 }

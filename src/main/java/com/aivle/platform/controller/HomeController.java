@@ -56,16 +56,14 @@ public class HomeController {
     public String cctvPage(@PathVariable("region") String region, Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
 
-        switch (region) {
-            case "buk":   // 북구
-            case "gwang": // 광산구
-            case "seo":   // 서구
-            case "dong":  // 동구
-            case "nam":   // 남구
-                return "cctv/cctv_" + region; // templates/cctv/cctv_{region}.html
-            default:
-                return "redirect:/cctv/google_map"; // 잘못된 region 값에 대해 기본 페이지로 리디렉션
-        }
+        return switch (region) {   // 북구
+            // 광산구
+            // 서구
+            // 동구
+            case "buk", "gwang", "seo", "dong", "nam" ->   // 남구
+                    "cctv/cctv_" + region; // templates/cctv/cctv_{region}.html
+            default -> "redirect:/cctv/google_map"; // 잘못된 region 값에 대해 기본 페이지로 리디렉션
+        };
     }
 
     // JSON 데이터 제공
