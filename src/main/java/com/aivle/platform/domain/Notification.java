@@ -45,7 +45,7 @@ public class Notification {
     private List<Image> images = new ArrayList<>();
 
 
-    private String getReadStatus() {
+    public String getReadStatusDescription() {
         return readStatus.getDescription();
     }
 
