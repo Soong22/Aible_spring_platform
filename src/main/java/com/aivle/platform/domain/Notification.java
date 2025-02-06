@@ -4,7 +4,6 @@ import com.aivle.platform.domain.type.ReadStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +20,8 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationId;
 
-    @Column(precision = 11, scale = 8, nullable = false)
-    private BigDecimal cctvLatitude;
-
-    @Column(precision = 11, scale = 8, nullable = false)
-    private BigDecimal cctvLongitude;
-
-    @Column(length = 500, nullable = false)
-    private String gifUrl;
-
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String description;
+    private String content;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -51,8 +41,12 @@ public class Notification {
     @JoinColumn(name = "receiver_id", nullable = false)
     private Member receiver; // Receiver (Member 테이블과 다대일 관계)
 
-    @OneToMany(mappedBy = "notification", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Image> images = new ArrayList<>();
 
+
+    private String getReadStatus() {
+        return readStatus.getDescription();
+    }
 
 }
