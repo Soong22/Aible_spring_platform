@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -24,6 +25,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // 비밀번호 암호화 설정
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler(); // Security 핸들러 등록
     }
 
     @Bean
@@ -45,12 +51,17 @@ public class SecurityConfig {
                 .requestMatchers("/member/**", "/mypage/**", "/cctv/**", "/notice_board/boards", "/region/**", "/index2").authenticated()
                 .requestMatchers("/board/**", "/boards", "/comment/**", "/comments").authenticated()
 
+                .requestMatchers("/notification/**").authenticated()
+
                 // 관리자 권한이 필요한 경로
                 .requestMatchers("/members").hasRole("ADMIN")
 
                 // 기타 모든 요청은 인증 필요
                 .anyRequest().authenticated()
-        );
+                )
+                .exceptionHandling(exception -> {
+                    exception.accessDeniedHandler(accessDeniedHandler());
+                });
 
         // 로그인 설정
         http.formLogin(form -> form

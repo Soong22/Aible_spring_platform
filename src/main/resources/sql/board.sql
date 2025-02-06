@@ -17,6 +17,9 @@ SELECT * FROM board;
 SELECT * FROM comment;
 
 
+SELECT * FROM notification;
+
+
 SELECT * FROM image;
 
 

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -145,6 +145,7 @@ public class GlobalExceptionHandler {
         return "error/error";
     }
 
+
     /**
      * [8] 405 Method Not Allowed
      */
@@ -168,7 +169,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public String handleAccessDeniedException(AccessDeniedException ex,
                                               HttpServletRequest request,
-                                              HttpServletResponse response,
                                               Model model) {
         model.addAttribute("status", 403);
         model.addAttribute("error", "Forbidden");
@@ -199,7 +199,24 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * [11] 500 Internal Server Error (그 외 모든 예외)
+     * [11] 404 Not Found (정적 리소스가 없는 경우)
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public String handleNoResourceFoundException(NoResourceFoundException ex,
+                                                 HttpServletRequest request,
+                                                 Model model) {
+        model.addAttribute("status", 404);
+        model.addAttribute("error", "Not Found");
+        model.addAttribute("message", "요청하신 페이지 또는 리소스를 찾을 수 없습니다.");
+        model.addAttribute("path", request.getRequestURI());
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
+    }
+
+    /**
+     * [12] 500 Internal Server Error (그 외 모든 예외)
      */
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex,
@@ -224,4 +241,5 @@ public class GlobalExceptionHandler {
         ex.printStackTrace(pw);
         return sw.toString();
     }
+
 }

@@ -4,6 +4,7 @@ import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.PoliceUnit;
 import com.aivle.platform.domain.type.Role;
 import com.aivle.platform.dto.response.MemberResponseDto;
+import com.aivle.platform.dto.response.NotificationForMemberResponseDto;
 import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.PoliceUnitService;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +73,13 @@ public class ApiController {
         } else {
             return ResponseEntity.noContent().build(); // 🔥 404 → 204 변경
         }
+    }
+
+    // 탈퇴자가 아닌 유저 목록 반환 (관리자가 선택할 대상)
+    @GetMapping("/active")
+    public ResponseEntity<List<NotificationForMemberResponseDto>> getActiveMembers() {
+        List<NotificationForMemberResponseDto> members = memberService.getActiveMembers();
+        return ResponseEntity.ok(members);
     }
 
 }

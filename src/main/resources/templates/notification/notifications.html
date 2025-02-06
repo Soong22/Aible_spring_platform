@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>게시판 목록</title>
+    <title>알림 내역</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -49,7 +49,7 @@
         }
 
         /* 게시글 항목 */
-        .board-item {
+        .notification-item {
             display: flex;
             align-items: center;
             padding: 15px;
@@ -59,7 +59,7 @@
         }
 
         /* 이미지 박스 */
-        .board-image-container {
+        .notification-image-container {
             position: relative;
             width: 100px;
             height: 100px;
@@ -67,7 +67,7 @@
         }
 
         /* 게시글 대표 이미지 */
-        .board-image {
+        .notification-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -89,26 +89,26 @@
         }
 
         /* 게시글 내용 */
-        .board-content {
+        .notification-content {
             flex-grow: 1;
         }
 
-        .board-title {
+        .notification-title {
             font-size: 1rem;
             font-weight: bold;
         }
 
-        .board-comments {
+        .notification-comments {
             color: #007bff;
             font-size: 0.9rem;
         }
 
-        .board-meta {
+        .notification-meta {
             font-size: 0.85rem;
             color: #666;
         }
 
-        .board-status {
+        .notification-status {
             font-size: 0.85rem;
             font-weight: bold;
             color: #28a745;
@@ -202,8 +202,9 @@
             });
         });
 
-        function goToBoardPage(boardId) {
-            location.href = `/board/${boardId}`;
+        function goTonotificationPage(notificationId) {
+            // location.href = `/notification/${notificationId}`;
+            location.href = `/`;
         }
     </script>
 
@@ -220,40 +221,36 @@
 <div class="team24-container">
     <!-- 게시판 컨테이너 -->
     <div class="table-container">
-        <h1>게시판 목록</h1>
+        <h1>알림 내역</h1>
 
         <!-- 게시판 목록 -->
-        <div th:each="board : ${boards.content}" class="board-item" th:onclick="|goToBoardPage(${board.boardId})|">
+        <div th:each="notification : ${notifications.content}" class="notification-item" th:onclick="|goTonotificationPage(${notification.notificationId})|">
 
             <!-- 대표 이미지 -->
-            <div class="board-image-container">
-                <img th:if="${board.imageUrls.size() > 0}" th:src="${board.imageUrls[0]}" alt="대표 이미지"
-                     class="board-image">
-                <img th:if="${board.imageUrls.size() == 0}" th:src="@{/images/noImage.png}" alt="기본 이미지"
-                     class="board-image">
+            <div class="notification-image-container">
+                <img th:if="${notification.imageUrls.size() > 0}" th:src="${notification.imageUrls[0]}" alt="대표 이미지"
+                     class="notification-image">
+                <img th:if="${notification.imageUrls.size() == 0}" th:src="@{/images/noImage2.png}" alt="기본 이미지"
+                     class="notification-image">
 
                 <!-- 이미지 개수 표시 -->
-                <div th:if="${board.imageUrls.size() > 1}" class="image-count"
-                     th:text="${board.imageUrls.size()}"></div>
+                <div th:if="${notification.imageUrls.size() > 1}" class="image-count"
+                     th:text="${notification.imageUrls.size()}"></div>
             </div>
 
             <!-- 게시글 정보 -->
-            <div class="board-content">
-                <div class="board-title">
-                    <span th:text="${board.title.length() > 20 ? board.title.substring(0, 20) + '...' : board.title}"></span>
-                    <span class="board-comments" th:text="'[' + ${board.comments.size()} + ']'"></span>
-                </div>
+            <div class="notification-content">
 
-                <div class="board-status" th:text="${board.status}"></div>
+                <div class="notification-status" th:text="${notification.readStatus}"></div>
 
-                <div class="board-meta">
-                    <span class="relative-time" th:attr="data-created-at=${board.createdAt}"></span> ·
-                    <span th:if="${board.policeUnitName == '탈퇴자' or board.policeUnitType == '탈퇴자'}">탈퇴자</span>
-                    <span th:unless="${board.policeUnitName == '탈퇴자' or board.policeUnitType == '탈퇴자'}"
-                          th:text="${board.policeUnitName} + ' ' + ${board.policeUnitType}"></span> ·
-                    <span th:text="${board.memberName}"></span>
-                    <br> 조회
-                    <span th:text="${board.viewCount}"></span>
+                <div class="notification-meta">
+                    <span class="relative-time" th:attr="data-created-at=${notification.createdAt}"></span> ·
+<!--                    <span th:text="${notification.receiverPoliceUnitName} + ' ' + ${notification.receiverPoliceUnitType}"></span>에 요청-->
+
+                    <span th:if="${notification.receiverPoliceUnitName == '탈퇴자' or notification.receiverPoliceUnitType == '탈퇴자'}">탈퇴자에 요청</span>
+                    <span th:unless="${notification.receiverPoliceUnitName == '탈퇴자' or notification.receiverPoliceUnitType == '탈퇴자'}"
+                          th:text="${notification.receiverPoliceUnitName} + ' ' + ${notification.receiverPoliceUnitType} + '에 요청'"></span>
+
                 </div>
             </div>
 
@@ -262,22 +259,22 @@
         <!-- 페이징 & 작성하기 버튼 컨테이너 -->
         <div class="pagination-container">
             <!-- 작성하기 버튼 -->
-            <a href="/board/register" class="btn btn-create">작성하기</a>
+<!--            <a href="/notification/register" class="btn btn-create">작성하기</a>-->
 
             <!-- 기존 페이지네이션 -->
-            <nav th:if="${boards.totalPages > 1}">
+            <nav th:if="${notifications.totalPages > 1}">
                 <ul class="pagination">
-                    <li class="page-item" th:classappend="${boards.hasPrevious() ? '' : 'disabled'}">
-                        <a class="page-link" th:href="@{/boards(page=${boards.number - 1})}" aria-label="이전">
+                    <li class="page-item" th:classappend="${notifications.hasPrevious() ? '' : 'disabled'}">
+                        <a class="page-link" th:href="@{/notifications(page=${notifications.number - 1})}" aria-label="이전">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, boards.totalPages - 1)}"
-                        th:classappend="${pageNum == boards.number ? 'active' : ''}">
-                        <a class="page-link" th:href="@{/boards(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, notifications.totalPages - 1)}"
+                        th:classappend="${pageNum == notifications.number ? 'active' : ''}">
+                        <a class="page-link" th:href="@{/notifications(page=${pageNum})}" th:text="${pageNum + 1}"></a>
                     </li>
-                    <li class="page-item" th:classappend="${boards.hasNext() ? '' : 'disabled'}">
-                        <a class="page-link" th:href="@{/boards(page=${boards.number + 1})}" aria-label="다음">
+                    <li class="page-item" th:classappend="${notifications.hasNext() ? '' : 'disabled'}">
+                        <a class="page-link" th:href="@{/notifications(page=${notifications.number + 1})}" aria-label="다음">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>

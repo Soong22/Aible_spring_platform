@@ -89,7 +89,7 @@ public class BoardController {
         // 최신 작성순 정렬 추가 (createdAt 기준 내림차순)
         // Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         // 페이징된 게시판 목록 조회
@@ -102,7 +102,7 @@ public class BoardController {
         model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
 
-        return "board/boards"; // register.html 페이지로 반환
+        return "board/boards";
 
     }
 

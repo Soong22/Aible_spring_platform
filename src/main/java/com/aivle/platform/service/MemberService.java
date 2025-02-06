@@ -5,6 +5,7 @@ import com.aivle.platform.domain.PoliceUnit;
 import com.aivle.platform.domain.type.Role;
 import com.aivle.platform.dto.request.MemberRequestDto;
 import com.aivle.platform.dto.response.MemberResponseDto;
+import com.aivle.platform.dto.response.NotificationForMemberResponseDto;
 import com.aivle.platform.exception.member.*;
 import com.aivle.platform.exception.police_unit.PoliceUnitNotFoundException;
 import com.aivle.platform.repository.MemberRepository;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -50,7 +52,7 @@ public class MemberService {
         }
     }
 
-    private Member getMember(Long memberId) {
+    public Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("유저를 찾을 수 없습니다. member_id: " + memberId));
     }
@@ -178,6 +180,11 @@ public class MemberService {
             model.addAttribute("isUser", false);
             model.addAttribute("isAdmin", false);
         }
+    }
+
+    // 탈퇴자가 아닌 유저 목록 조회 (지구대/파출소 정보 포함)
+    public List<NotificationForMemberResponseDto> getActiveMembers() {
+        return memberRepository.findActiveMembersWithPoliceUnit();
     }
 
 }
