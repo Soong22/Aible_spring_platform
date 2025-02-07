@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ReadStatus {
     UNREAD("읽지않음"),
-    READ("읽음");
+    READ("읽음"),
+    COMPLETED("처리완료");
 
     private final String description;
 

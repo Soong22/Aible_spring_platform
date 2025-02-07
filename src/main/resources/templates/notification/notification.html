@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>알림</title>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- CSS 파일 참조 -->
+    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
+
+    <style>
+        /* ================================
+        [1] 기본(Global) & 전체 레이아웃
+        ================================ */
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ================================
+           [2] 게시글(notification) 관련
+        ================================ */
+        /* 게시글 컨테이너 */
+        .notification-container {
+            max-width: 800px;
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            border: 1px solid #e9ecef;
+        }
+
+        /* 게시글 헤더 (제목, 작성자 등) */
+        .notification-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* 작성일, 조회수, 댓글개수 */
+        .notification-meta-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-meta {
+            font-size: 17px;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .notification-content {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .notification-status {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        /* 게시글 내부 이미지 */
+        .notification-images {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .notification-image {
+            width: 50%;
+            height: 50%;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 게시글 하단 버튼 (수정/삭제/목록 등) */
+        .notification-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .notification-buttons .btn-list {
+            background-color: #003366;
+            color: white;
+        }
+
+        .notification-buttons .btn-list:hover {
+            background-color: #0073e6;
+        }
+
+        /* ================================
+           [6] 모달(이미지 확대) 관련
+        ================================ */
+        .image-modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    </style>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+
+    <script th:inline="javascript" th:if="${errorMessage != null}">
+        /*<![CDATA[*/
+        var msg = /*[[${errorMessage}]]*/ "";
+        alert(msg);
+        /*]]>*/
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateElements = document.querySelectorAll('.relative-time');
+
+            dateElements.forEach(element => {
+                const createdAt = element.dataset.createdAt;
+                if (!createdAt) return;
+
+                const createdDate = new Date(createdAt);
+                const now = new Date();
+                const diffInMilliseconds = now - createdDate;
+
+                const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+                const diffInHours = Math.floor(diffInMinutes / 60);
+                const diffInDays = Math.floor(diffInHours / 24);
+
+                let relativeTime = "";
+                if (diffInDays >= 1) {
+                    relativeTime = `${diffInDays}일 전`;
+                } else if (diffInHours >= 1) {
+                    relativeTime = `${diffInHours}시간 전`;
+                } else if (diffInMinutes >= 1) {
+                    relativeTime = `${diffInMinutes}분 전`;
+                } else {
+                    relativeTime = "방금 전";
+                }
+
+                element.textContent = relativeTime;
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+<!-- 사이드바 -->
+<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
+
+<!-- 헤더 -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 메인 콘텐츠 -->
+<div class="team24-container">
+    <div class="notification-container">
+        <div class="notification-header">
+            <div class="notification-meta-container">
+                <div class="notification-meta">
+                    <span th:text="${#temporals.format(notification.createdAt, 'yyyy.MM.dd HH:mm') + '에 '}"></span>
+                    <span th:if="${notification.receiverPoliceUnitName == '탈퇴자' or notification.receiverPoliceUnitType == '탈퇴자'}">탈퇴자에 요청</span>
+                    <span th:unless="${notification.receiverPoliceUnitName == '탈퇴자' or notification.receiverPoliceUnitType == '탈퇴자'}"
+                          th:text="${notification.receiverPoliceUnitName} + ' ' + ${notification.receiverPoliceUnitType} + '에 요청'"></span>
+                    (<span class="notification-status" th:text="${notification.readStatus}"></span>)
+                </div>
+
+                <!-- POST 방식으로 완료 처리: notificationId를 hidden field로 전달 -->
+                <div sec:authorize="hasRole('USER')" th:if="${!notification.readStatus.equals('처리완료')}">
+                    <form th:action="@{/notification/complete}" method="post">
+                        <input type="hidden" name="notificationId" th:value="${notification.notificationId}" />
+                        <button type="submit" class="btn btn-success">완료하기</button>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="notification-content" th:utext="${#strings.replace(notification.content, '\n', '<br>')}">
+            알림 내용이 여기에 표시됩니다.
+        </div>
+
+        <!-- 이미지 목록 -->
+        <div class="notification-images" th:if="${notification.imageUrls.size() > 0}">
+            <img th:each="imageUrl : ${notification.imageUrls}" th:src="${imageUrl}" alt="게시글 이미지"
+                 class="notification-image">
+        </div>
+
+        <br>
+
+        <!-- 수정/삭제 버튼 -->
+        <div class="notification-buttons">
+            <button class="btn btn-list" onclick="location.href='/notifications'">목록</button>
+        </div>
+
+        <hr/>
+    </div>
+</div>
+
+<!-- 이미지 팝업 모달 -->
+<div id="imageModal" class="image-modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+
+<!-- 푸터 아래 추가 여백 -->
+<div class="team24-footer-padding"></div>
+
+<!-- 푸터 -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+
+<!-- JavaScript -->
+<script src="/js/fragments/sidebar.js"></script>
+<script src="/js/fragments/scrollbar.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 이미지 모달 (옵션)
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const images = document.querySelectorAll(".notification-image, .comment-image");
+
+        images.forEach(img => {
+            img.addEventListener("click", function () {
+                if (!modal) return;
+                modal.style.display = "flex";
+                modalImg.src = this.src;
+            });
+        });
+
+        window.closeModal = function () {
+            if (modal) modal.style.display = "none";
+        };
+        if (modal) {
+            modal.addEventListener("click", function (e) {
+                if (e.target === modal || e.target === modalImg) closeModal();
+            });
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape" && modal.style.display === "flex") {
+                    closeModal();
+                }
+            });
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -78,29 +78,19 @@
         /* 이미지 개수 표시 */
         .image-count {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
+            bottom: 0;
+            right: 0;
             background-color: rgba(0, 0, 0, 0.6);
             color: white;
-            font-size: 12px;
+            font-size: 15px;
             font-weight: bold;
-            padding: 3px 6px;
+            padding: 3px 9px;
             border-radius: 4px;
         }
 
         /* 게시글 내용 */
         .notification-content {
             flex-grow: 1;
-        }
-
-        .notification-title {
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .notification-comments {
-            color: #007bff;
-            font-size: 0.9rem;
         }
 
         .notification-meta {
@@ -133,30 +123,12 @@
             color: white;
         }
 
-
         .pagination-container {
             position: relative;
             display: flex;
             justify-content: center; /* 페이지네이션을 중앙에 둠 */
             align-items: center;
             margin-top: 20px;
-        }
-
-        /* 작성하기 버튼을 왼쪽 끝에 고정 */
-        .btn-create {
-            position: absolute;
-            left: 0;
-            background-color: #003366;
-            color: white;
-            font-weight: bold;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .btn-create:hover {
-            background-color: #0073e6;
-            color: white;
         }
 
     </style>
@@ -203,8 +175,8 @@
         });
 
         function goTonotificationPage(notificationId) {
-            // location.href = `/notification/${notificationId}`;
-            location.href = `/`;
+            location.href = `/notification/${notificationId}`;
+            // location.href = `/`;
         }
     </script>
 

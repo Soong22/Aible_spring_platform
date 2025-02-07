@@ -361,7 +361,7 @@
                 data.forEach(member => {
                     const option = document.createElement("option");
                     option.value = member.memberId;
-                    option.textContent = `${member.policeUnitName} ${member.policeUnitType}`;
+                    option.textContent = `${member.policeUnitName} ${member.policeUnitType}(${member.memberName})`;
                     select.appendChild(option);
                 });
             })

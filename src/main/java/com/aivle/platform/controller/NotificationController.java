@@ -2,10 +2,15 @@ package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.domain.Notification;
+import com.aivle.platform.domain.type.ReadStatus;
+import com.aivle.platform.domain.type.Role;
 import com.aivle.platform.dto.request.NotificationRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
+import com.aivle.platform.dto.response.MemberResponseDto;
 import com.aivle.platform.dto.response.NotificationResponseDto;
+import com.aivle.platform.exception.board.BoardNotFoundException;
 import com.aivle.platform.exception.notification.NotificationCreationFailedException;
+import com.aivle.platform.exception.notification.NotificationNotFoundException;
 import com.aivle.platform.service.FileService;
 import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.NotificationService;
@@ -25,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -71,8 +77,7 @@ public class NotificationController {
             // 게시판 저장
             Notification notification = notificationService.createNotification(request, sender, receiver);
 
-            return "redirect:/";
-//            return "redirect:/notification/" + notification.getNotificationId();
+            return "redirect:/notification/" + notification.getNotificationId();
         } catch (NotificationCreationFailedException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/notification/register";
@@ -81,8 +86,8 @@ public class NotificationController {
 
     @GetMapping("/notifications")
     public String getNotifications(Model model, Authentication authentication,
-                            @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "5") int size) {
+                                   @RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "5") int size) {
 
         MemberService.addMemberInfoToModel(model, authentication);
 
@@ -104,6 +109,166 @@ public class NotificationController {
 
         return "notification/notifications";
 
+    }
+
+    @GetMapping("/notification/{notificationId}")
+    public String getNotification(@PathVariable("notificationId") Long notificationId, Model model,
+                                  Authentication authentication, RedirectAttributes redirectAttributes) {
+        try {
+            MemberService.addMemberInfoToModel(model, authentication);
+
+            Member member = memberService.getMemberEmail(authentication.getName());
+
+
+            if (notificationService.getNotificationById(notificationId).getReadStatus().equals("읽지않음") && member.getRole() == Role.USER) {
+                notificationService.changeNotificationReadStatus(notificationId);
+            }
+
+            NotificationResponseDto notification = notificationService.getNotificationById(notificationId);
+
+            model.addAttribute("notification", notification);
+
+            return "notification/notification";
+        } catch (NotificationNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/notifications";
+        }
+    }
+
+    // 일반 사용자가 자신에게 들어온 요청알림 확인
+    @GetMapping("/notification/requested")
+    public String getNotificationsByReceiverRequested(Model model, Authentication authentication,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+        Member receiver = memberService.getMemberEmail(authentication.getName());
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 처리완료가 아닌거 불러오기
+        Page<NotificationResponseDto> notifications = notificationService
+                .getAllByReceiverAndReadStatusNot(receiver, pageable);
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("notifications", notifications); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
+
+        return "notification/notifications";
+    }
+
+    // 일반 사용자가 자신이 완료한 요청알림 확인
+    @GetMapping("/notification/completed")
+    public String getNotificationsByReceiverCompleted(Model model, Authentication authentication,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+        Member receiver = memberService.getMemberEmail(authentication.getName());
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 자신이 완료한거
+        Page<NotificationResponseDto> notifications = notificationService
+                .getAllByReceiverAndReadStatus(receiver, ReadStatus.COMPLETED, pageable);
+
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("notifications", notifications); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
+
+        return "notification/notifications";
+    }
+
+    // 관리자가 완료상태의 알림 확인
+    @GetMapping("/notification/admin-completed")
+    public String getNotificationsByCompleted(Model model, Authentication authentication,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 완료된 알림
+        Page<NotificationResponseDto> notifications = notificationService
+                .getAllByReadStatus(ReadStatus.COMPLETED, pageable);
+
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("notifications", notifications); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
+
+        return "notification/notifications";
+    }
+
+    // 관리자가 읽은상태의 알림 확인
+    @GetMapping("/notification/admin-read")
+    public String getNotificationsByRead(Model model, Authentication authentication,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 완료된 알림
+        Page<NotificationResponseDto> notifications = notificationService
+                .getAllByReadStatus(ReadStatus.READ, pageable);
+
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("notifications", notifications); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
+
+        return "notification/notifications";
+    }
+
+    // 관리자가 읽은상태의 알림 확인
+    @GetMapping("/notification/admin-unread")
+    public String getNotificationsByUnRead(Model model, Authentication authentication,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 완료된 알림
+        Page<NotificationResponseDto> notifications = notificationService
+                .getAllByReadStatus(ReadStatus.UNREAD, pageable);
+
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("notifications", notifications); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
+
+        return "notification/notifications";
+    }
+
+    // 사용자가 알림을 처리완료로 변경하기 위한 버튼
+    @PostMapping("/notification/complete")
+    public String setNotificationComplete(Model model, Authentication authentication,
+                                          @RequestParam("notificationId") Long notificationId){
+
+        notificationService.setNotificationComplete(notificationId);
+
+        return "redirect:/notification/" + notificationId;
     }
 
 

@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.thymeleaf.exceptions.TemplateInputException;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -216,7 +217,24 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * [12] 500 Internal Server Error (그 외 모든 예외)
+     * [12] 500 Thymeleaf 템플릿 파싱 오류 처리
+     */
+    @ExceptionHandler(TemplateInputException.class)
+    public String handleTemplateInputException(TemplateInputException ex,
+                                               HttpServletRequest request,
+                                               Model model) {
+        model.addAttribute("status", 500);
+        model.addAttribute("error", "Internal Server Error");
+        model.addAttribute("message", ex.getMessage());
+        model.addAttribute("path", request.getRequestURI());
+        if (showStackTrace) {
+            model.addAttribute("trace", getStackTraceAsString(ex));
+        }
+        return "error/error";
+    }
+
+    /**
+     * [13] 500 Internal Server Error (그 외 모든 예외)
      */
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex,

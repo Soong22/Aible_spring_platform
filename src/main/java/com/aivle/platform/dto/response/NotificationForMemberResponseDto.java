@@ -11,11 +11,13 @@ import lombok.*;
 public class NotificationForMemberResponseDto {
 
     private Long memberId;
+    private String memberName;
     private String policeUnitName; // 지구대/파출소명
     private String policeUnitType; // 문자열로 받고, 지구대/파출소 선택
 
-    public NotificationForMemberResponseDto(Long memberId, String policeUnitName, String policeUnitType) {
+    public NotificationForMemberResponseDto(Long memberId, String memberName,String policeUnitName, String policeUnitType) {
         this.memberId = memberId;
+        this.memberName = memberName;
         this.policeUnitName = policeUnitName;
 
         // ENUM을 한글로 변환
@@ -37,6 +39,7 @@ public class NotificationForMemberResponseDto {
 
         // 탈퇴자는 미리 제외시키기, 검색으로 찾기
         response.setMemberId(member.getMemberId());
+        response.setMemberName(member.getMemberName());
         response.setPoliceUnitName(member.getPoliceUnit().getPoliceUnitName());
         response.setPoliceUnitType(member.getPoliceUnit().getPoliceUnitTypeDescription());
 

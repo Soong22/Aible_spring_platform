@@ -20,7 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 알림 작성한 유저데이터, 탈퇴자, 관리자는 제외함
     @Query("SELECT new com.aivle.platform.dto.response.NotificationForMemberResponseDto(" +
-            "m.memberId, p.policeUnitName, CAST(p.policeUnitType AS string)) " +
+            "m.memberId, m.memberName, p.policeUnitName, CAST(p.policeUnitType AS string)) " +
             "FROM Member m " +
             "JOIN m.policeUnit p " +
             "WHERE m.role <> 'WITHDRAWN' AND m.role <> 'ADMIN'")
