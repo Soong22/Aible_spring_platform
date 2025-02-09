@@ -19,6 +19,8 @@ SELECT * FROM comment;
 
 SELECT * FROM notification;
 
+SELECT * FROM verification_token;
+
 
 SELECT * FROM image;
 
