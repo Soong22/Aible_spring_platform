@@ -3,6 +3,8 @@ package com.aivle.platform.service;
 import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Image;
 import com.aivle.platform.domain.Member;
+import com.aivle.platform.domain.Notification;
+import com.aivle.platform.domain.type.ReadStatus;
 import com.aivle.platform.domain.type.Status;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
@@ -44,6 +46,15 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
+    public Board createBoardByStatus(BoardRequestDto request, Member member, Status status) {
+        Board board = BoardRequestDto.toEntity(request);
+        board.setMember(member);
+        board.setCreatedAt(LocalDateTime.now());
+        board.setStatus(status);
+
+        return boardRepository.save(board);
+    }
+
     public BoardResponseDto getBoardById(Long boardId) {
         Board board = getBoard(boardId);
         board.setViewCount(board.getViewCount() + 1);
@@ -55,6 +66,15 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Page<BoardResponseDto> getAllBoards(Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
+
+        return boards.map(BoardResponseDto::fromEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BoardResponseDto> getAllBoardsByStatus(List<Status> statuses, Pageable pageable) {
+//        Page<Board> boards = boardRepository.findAllByStatus(status, pageable);
+
+        Page<Board> boards = boardRepository.findAllByStatusIn(statuses, pageable);
 
         return boards.map(BoardResponseDto::fromEntity);
     }
@@ -84,6 +104,13 @@ public class BoardService {
 
     public void deleteBoard(Long boardId) {
         boardRepository.delete(getBoard(boardId));
+    }
+
+    public void setBoardComplete(Long boardId) {
+        Board board = getBoard(boardId);
+        board.setStatus(Status.COMPLETED);
+
+        boardRepository.save(board);
     }
 
 }

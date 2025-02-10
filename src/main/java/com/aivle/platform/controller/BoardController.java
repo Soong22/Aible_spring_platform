@@ -2,6 +2,7 @@ package com.aivle.platform.controller;
 
 import com.aivle.platform.domain.Board;
 import com.aivle.platform.domain.Member;
+import com.aivle.platform.domain.type.Status;
 import com.aivle.platform.dto.request.BoardRequestDto;
 import com.aivle.platform.dto.response.BoardResponseDto;
 import com.aivle.platform.exception.board.BoardCreationFailedException;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -79,6 +81,89 @@ public class BoardController {
         }
     }
 
+    // 게시판작성(공지사항) GET
+    @GetMapping("/board/register-important")
+    public String registerBoardImportantForm(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        model.addAttribute("request", new BoardRequestDto());
+
+        return "board/registerImportant";
+    }
+
+    // 게시판작성(공지사항) POST
+    @PostMapping("/board/register-important")
+    public String registerBoardImportant(
+            @Valid
+            @ModelAttribute("request") BoardRequestDto request,
+            @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles,
+            Authentication authentication, RedirectAttributes redirectAttributes) {
+        try {
+            Member member = memberService.getMemberEmail(authentication.getName());
+
+            // 이미지 파일 리스트가 null이거나 비어 있을 경우 처리
+            List<String> photoUrls = new ArrayList<>();
+            if (photoFiles != null && !photoFiles.isEmpty()) {
+                photoUrls = photoFiles.stream()
+                        .filter(file -> !file.isEmpty()) // 빈 파일 필터링
+                        .map(FileService::saveFileAndGetUrl)
+                        .collect(Collectors.toList());
+            }
+
+            // 이미지 URL 리스트를 요청 DTO에 설정
+            request.setImageUrls(photoUrls);
+
+            // 게시판 저장
+            Board board = boardService.createBoardByStatus(request, member, Status.IMPORTANT);
+
+            return "redirect:/board/" + board.getBoardId();
+        } catch (BoardCreationFailedException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/board/register";
+        }
+    }
+
+    // 게시판작성(보고서) GET
+    @GetMapping("/board/register-report")
+    public String registerBoardReportForm(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        model.addAttribute("request", new BoardRequestDto());
+
+        return "board/registerReport";
+    }
+
+    // 게시판작성(보고서) POST
+    @PostMapping("/board/register-report")
+    public String registerBoardReport(
+            @Valid
+            @ModelAttribute("request") BoardRequestDto request,
+            @RequestPart(value = "photoFiles", required = false) List<MultipartFile> photoFiles,
+            Authentication authentication, RedirectAttributes redirectAttributes) {
+        try {
+            Member member = memberService.getMemberEmail(authentication.getName());
+
+            // 이미지 파일 리스트가 null이거나 비어 있을 경우 처리
+            List<String> photoUrls = new ArrayList<>();
+            if (photoFiles != null && !photoFiles.isEmpty()) {
+                photoUrls = photoFiles.stream()
+                        .filter(file -> !file.isEmpty()) // 빈 파일 필터링
+                        .map(FileService::saveFileAndGetUrl)
+                        .collect(Collectors.toList());
+            }
+
+            // 이미지 URL 리스트를 요청 DTO에 설정
+            request.setImageUrls(photoUrls);
+
+            // 게시판 저장
+            Board board = boardService.createBoardByStatus(request, member, Status.PENDING);
+
+            return "redirect:/board/" + board.getBoardId();
+        } catch (BoardCreationFailedException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/board/register";
+        }
+    }
+
+    // 전체 게시글조회
     @GetMapping("/boards")
     public String getBoards(Model model, Authentication authentication,
                             @RequestParam(defaultValue = "0") int page,
@@ -104,6 +189,98 @@ public class BoardController {
 
         return "board/boards";
 
+    }
+
+    @GetMapping("/boards/important")
+    public String getBoardsImportant(Model model, Authentication authentication,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 페이징된 게시판 목록 조회
+        List<Status> statuses = List.of(Status.IMPORTANT);
+        Page<BoardResponseDto> boards = boardService.getAllBoardsByStatus(statuses, pageable);
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("boards", boards); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
+
+        return "board/boardsImportant";
+    }
+
+    @GetMapping("/boards/report")
+    public String getBoardsReport(Model model, Authentication authentication,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 페이징된 게시판 목록 조회
+        List<Status> statuses = List.of(Status.PENDING, Status.COMPLETED);
+        Page<BoardResponseDto> boards = boardService.getAllBoardsByStatus(statuses, pageable);
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("boards", boards); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
+
+        return "board/boardsReport";
+    }
+
+    @GetMapping("/boards/report-unread")
+    public String getBoardsReportUnread(Model model, Authentication authentication,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 페이징된 게시판 목록 조회
+        List<Status> statuses = List.of(Status.PENDING);
+        Page<BoardResponseDto> boards = boardService.getAllBoardsByStatus(statuses, pageable);
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("boards", boards); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
+
+        return "board/boardsReport";
+    }
+
+    @GetMapping("/boards/report-read")
+    public String getBoardsReportRead(Model model, Authentication authentication,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "5") int size) {
+
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 5개 항목)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 페이징된 게시판 목록 조회
+        List<Status> statuses = List.of(Status.COMPLETED);
+        Page<BoardResponseDto> boards = boardService.getAllBoardsByStatus(statuses, pageable);
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("boards", boards); // 멤버 목록
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
+
+        return "board/boardsReport";
     }
 
     @GetMapping("/board/{boardId}")
@@ -205,6 +382,13 @@ public class BoardController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/board/" + boardId;
         }
+    }
+
+    @PostMapping("/board/complete")
+    public String setBoardComplete(@RequestParam("boardId") Long boardId){
+        boardService.setBoardComplete(boardId);
+
+        return "redirect:/boards/report-unread";
     }
 
 }

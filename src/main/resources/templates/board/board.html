@@ -652,6 +652,7 @@
                     <span th:text="${#temporals.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
                     <span th:if="${board.updatedAt != null}" class="team24-edited-text">(수정됨)</span>
                     · 조회 <span th:text="${board.viewCount}"></span>
+                    (<span th:text="${board.status}"></span>)
                 </div>
 
                 <div class="team24-comment-count" onclick="scrollToComments()">
@@ -691,7 +692,49 @@
             </div>
 
             <!-- 우측: 목록 버튼 -->
-            <button class="btn btn-list" onclick="location.href='/boards'">목록</button>
+<!--            <button class="btn btn-list" onclick="location.href='/boards'">목록</button>-->
+
+
+            <!-- 우측: 목록 버튼 -->
+
+            <!-- 버튼 컨테이너 -->
+            <div class="button-container">
+                <!-- 완료하기 버튼 (왼쪽) -->
+                <form th:action="@{/board/complete}" method="post" style="display:inline;">
+                    <input type="hidden" name="boardId" th:value="${board.boardId}">
+                    <button type="submit" class="btn btn-list"
+                            th:if="${#authorization.expression('hasRole(''ADMIN'')')
+                and board.status == '확인대기'}">
+                        완료하기
+                    </button>
+                </form>
+
+                <!-- 우측: 목록 버튼 -->
+                <button type="button" class="btn btn-list"
+                        th:onclick="
+                ${#authorization.expression('hasRole(''USER'')')
+                and (board.status == '확인대기' or board.status == '확인완료')}
+                ? 'location.href=\'/boards/report\''
+                : (${board.status == '일반'} ? 'location.href=\'/boards\''
+                : (${board.status == '공지사항'} ? 'location.href=\'/boards/important\''
+                : (${board.status == '확인대기'} ? 'location.href=\'/boards/report-unread\''
+                : 'location.href=\'/boards/report-read\'')))">
+                    목록
+                </button>
+            </div>
+
+
+            <!--            <button type="button" class="btn btn-list"-->
+<!--                    th:onclick="-->
+<!--            ${#authorization.expression('hasRole(''USER'')')-->
+<!--            and (board.status == '확인대기' or board.status == '확인완료')}-->
+<!--            ? 'location.href=\'/boards/report\''-->
+<!--            : (${board.status == '일반'} ? 'location.href=\'/boards\''-->
+<!--            : (${board.status == '공지사항'} ? 'location.href=\'/boards/important\''-->
+<!--            : (${board.status == '확인대기'} ? 'location.href=\'/boards/report-unread\''-->
+<!--            : 'location.href=\'/boards/report-read\'')))">-->
+<!--                목록-->
+<!--            </button>-->
         </div>
 
         <hr/>
@@ -740,7 +783,22 @@
                     </div>
 
                     <!-- 우측: 목록 버튼 -->
-                    <button type="button" class="btn btn-list" onclick="location.href='/boards'">목록</button>
+<!--                    <button type="button" class="btn btn-list" onclick="location.href='/boards'">목록</button>-->
+
+                    <!-- 우측: 목록 버튼 -->
+                    <button type="button" class="btn btn-list"
+                            th:onclick="
+            ${#authorization.expression('hasRole(''USER'')')
+            and (board.status == '확인대기' or board.status == '확인완료')}
+            ? 'location.href=\'/boards/report\''
+            : (${board.status == '일반'} ? 'location.href=\'/boards\''
+            : (${board.status == '공지사항'} ? 'location.href=\'/boards/important\''
+            : (${board.status == '확인대기'} ? 'location.href=\'/boards/report-unread\''
+            : 'location.href=\'/boards/report-read\'')))">
+                        목록
+                    </button>
+
+
 
                 </div>
             </form>

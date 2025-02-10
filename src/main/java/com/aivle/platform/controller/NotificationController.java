@@ -263,8 +263,7 @@ public class NotificationController {
 
     // 사용자가 알림을 처리완료로 변경하기 위한 버튼
     @PostMapping("/notification/complete")
-    public String setNotificationComplete(Model model, Authentication authentication,
-                                          @RequestParam("notificationId") Long notificationId){
+    public String setNotificationComplete(@RequestParam("notificationId") Long notificationId){
 
         notificationService.setNotificationComplete(notificationId);
 

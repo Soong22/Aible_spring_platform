@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Status {
     GENERAL("일반"),
-    IMPORTANT("공지"),
+    IMPORTANT("공지사항"),
     PENDING("확인대기"),
     COMPLETED("확인완료");
 
