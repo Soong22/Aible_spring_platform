@@ -27,7 +27,7 @@ public class HomeController {
     public String loginPage(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
 
-        return "member/login"; // `login.html`로 이동
+        return "member/login";
     }
 
     @GetMapping("/index2")

@@ -1,0 +1,140 @@
+.team24-login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 25px;
+    /*background: linear-gradient(145deg, #ffffff, #f2f2f2); !* 부드러운 흰색 그라데이션 *!*/
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* 더 깊은 그림자 */
+    text-align: center;
+    /* 중앙 정렬 */
+    /*align-items: center;*/
+    margin: 200px auto auto;
+
+    background-color: white;
+    border: 1px solid #e9ecef;
+}
+
+/* 로그인 폼 */
+.team24-login-form h1 {
+    font-size: 26px;
+    margin-bottom: 25px;
+    color: #003366; /* 진한 파란색 */
+    font-weight: bold;
+    text-transform: uppercase; /* 대문자 */
+    letter-spacing: 1px;
+}
+
+.team24-login-form label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333; /* 진한 회색 */
+    text-align: left;
+    font-weight: bold;
+}
+
+.team24-login-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: border 0.3s;
+}
+
+.team24-login-form input:focus {
+    border-color: #003366; /* 포커스 시 파란색 */
+    outline: none;
+}
+
+.team24-login-form input::placeholder {
+    color: #aaa; /* 연한 회색 */
+}
+
+.team24-login-form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #003366; /* 경찰 느낌의 진한 파란색 */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+}
+
+.team24-login-form button:hover {
+    background-color: #0073e6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.team24-login-form button:active {
+    transform: translateY(1px);
+}
+
+/* 에러 및 성공 메시지 */
+.team24-login-error-msg {
+    color: #b30000; /* 진한 빨간색 */
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.team24-login-success-msg {
+    color: #007b00; /* 진한 초록색 */
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* 로고 */
+.team24-login-logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.team24-login-logo-container img {
+    width: 80px; /* 적당한 크기의 로고 */
+    height: auto;
+}
+
+/* 메인 컨테이너 */
+.team24-login-container {
+    flex-grow: 1; /* 남은 공간을 채우기 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff; /* 흰색 배경 */
+}
+
+.team24-login-additional-links {
+    display: flex;
+    justify-content: space-between; /* 좌우로 배치 */
+    margin-top: 15px; /* 로그인 버튼과의 간격 */
+}
+
+.team24-login-additional-links a {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none; /* 밑줄 제거 */
+    color: #003366; /* 기본 파란색 */
+    transition: color 0.3s ease, transform 0.2s ease; /* 색상과 이동 효과 */
+}
+
+.team24-login-additional-links a:hover {
+    color: #002244; /* 더 진한 파란색 */
+    transform: translateY(-2px); /* 위로 2px 이동 */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+}
+
+.team24-login-additional-links a:active {
+    transform: translateY(1px); /* 클릭 시 아래로 1px 이동 */
+}

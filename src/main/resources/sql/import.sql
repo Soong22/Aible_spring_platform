@@ -1,5 +1,7 @@
 USE platform;
 
+select * from member;
+select * from board;
 
 INSERT INTO police_unit (dept_name, station_name, police_unit_name, police_unit_type, address, latitude, longitude)
 VALUES

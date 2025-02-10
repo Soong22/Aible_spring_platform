@@ -1,0 +1,14 @@
+.top-button {
+    position: fixed;
+    bottom: 50px; /* 버튼 위치 조정 */
+    right: 80px; /* 버튼 위치 조정 */
+    width: 150px; /* 버튼 크기 */
+    height: auto; /* 원본 비율 유지 */
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    z-index: 9999; /* 가장 위에 배치 (다른 요소 위로 올라오게 설정) */
+}
+
+.top-button:hover {
+    transform: scale(1.1); /* 마우스 호버 시 약간 확대 */
+}

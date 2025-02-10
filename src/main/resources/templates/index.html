@@ -2,21 +2,35 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>홈</title>
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes" />
+    <meta name="keywords" content="KT Avile School 6기 24조" />
+    <meta name="description" content="범죄와 전쟁 : AI 범죄모니터링 시스템은, 시민의 안전하고 행복한 생활을 위하여 24시간 방범관제 및 범죄자 예측을 제공하고 있습니다." />
 
-    <!-- CSS 파일 참조 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
+    <title>kt Aivle School 24조</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+    <!-- css -->
+    <!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="/css/font_ie8.css" /><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css" />
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/loading.css">
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css" />
+
+    <!-- js -->
+    <!--[if lt IE 9]><script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
 
 
     <!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창-->
@@ -90,6 +104,7 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             border-radius: 8px;
+            z-index: 9999999999;
         }
 
         /* toast-top-right 위치 조정: 기본 top 값 대신 80px로 설정 */
@@ -113,75 +128,137 @@
         }
     </style>
 
-<!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창-->
+    <!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창-->
+
 
 </head>
-<body>
 
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
+
+<!-- 🔥 로딩 화면 -->
+<!--<body>-->
+<!--<div id="loading-screen">-->
+<!--    <div class="loading-text">-->
+<!--        <h1>kt AIVLE 6기 24조</h1>-->
+<!--        <p class="loading-text"> Please wait a moment...🚀</p>-->
+<!--    </div>-->
+<!--    <div class="progress-bar">-->
+<!--        <div class="progress"></div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+
 <!-- 메인 콘텐츠 -->
-<div class="team24-container">
-    <div class="team24-index-main-content">
-        <!--        <h1>메인 페이지</h1>-->
+<body id="cctv" class="cctv">
+<div id="wrapper">
+    <div id="container">
+        <div class="rowgroup">
+            <section class="visual">
+                <h2 class="skip">비주얼</h2>
+                <div class="visual_list">
 
-        <!-- 슬라이더 -->
-        <div class="team24-index-slider" id="team24-index-slider">
-            <img th:src="@{/images/police_1.png}" alt="슬라이드 1">
-            <img th:src="@{/images/police_2.png}" alt="슬라이드 2" style="display: none;">
-            <img th:src="@{/images/police_3.png}" alt="슬라이드 3" style="display: none;">
 
-            <!-- 좌우 버튼 -->
-            <div class="team24-index-slider-buttons">
-                <i class="fas fa-chevron-left" onclick="prevSlide()" aria-label="이전 슬라이드"></i>
-                <i class="fas fa-chevron-right" onclick="nextSlide()" aria-label="다음 슬라이드"></i>
-            </div>
-
-            <!-- 슬라이드 인디케이터 -->
-            <div class="team24-index-slider-indicator">
-                <span class="team24-index-indicator" onclick="goToSlide(0)"></span>
-                <span class="team24-index-indicator" onclick="goToSlide(1)"></span>
-                <span class="team24-index-indicator" onclick="goToSlide(2)"></span>
-            </div>
+                    <div class="visual_item">
+                        <a href="/cctv/contents.do?key=8205" target="_blank" rel="noopener noreferrer" class="visual_anchor">
+                                <span class="visual_intro">
+                                    <span class="sub_title fade delay25">국민이 행복하고 범죄없는 나라 </span>
+                                    <span class="visual_title fade delay50">kt Aivle 24조</span>
+                                </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="visual_control">
+                    <div class="visual_count">
+                        <span class="visual_current slick-text"></span>
+                        <span class="progress on"><span></span></span>
+                        <span class="visual_total slick-text"></span>
+                    </div>
+                    <div class="visual_btn">
+                        <button type="button" class="visual_prev slick-arrow" title="이전" style="">이전</button>
+                        <button type="button" class="visual_next slick-arrow active" title="다음" style="">다음</button>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <!-- 게시판과 공지사항 -->
-        <div class="team24-index-info-box">
-            <!-- 게시판 -->
-            <div class="team24-index-box" id="team24-index-board-box">
-                <a href="/boards" class="team24-index-box-title">게시판</a>
-                <ul>
-                    <li><a href="/boards">게시판 항목 1</a></li>
-                    <li><a href="/board/list">게시판 항목 2</a></li>
-                </ul>
-            </div>
+        <div class="rowgroup2">
+            <section class="info">
+                <div class="wrap">
+                    <h2 class="info_title fade">시민 안전 스마트 도시! AI 범죄 예방 </h2>
+                    <div class="info_text fade">
+                        범죄와의 전쟁 팀은 CCTV 실시간 관제를 통한 범죄 예방 뿐만 아니라<br>
+                        범죄자(수배) 색출까지 시행하며, 시민의 안전과 행복에 힘을 기울이고 있습니다.
+                    </div>
 
-            <!-- 공지사항 -->
-            <div class="team24-index-box" id="team24-index-notice-box">
-                <a href="공지사항.html" class="team24-index-box-title">공지사항</a>
-                <ul>
-                    <li><a href="/notice_board/boards">공지사항 항목 1</a></li>
-                    <li><a href="/notice_board/boards">공지사항 항목 2</a></li>
-                </ul>
-            </div>
+                    <div class="info_list fade">
+                        <div class="info_item">
+                            <a href="/ai/ai_introduce" class="info_anchor">
+            <span class="info_image">
+              <img src="/images/AI.jpeg" alt="AI 이미지">
+            </span>
+                                <!-- 이미지 아래에 추가할 텍스트 -->
+                                <span class="info_caption">AI 기술 소개</span>
+                            </a>
+                        </div>
+                        <div class="info_item">
+                            <a href="/police/police_google_map" class="info_anchor">
+                <span class="info_image">
+                  <img src="/images/police_im.jpg" alt="파출소 이미지">
+                </span>
+                                <span class="info_caption">경찰서 위치</span>
+                            </a>
+                        </div>
+                        <div class="info_item">
+                            <a href="/cctv/google_map" class="info_anchor">
+                <span class="info_image">
+                  <img src="/images/info_img3.png" alt="CCTV 이미지">
+                </span>
+                                <span class="info_caption">CCTV 위치</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
+
+
+        <div class="rowgroup3">
+            <section class="data">
+                <h2 class="skip">데이터</h2>
+                <div class="wrap">
+                    <div class="databox n2 fade">
+                        <div class="image_container"> </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="rowgroup4">
+            <section class="center">
+                <div class="wrap">
+                    <h2 class="skip">조 </h2>
+                    <div class="center_text fade delay50">
+                        <span>국민이 안심할 수 있는 범죄 예방,</span>
+                        <span><em>kt Aivle School 24조</em>가</span>
+                        <span> 앞장서겠습니다.</span>
+                    </div>
+                    <div class="center_inner fade delay50">
+                    </div>
+                </div>
+            </section>
+        </div>
+
     </div>
 </div>
-
-<!-- 푸터 아래 추가 여백 -->
-<div class="team24-footer-padding"></div>
-
-<!-- 푸터 -->
-<div th:replace="~{fragments/footer :: footer}"></div>
-
-<!-- JavaScript -->
-<script src="/js/index.js"></script>
-<script src="/js/fragments/sidebar.js"></script>
-<script src="/js/fragments/scrollbar.js"></script>
+<!-- 맨 위로 이동 버튼 -->
+<img src="/images/model_image/top_button.png" id="topButton" class="top-button" alt="맨 위로 이동 버튼">
 </body>
-</html>
 
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
+
+</html>
