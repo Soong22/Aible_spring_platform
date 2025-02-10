@@ -261,4 +261,20 @@ public class MemberController {
         }
     }
 
+    // 아이디 찾기GET
+    @GetMapping("/member/find-email")
+    public String getMyEmailForm(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "member/find-email";
+    }
+
+    // 비번 찾기GET
+    @GetMapping("/member/find-pwd")
+    public String changeMyPwdForm(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "member/find-pwd";
+    }
+
 }

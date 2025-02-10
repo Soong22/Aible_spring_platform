@@ -30,4 +30,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Page<Member> findAllByPoliceUnit_StationName(String stationName, Pageable pageable);
 
+    // 해당 이메일과 이름으로 가입된 회원이 존재하면 true를 리턴
+    boolean existsByEmailAndMemberName(String email, String memberName);
+
 }

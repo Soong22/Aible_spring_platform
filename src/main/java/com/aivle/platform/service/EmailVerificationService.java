@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class EmailVerificationService {
 
@@ -20,6 +22,11 @@ public class EmailVerificationService {
      * 인증번호 생성 후 이메일 전송
      */
     public void sendVerificationCode(String email) {
+        // 1) 기존 이메일 토큰 삭제
+        if(tokenRepo.existsByEmail(email)){
+            tokenRepo.deleteAllByEmail(email);
+        }
+
         // 예: 6자리 난수 (100000 ~ 999999)
         String code = String.valueOf((int)(Math.random() * 900000) + 100000);
 
@@ -47,7 +54,7 @@ public class EmailVerificationService {
         }
         // 코드 일치 & 만료 전이면 인증 성공
         if (token.getCode().equals(code) && token.getExpiryDate().isAfter(LocalDateTime.now())) {
-            tokenRepo.delete(token); // 재사용 방지 위해 삭제 (선택)
+            tokenRepo.deleteAllByEmail(email);
             return true;
         }
         return false;

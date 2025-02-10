@@ -194,4 +194,19 @@ public class MemberService {
         return memberRepository.findActiveMembersWithPoliceUnit();
     }
 
+    public boolean checkEmail(String email, String memberName) {
+        return memberRepository.existsByEmailAndMemberName(email, memberName);
+    }
+
+    public boolean changePassword(String email, String password) {
+        try {
+            Member member = getMemberEmail(email);
+            member.setPassword(passwordEncoder.encode(password));
+            memberRepository.save(member);
+            return true;
+        } catch (Exception e){
+            throw new MemberUpdateFailedException("회원 수정에 실패하였습니다: " + e.getMessage(), e.getCause());
+        }
+    }
+
 }
