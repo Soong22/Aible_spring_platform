@@ -34,16 +34,21 @@
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+<!-- 네비게이션 메뉴 -->
+<nav class="nav-container">
+  <ul class="nav-menu">
+    <li><a href="#hello" class="nav-link">인사말</a></li>
+    <li><a href="#introduce" class="nav-link">팀원소개</a></li>
+  </ul>
+</nav>
+
+
 <!-- 메인 콘텐츠 -->
 <body>
 <div class="image-section">
   <img src="/images/kt_background.jpg" alt="KT " class="kt_image">
 </div>
-<!-- 네비게이션 버튼 -->
-<nav class="nav-container">
-  <button class="nav-button" onclick="scrollToSection('hello')">인사말</button>
-  <button class="nav-button" onclick="scrollToSection('introduce')">팀원소개</button>
-</nav>
+
 
 <!-- 공간 추가 -->
 <div class="spacer"></div>
@@ -68,82 +73,77 @@
 <div class="spacer"></div>
 <!-- 공간 추가 -->
 <div class="spacer"></div>
-<!-- 공간 추가 -->
-<div class="spacer"></div>
-<!-- 공간 추가 -->
-<div class="spacer"></div>
-<!-- 공간 추가 -->
-<div class="spacer"></div>
 <!-- 팀원 소개 섹션 -->
 <div id="introduce" class="team-section">
   <h2>AI 전남/전북 09반 24조 소개</h2>
 
   <div class="team-container">
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
+      <img src="/images/team/team1.jpg" alt="전홍석">
       <h3>전홍석</h3>
       <p>조장</p>
-      <p>Front End<br>AI / Data</p>
+      <p>Front End<br>AI / 얼굴탐지 모델 </p>
       <p>wjsghdtjr729@naver.com</p>
     </div>
 
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
-      <h3>전홍석</h3>
-      <p>조장</p>
-      <p>Front End<br>AI / Data</p>
-      <p>wjsghdtjr729@naver.com</p>
+      <img src="/images/team/team3.jpg"alt="조수아">
+      <h3>조수아</h3>
+      <p>팀원</p>
+      <p>Front End<br>AI / fast api 연동</p>
+      <p>josooah5226@gmail.com</p>
     </div>
 
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
-      <h3>전홍석</h3>
-      <p>조장</p>
-      <p>Front End<br>AI / Data</p>
-      <p>wjsghdtjr729@naver.com</p>
+      <img src="/images/team/team2.jpg"alt="김형준">
+      <h3>김형준</h3>
+      <p>팀원</p>
+      <p>Back End<br>AI / DB </p>
+      <p>azurek0922@naver.com</p>
     </div>
 
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
-      <h3>전홍석</h3>
-      <p>조장</p>
-      <p>Front End<br>AI / Data</p>
-      <p>wjsghdtjr729@naver.com</p>
+      <img src="/images/team/team4.jpg" alt="신호용">
+      <h3>신호용</h3>
+      <p>팀원</p>
+      <p>Modeling<br>AI / 이상행동 탐지 모델</p>
+      <p>tlsghdyd5020@naver.com</p>
     </div>
 
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
-      <h3>전홍석</h3>
-      <p>조장</p>
-      <p>Front End<br>AI / Data</p>
-      <p>wjsghdtjr729@naver.com</p>
+      <img src="/images/team/team5.jpg" alt="오하영">
+      <h3>오하영</h3>
+      <p>팀원</p>
+      <p>Modeling<br>AI / 이상행동 탐지 모델</p>
+      <p>dhgkdud114@naver.com</p>
     </div>
 
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
-      <h3>전홍석</h3>
-      <p>조장</p>
-      <p>Front End<br>AI / Data</p>
-      <p>wjsghdtjr729@naver.com</p>
+      <img src="/images/team/team6.jpg" alt="심동민">
+      <h3>심동민</h3>
+      <p>팀원</p>
+      <p>Modeling<br>AI / 흉기 탐지 모델</p>
+      <p>shimdm123@gmail.com</p>
     </div>
 
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
-      <h3>전홍석</h3>
-      <p>조장</p>
-      <p>Front End<br>AI / Data</p>
-      <p>wjsghdtjr729@naver.com</p>
+      <img src= "/images/team/team7.jpg" alt="강명진">
+      <h3>강명진</h3>
+      <p>팀원</p>
+      <p>Modeling<br>AI / 흉기 탐지 모델</p>
+      <p>kangya16@naver.com</p>
     </div>
 
     <div class="team-member">
-      <img src="/images/profile22.jpg" alt="전홍석">
-      <h3>전홍석</h3>
-      <p>조장</p>
-      <p>Front End<br>AI / Data</p>
-      <p>wjsghdtjr729@naver.com</p>
+      <img src="/images/team/team8.jpg" alt="전홍석">
+      <h3>박창진</h3>
+      <p>팀원</p>
+      <p>Data <br>AI / Data 수집 </p>
+      <p>timeandmoon1@gmail.com</p>
     </div>
   </div> <!-- ✅ `.team-container` 닫는 태그 위치 수정 -->
 </div>
+
 
 
 <!-- 맨 위로 이동 버튼 -->

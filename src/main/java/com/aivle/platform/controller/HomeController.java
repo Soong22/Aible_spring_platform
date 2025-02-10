@@ -72,6 +72,12 @@ public class HomeController {
         return "management/crime";
     }
 
+    // AI 소개 페이지 매핑
+    @GetMapping("/ai_introduce/ai_introduce")
+    public String aiIntroduce(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
 
+        return "ai_introduce/ai_introduce";
+    }
 
 }
