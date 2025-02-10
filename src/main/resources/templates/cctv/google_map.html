@@ -9,13 +9,24 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- CSS 파일 참조 -->
-    <link rel="stylesheet" th:href="@{/css/tmp/fragments/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/tmp/fragments/header.css}">
-    <link rel="stylesheet" th:href="@{/css/tmp/fragments/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/tmp/index.css}">
-    <link rel="stylesheet" th:href="@{/css/tmp/fragments/scrollbar.css}">
-
-    <link rel="stylesheet" th:href="@{/css/tmp/google_map.css}">
+    <link rel="stylesheet" th:href="@{/css/google_map.css}">
+    <!-- Google Maps API -->
+    <link rel="stylesheet" type="text/css" href="/css/font.css" />
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe8yGUEAzf3rrlE2PJ8zs68mYkwNLmlyE"></script>
+    <link rel="stylesheet" type="text/css" href="/css/google_map.css" />
+    <script src="/js/police_google_map.js" defer></script>
+    <!--[if lt IE 9]><script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
 
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
@@ -121,8 +132,6 @@
 </head>
 
 <body>
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
@@ -130,7 +139,7 @@
 <!-- 지도 콘텐츠 -->
 <div class="team24-container">
     <div class="main-content">
-        <h1>광주광역시 CCTV 지도</h1>
+        <h1></h1>
 
         <!-- 구 선택 -->
         <div class="select-container">
