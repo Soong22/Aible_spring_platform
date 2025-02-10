@@ -65,6 +65,11 @@
             font-size: 30pt;
         }
 
+        .team24-notifications-table-container h2 {
+            text-align: center;
+            font-size: 20pt;
+        }
+
         /* 게시글 항목 */
         .team24-notification-item {
             display: flex;
@@ -416,6 +421,10 @@
     <!-- 게시판 컨테이너 -->
     <div class="team24-notifications-table-container">
         <h1>알림 내역</h1>
+
+        <div th:if="${#lists.isEmpty(notifications.content)}" class="team24-no-content">
+            <h2>알림이 없습니다</h2>
+        </div>
 
         <!-- 게시판 목록 -->
         <div th:each="notification : ${notifications.content}" class="team24-notification-item" th:onclick="|goTonotificationPage(${notification.notificationId})|">
