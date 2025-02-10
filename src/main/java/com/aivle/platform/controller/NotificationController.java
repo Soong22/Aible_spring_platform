@@ -50,6 +50,27 @@ public class NotificationController {
         return "notification/register";
     }
 
+    // 선택된 유저에게 알림작성 GET
+    @GetMapping("/notification/register-to-member")
+    public String registerNotificationToMemberForm(
+            @RequestParam("receiverId") Long receiverId,
+            Model model, Authentication authentication
+    ) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        model.addAttribute("request", new NotificationRequestDto());
+
+        // 추가로 수신자 정보를 미리 조회하거나,
+        // 뷰에서 고정 표시를 원하면 다음과 같이 처리 가능.
+        Member receiver = memberService.getMember(receiverId);
+        model.addAttribute("receiverId", receiverId);
+        model.addAttribute("receiverName", receiver.getMemberName());
+        model.addAttribute("policeUnitName", receiver.getPoliceUnit().getPoliceUnitName());
+        model.addAttribute("policeUnitType", receiver.getPoliceUnit().getPoliceUnitTypeDescription());
+        // 필요한 추가정보도 모델로 전달 가능
+
+        return "notification/registerToMember"; // 동일한 폼 페이지 사용 가능
+    }
+
     // 알림작성 POST
     @PostMapping("/notification/register")
     public String registerNotification(

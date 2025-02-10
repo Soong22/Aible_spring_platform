@@ -2,6 +2,8 @@ package com.aivle.platform.repository;
 
 import com.aivle.platform.domain.Member;
 import com.aivle.platform.dto.response.NotificationForMemberResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,5 +27,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "JOIN m.policeUnit p " +
             "WHERE m.role <> 'WITHDRAWN' AND m.role <> 'ADMIN'")
     List<NotificationForMemberResponseDto> findActiveMembersWithPoliceUnit();
+
+    Page<Member> findAllByPoliceUnit_StationName(String stationName, Pageable pageable);
 
 }

@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .requestMatchers("/member/register").permitAll()
 
                 // 인증이 필요한 경로
-                .requestMatchers("/member/**", "/mypage/**", "/cctv/**", "/notice_board/boards", "/region/**", "/index2").authenticated()
+                .requestMatchers("/member/**", "/mypage/**", "/cctv/**", "/notice_board/boards", "/region/**", "/index2", "/introduce/**").authenticated()
                 .requestMatchers("/board/**", "/boards", "/comment/**", "/comments").authenticated()
 
                 .requestMatchers("/notification/**").authenticated()

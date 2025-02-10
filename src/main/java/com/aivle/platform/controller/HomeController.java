@@ -23,6 +23,21 @@ public class HomeController {
         return "index";
     }
 
+    // 메인 맵 페이지
+    @GetMapping("/region/gwangjumap")
+    public String gwangjumap(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "region/gwangjumap";
+    }
+
+    @GetMapping("/introduce/team_introduce")
+    public String teamIntroduce(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "introduce/team_introduce"; // templates/introduce/team_introduce.html 매핑
+    }
+
     @GetMapping("/login")
     public String loginPage(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
@@ -87,5 +102,6 @@ public class HomeController {
             return ResponseEntity.status(404).body("JSON 파일을 찾을 수 없습니다: " + filePath);
         }
     }
+
 
 }

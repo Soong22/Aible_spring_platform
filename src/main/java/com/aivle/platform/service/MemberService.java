@@ -102,6 +102,13 @@ public class MemberService {
         return members.map(MemberResponseDto::fromEntity);
     }
 
+    @Transactional(readOnly = true)
+    public Page<MemberResponseDto> getAllMembersByStationName(String stationName, Pageable pageable) {
+        Page<Member> members = memberRepository.findAllByPoliceUnit_StationName(stationName, pageable);
+
+        return members.map(MemberResponseDto::fromEntity);
+    }
+
     // 전체 수정
     public MemberResponseDto updateMember(Long memberId, MemberRequestDto request) {
         PoliceUnit policeUnit = policeUnitRepository.findById(request.getPoliceUnitId())
