@@ -45,13 +45,6 @@ public class HomeController {
         return "member/login";
     }
 
-    @GetMapping("/index2")
-    public String index2(Model model, Authentication authentication) {
-        MemberService.addMemberInfoToModel(model, authentication);
-
-        return "index2"; // templates/index2.html 반환
-    }
-
     @GetMapping("/notice_board/boards")
     public String getNoticeBoard(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
