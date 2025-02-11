@@ -81,4 +81,18 @@ public class HomeController {
         return "police/police_google_map";
     }
 
+    // CCTV 페이지 매핑
+    @GetMapping("/cctv/gwangju_cctv")
+    public String gwangjuCctv(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "cctv/gwangju_cctv";
+    }
+
+    // 수사 요청 페이지 매핑
+    @GetMapping("/notification/police_map")
+    public String policeMap(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "notification/police_map";
+    }
+
 }

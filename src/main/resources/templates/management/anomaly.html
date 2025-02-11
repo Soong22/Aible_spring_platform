@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport"
           content="width=device-width, height=device-height, initial-scale=1.0,
@@ -55,44 +55,13 @@
         <table id="alarm-table">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>분류</th>
-                <th>일시</th>
-                <th>위치</th>
-                <th>상태</th>
-                <th>경찰서</th>
-                <th>소방서</th>
-                <th>관제센터</th>
-                <th>시청</th>
-                <th>병원</th>
+                <th>Class_Name</th>
+                <th>Accuracy</th>
+                <th>Timestamp</th>
             </tr>
             </thead>
             <tbody>
-            <!-- 초기 데모 데이터 -->
-            <tr>
-                <td>T1021</td>
-                <td>교통</td>
-                <td>12:55:26</td>
-                <td>37.4183, 127.1228</td>
-                <td>2단계</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>미전달</td>
-                <td>전달</td>
-            </tr>
-            <tr>
-                <td>T1020</td>
-                <td>교통</td>
-                <td>12:55:17</td>
-                <td>37.4653, 127.0900</td>
-                <td>2단계</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>미전달</td>
-                <td>전달</td>
-            </tr>
+
             </tbody>
         </table>
     </div>
@@ -100,70 +69,63 @@
 
 <script>
     // 전체화면 토글 함수: 헤더와 푸터는 제외하고, fullscreen-container만 전체화면 전환
-function toggleFullscreen() {
-    const elem = document.getElementById("fullscreen-container");
-    if (!document.fullscreenElement) {
-        elem.requestFullscreen().then(() => {
-            console.log("전체화면 모드 진입");
-        }).catch(err => {
-            console.error(`전체화면 요청 에러: ${err.message} (${err.name})`);
-        });
-    } else {
-        document.exitFullscreen().then(() => {
-            console.log("전체화면 모드 종료");
-        }).catch(err => {
-            console.error(`전체화면 종료 에러: ${err.message} (${err.name})`);
-        });
-    }
-}
-
-// 알람 데이터를 주기적으로 갱신하는 함수
-function updateAnomalyData() {
-$.ajax({
-    url: '/api/anomalies',
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) {
-        // data: AnomalyData 객체들의 배열
-        let tableBody = $('#alarm-table tbody');
-        tableBody.empty();
-
-        // 최신 데이터부터 표시 (역순 정렬)
-        data.slice().reverse().forEach(function(anomaly) {
-            // 임의로 위치, 경찰서 등은 고정값 또는 필요에 따라 업데이트
-            let row = `<tr>
-                <td>${anomaly.id}</td>
-                <td>${anomaly.type}</td>
-                <td>${anomaly.timestamp}</td>
-                <td>37.0000, 127.0000</td>
-                <td>${anomaly.accuracy.toFixed(1)}%</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>미전달</td>
-                <td>전달</td>
-            </tr>`;
-            tableBody.append(row);
-        });
-
-        // 알람 이미지 업데이트: 가장 최신 알람 이미지 사용
-        if(data.length > 0) {
-            let latest = data[data.length - 1];
-            $('#alarm-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
-            // 캐시 무효화를 위해 타임스탬프 추가
+    function toggleFullscreen() {
+        const elem = document.getElementById("fullscreen-container");
+        if (!document.fullscreenElement) {
+            elem.requestFullscreen().then(() => {
+                console.log("전체화면 모드 진입");
+            }).catch(err => {
+                console.error(`전체화면 요청 에러: ${err.message} (${err.name})`);
+            });
+        } else {
+            document.exitFullscreen().then(() => {
+                console.log("전체화면 모드 종료");
+            }).catch(err => {
+                console.error(`전체화면 종료 에러: ${err.message} (${err.name})`);
+            });
         }
-    },
-    error: function(err) {
-        console.error('알람 데이터 조회 에러:', err);
     }
-});
-}
 
-// 페이지 로드시와 5초마다 업데이트
-$(document).ready(function(){
-updateAnomalyData();
-setInterval(updateAnomalyData, 5000);
-});
+    // 알람 데이터를 주기적으로 갱신하는 함수
+    function updateAnomalyData() {
+        $.ajax({
+            url: '/api/anomalies',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // data: AnomalyData 객체들의 배열
+                let tableBody = $('#alarm-table tbody');
+                tableBody.empty();
+
+                // 최신 데이터부터 표시 (역순 정렬)
+                data.slice().reverse().forEach(function(anomaly) {
+                    // 임의로 위치, 경찰서 등은 고정값 또는 필요에 따라 업데이트
+                    let row = `<tr>
+                <td>${anomaly.class_name}</td>
+                <td>${anomaly.accuracy.toFixed(1)}%</td>
+                <td>${anomaly.timestamp}</td>
+            </tr>`;
+                    tableBody.append(row);
+                });
+
+                // 알람 이미지 업데이트: 가장 최신 알람 이미지 사용
+                if(data.length > 0) {
+                    let latest = data[data.length - 1];
+                    $('#alarm-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
+                    // 캐시 무효화를 위해 타임스탬프 추가
+                }
+            },
+            error: function(err) {
+                console.error('알람 데이터 조회 에러:', err);
+            }
+        });
+    }
+
+    // 페이지 로드시와 5초마다 업데이트
+    $(document).ready(function(){
+        updateAnomalyData();
+        setInterval(updateAnomalyData, 5000);
+    });
 </script>
 </body>
 

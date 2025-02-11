@@ -4,17 +4,16 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport"
-          content="width=device-width, height=device-height, initial-scale=1.0,
-                   maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes" />
+          content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes" />
     <meta name="keywords" content="KT Avile School 6기 24조" />
     <meta name="description" content="범죄와 전쟁 : AI 범죄모니터링 시스템은, 시민의 안전하고 행복한 생활을 위하여 24시간 방범관제 및 범죄자 예측을 제공하고 있습니다." />
 
-    <!-- css (필요한 CSS 파일들) -->
+    <!-- CSS 파일들 -->
     <link rel="stylesheet" type="text/css" href="/css/font.css" />
     <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
     <link rel="stylesheet" type="text/css" href="/css/management.css" />
 
-    <!-- js (필요한 JS 파일들) -->
+    <!-- JS 파일들 -->
     <script src="/js/jquery-1.12.4.min.js"></script>
     <script src="/js/jquery.screen.min.js"></script>
     <script src="/js/jquery.menu.min.js"></script>
@@ -27,70 +26,45 @@
     <script src="/js/cctv/main.js"></script>
     <script src="/js/loading.js"></script>
 
-    <title>범죄 이력 관리</title>
+    <title>범죄 알림 관리</title>
 </head>
 
+<body>
 <!-- 헤더 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
-<body>
 <!-- 전체화면 토글 버튼 -->
 <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
 <div class="grid-container">
-    <!-- 좌측: MJPEG 스트리밍 (FastAPI의 /predict URL) -->
+    <!-- 좌측: 스트리밍 영상 혹은 기타 콘텐츠 (원래 코드에서 사용하던 부분, 필요에 따라 수정) -->
     <div class="video-section">
         <img src="https://crime-detect.run.goorm.io/predict" alt="MJPEG Stream" />
     </div>
 
-    <!-- 우측: 알람 이미지 영역 (최신 알람 이미지로 업데이트) -->
+    <!-- 우측: 최신 범죄 알림 이미지 -->
     <div class="image-section">
-        <img id="alarm-image" src="/images/AI.jpeg" alt="Alarm" />
+        <img id="crime-image" src="/images/placeholder.jpg" alt="범죄 알림 이미지" />
     </div>
 
-    <!-- 하단: 알람 정보 테이블 -->
+    <!-- 하단: 범죄 알림 정보 테이블 -->
     <div class="table-section">
-        <table id="alarm-table">
+        <table id="crime-table">
             <thead>
             <tr>
                 <th>ID</th>
                 <th>분류</th>
                 <th>일시</th>
-                <th>위치</th>
-                <th>상태</th>
-                <th>경찰서</th>
-                <th>소방서</th>
-                <th>관제센터</th>
-                <th>시청</th>
-                <th>병원</th>
+                <th>정확도</th>
+                <th>이름</th>
+                <th>범죄 유형</th>
+                <th>범죄 횟수</th>
+                <th>출소 여부</th>
+                <th>위험도</th>
             </tr>
             </thead>
             <tbody>
-            <!-- 초기 데모 데이터 -->
-            <tr>
-                <td>T1021</td>
-                <td>교통</td>
-                <td>12:55:26</td>
-                <td>37.4183, 127.1228</td>
-                <td>2단계</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>미전달</td>
-                <td>전달</td>
-            </tr>
-            <tr>
-                <td>T1020</td>
-                <td>교통</td>
-                <td>12:55:17</td>
-                <td>37.4653, 127.0900</td>
-                <td>2단계</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>전달</td>
-                <td>미전달</td>
-                <td>전달</td>
-            </tr>
+            <!-- JavaScript로 데이터 추가 -->
             </tbody>
         </table>
     </div>
@@ -99,71 +73,67 @@
 <script>
     // 전체화면 토글 함수
     function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.body.requestFullscreen().then(() => {
-          console.log("전체화면 모드 진입");
-        }).catch(err => {
-          console.error(`전체화면 요청 에러: ${err.message} (${err.name})`);
-        });
-      } else {
-        document.exitFullscreen().then(() => {
-          console.log("전체화면 모드 종료");
-        }).catch(err => {
-          console.error(`전체화면 종료 에러: ${err.message} (${err.name})`);
-        });
-      }
+        if (!document.fullscreenElement) {
+            document.body.requestFullscreen().then(() => {
+                console.log("전체화면 모드 진입");
+            }).catch(err => {
+                console.error(`전체화면 요청 에러: ${err.message} (${err.name})`);
+            });
+        } else {
+            document.exitFullscreen().then(() => {
+                console.log("전체화면 모드 종료");
+            }).catch(err => {
+                console.error(`전체화면 종료 에러: ${err.message} (${err.name})`);
+            });
+        }
     }
 
-    // 알람 데이터를 주기적으로 갱신하는 함수
-    function updateAnomalyData() {
+    // 범죄 알림 데이터를 주기적으로 갱신하는 함수
+    function updateCrimeData() {
         $.ajax({
-            url: '/api/anomalies',
+            url: '/api/crime',  // CrimeController의 GET 매핑 주소
             type: 'GET',
             dataType: 'json',
             success: function(data) {
-                // data: AnomalyData 객체들의 배열
-                let tableBody = $('#alarm-table tbody');
+                var tableBody = $('#crime-table tbody');
                 tableBody.empty();
 
                 // 최신 데이터부터 표시 (역순 정렬)
-                data.slice().reverse().forEach(function(anomaly) {
-                    // 임의로 위치, 경찰서 등은 고정값 또는 필요에 따라 업데이트
-                    let row = `<tr>
-                        <td>${anomaly.id}</td>
-                        <td>${anomaly.type}</td>
-                        <td>${anomaly.timestamp}</td>
-                        <td>37.0000, 127.0000</td>
-                        <td>${anomaly.accuracy.toFixed(1)}%</td>
-                        <td>전달</td>
-                        <td>전달</td>
-                        <td>전달</td>
-                        <td>미전달</td>
-                        <td>전달</td>
-                    </tr>`;
+                data.slice().reverse().forEach(function(alert) {
+                    var row = `<tr>
+                                    <td>${alert.id}</td>
+                                    <td>${alert.type}</td>
+                                    <td>${alert.timestamp}</td>
+                                    <td>${parseFloat(alert.accuracy).toFixed(1)}%</td>
+                                    <td>${alert.name ? alert.name : '-'}</td>
+                                    <td>${alert.crimeType ? alert.crimeType : '-'}</td>
+                                    <td>${alert.crimeCount}</td>
+                                    <td>${alert.released ? '출소' : '미출소'}</td>
+                                    <td>${alert.riskLevel ? alert.riskLevel : '-'}</td>
+                               </tr>`;
                     tableBody.append(row);
                 });
 
-                // 알람 이미지 업데이트: 가장 최신 알람 이미지 사용
-                if(data.length > 0) {
-                    let latest = data[data.length - 1];
-                    $('#alarm-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
-                    // 캐시 무효화를 위해 타임스탬프 추가
+                // 최신 알림 이미지 업데이트 (이미지가 존재할 경우)
+                if (data.length > 0) {
+                    var latest = data[data.length - 1];
+                    $('#crime-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
                 }
             },
             error: function(err) {
-                console.error('알람 데이터 조회 에러:', err);
+                console.error('범죄 알림 데이터 조회 오류:', err);
             }
         });
     }
 
-    // 페이지 로드시와 5초마다 업데이트
+    // 페이지 로드 시 및 5초마다 갱신
     $(document).ready(function(){
-        updateAnomalyData();
-        setInterval(updateAnomalyData, 5000);
+        updateCrimeData();
+        setInterval(updateCrimeData, 5000);
     });
 </script>
-</body>
 
 <!-- 푸터 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
 </html>
