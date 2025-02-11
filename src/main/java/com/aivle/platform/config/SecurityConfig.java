@@ -83,7 +83,7 @@ public class SecurityConfig {
 
         // 중복 로그인 차단을 위한 세션 관리
         http.sessionManagement(session -> session
-                .maximumSessions(1) // 세션 최대 허용 수: 1
+                .maximumSessions(1000) // 세션 최대 허용 수: 1
 //                .maxSessionsPreventsLogin(true) // 새로운 로그인 차단
                 .maxSessionsPreventsLogin(false) // 기존 세션 만료, 새로운 로그인 허용
                 .expiredSessionStrategy(customSessionExpiredStrategy) // 커스텀 전략 적용
