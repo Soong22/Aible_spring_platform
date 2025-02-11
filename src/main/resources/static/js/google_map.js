@@ -1,11 +1,14 @@
+// 전역 변수로 현재 열려있는 인포윈도우를 저장 (하나만 열리도록)
+let currentInfoWindow = null;
+
 function loadCCTVData() {
     const region = document.getElementById("region-select").value; // 선택된 구
     const dataUrl = `/cctv/cctv_data_${region}.json`; // 구별 JSON 파일 경로
 
-    // 사용자 지정 CCTV 아이콘 경로 및 크기 설정
+    // 사용자 지정 CCTV 아이콘 설정
     const cctvIconUrl = {
         url: '/images/cctv2.png', // CCTV 아이콘 경로
-        scaledSize: new google.maps.Size(40, 40), // 아이콘 크기 설정 (너비 x 높이)
+        scaledSize: new google.maps.Size(40, 40), // 아이콘 크기 설정
     };
 
     // 기존 마커 제거
@@ -33,18 +36,33 @@ function loadCCTVData() {
                     position: { lat: cctv.lat, lng: cctv.lng },
                     map: map,
                     title: cctv.name,
-                    icon: cctvIconUrl, // 사용자 지정 아이콘
+                    icon: cctvIconUrl,
                 });
 
+                // 인포윈도우 내용에 영상 스트림 영역 추가
+                const content = `
+              <div class="cctv-info">
+                <b>${cctv.name}</b>
+                <div class="video-section">
+                  <img src="https://crime-detect.run.goorm.io/predict" alt="MJPEG Stream" />
+                </div>
+              </div>
+            `;
+
                 const infoWindow = new google.maps.InfoWindow({
-                    content: `<b>${cctv.name}</b>`,
+                    content: content,
                 });
 
                 marker.addListener("click", () => {
+                    // 다른 인포윈도우가 열려있다면 닫음
+                    if (currentInfoWindow) {
+                        currentInfoWindow.close();
+                    }
                     infoWindow.open(map, marker);
+                    currentInfoWindow = infoWindow;
                 });
 
-                window.markers.push(marker); // 마커 저장
+                window.markers.push(marker);
             });
         })
         .catch(error => {

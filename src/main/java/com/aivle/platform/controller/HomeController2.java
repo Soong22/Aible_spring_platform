@@ -40,5 +40,33 @@ public class HomeController2 {
         return "police/police_google_map";
     }
 
+    // CCTV 페이지 매핑
+    @GetMapping("/cctv/gwangju_cctv")
+    public String gwangjuCctv(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "cctv/gwangju_cctv";
+    }
+
+    // 수사 요청 페이지 매핑
+    @GetMapping("/notification/police_map")
+    public String policeMap(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "notification/police_map";
+    }
+
+    // 이상 행동 관리 페이지 매핑
+    @GetMapping("/management/anomaly")
+    public String anomaly(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "management/anomaly";
+    }
+
+    // 범죄 이력 관리 페이지 매핑
+    @GetMapping("/management/crime")
+    public String crime(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "management/crime";
+    }
+
 
 }
