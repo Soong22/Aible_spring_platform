@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
     maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
     <title>이메일 가입 여부 확인</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 
     <!-- css -->
     <!--[if lt IE 9]>
@@ -93,6 +93,9 @@
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
 
 <!-- 메인 콘텐츠 -->
 <div id="wrapper">

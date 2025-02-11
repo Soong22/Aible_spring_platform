@@ -1,170 +1,92 @@
 <!-- resources/templates/region/dong.html -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>동구 상세 페이지</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <!-- CSS 파일 참조 -->
-  <link rel="stylesheet" th:href="@{/css/header.css}">
-  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
-  <link rel="stylesheet" th:href="@{/css/footer.css}">
-  <link rel="stylesheet" th:href="@{/css/scrollbar.css}">
-  <link rel="stylesheet" th:href="@{/css/tmp/police_table.css}"> <!-- 경찰서 테이블 전용 CSS -->
-  <!-- Font Awesome (필요 시) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport"
+          content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
 
-  <!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창-->
+    <title>동구 상세 페이지</title>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 
-  <!-- jQuery 라이브러리 (toastr 이전에 로드) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- css -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/loading.css">
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
 
-  <!-- CDN으로 라이브러리 로드 -->
-  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-
-  <!-- toastr CSS (head 태그 내에 추가) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-
-  <!-- toastr JS (body 태그 끝부분이나 필요한 곳에 추가) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-
-
-  <script>
-    // WebSocket 연결 생성
-    var socket = new SockJS('/ws');
-    var stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, function(frame) {
-      console.log('WebSocket 연결됨: ' + frame);
-
-      stompClient.subscribe('/user/queue/notifications', function(message) {
-        var notification = JSON.parse(message.body);
-        showNotificationPopup(notification);
-      });
-    });
-
-    // 푸쉬 알림 팝업을 표시하는 함수
-    function showNotificationPopup(notification) {
-      toastr.options = {
-        "closeButton": true,           // x 버튼 표시
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right", // 우측 상단 위치
-        "preventDuplicates": false,
-
-        "onclick": function() {
-          // 토스트를 클릭하면 해당 알림의 id를 URL에 포함하여 이동
-          window.location.href = "/notification/" + notification.notificationId;
-        },
-
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": 0,                  // 0이면 자동으로 사라지지 않음
-        "extendedTimeOut": 0,          // 0이면 추가 시간 없이 그대로 유지
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-      };
-
-      toastr.info("관리자에게 지원요청이 들어왔습니다.");
-    }
-  </script>
-
-  <style>
-    /* 기본 토스트 스타일 오버라이드 */
-    .toast {
-      opacity: 1 !important;
-
-      width: 300px !important;
-      height: 70px !important;
-      line-height: 1.2;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      border-radius: 8px;
-      z-index: 9999999999;
-    }
-
-    /* toast-top-right 위치 조정: 기본 top 값 대신 80px로 설정 */
-    .toast-top-right {
-      top: 60px !important;
-    }
-
-    /* info 타입 토스트의 배경 및 글자색 변경 */
-    .toast-info {
-      opacity: 1 !important;
-
-      background-color: #007bff !important; /* 변경된 파란색 배경 */
-      color: #ffffff !important;
-      border: 1px solid #0056b3 !important;   /* 파란색 테두리 (원하는 색상으로 수정 가능) */
-    }
-
-    /* 토스트 닫기 버튼 스타일 */
-    .toast-close-button {
-      color: #ffffff !important;
-      font-size: 1.2rem;
-    }
-  </style>
-
-  <!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창--><!--알림창-->
+    <!-- js -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
 
 </head>
 
 <body>
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar2 :: sidebar}" id="sidebar"></div>
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
 <!-- 메인 콘텐츠 -->
 <div class="container">
-  <div class="main-content">
-    <h1>동구 상세 정보</h1>
-    <div class="content">
-      <table class="police-table" aria-label="동구 경찰서 목록">
-        <thead>
-        <tr>
-          <th>경찰서</th>
-          <th>관서명</th>
-          <th>구분</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr onclick="stationClick('금남 지구대')">
-          <td>광주동부</td>
-          <td>금남 지구대</td>
-          <td>지구대</td>
-        </tr>
-        <tr onclick="stationClick('학서 파출소')">
-          <td>광주동부</td>
-          <td>학서 파출소</td>
-          <td>파출소</td>
-        </tr>
-        <tr onclick="stationClick('산수 파출소')">
-          <td>광주동부</td>
-          <td>산수 파출소</td>
-          <td>파출소</td>
-        </tr>
-        <tr onclick="stationClick('지원 파출소')">
-          <td>광주동부</td>
-          <td>지원 파출소</td>
-          <td>파출소</td>
-        </tr>
-        <tr onclick="stationClick('지산 파출소')">
-          <td>광주동부</td>
-          <td>지산 파출소</td>
-          <td>파출소</td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="main-content">
+        <h1>동구 상세 정보</h1>
+        <div class="content">
+            <table class="police-table" aria-label="동구 경찰서 목록">
+                <thead>
+                <tr>
+                    <th>경찰서</th>
+                    <th>관서명</th>
+                    <th>구분</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr onclick="stationClick('금남 지구대')">
+                    <td>광주동부</td>
+                    <td>금남 지구대</td>
+                    <td>지구대</td>
+                </tr>
+                <tr onclick="stationClick('학서 파출소')">
+                    <td>광주동부</td>
+                    <td>학서 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('산수 파출소')">
+                    <td>광주동부</td>
+                    <td>산수 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('지원 파출소')">
+                    <td>광주동부</td>
+                    <td>지원 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                <tr onclick="stationClick('지산 파출소')">
+                    <td>광주동부</td>
+                    <td>지산 파출소</td>
+                    <td>파출소</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- 푸터 -->
@@ -172,32 +94,30 @@
 
 <!-- 모달 창 -->
 <div id="supportModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>지원 요청</h2>
-    <form id="supportForm">
-      <label for="stationName">관서명:</label>
-      <input type="text" id="stationName" name="stationName" readonly>
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>지원 요청</h2>
+        <form id="supportForm">
+            <label for="stationName">관서명:</label>
+            <input type="text" id="stationName" name="stationName" readonly>
 
-      <label for="photo">사진 업로드</label>
-      <div class="file-input-container">
-        <button type="button" id="fileSelectButton">파일 선택</button>
-        <span id="fileLabelText">선택된 파일 없음</span>
-        <input type="file" id="photo" name="photo" accept="image/*" multiple>
-      </div>
-      <ul id="fileList" class="file-list"></ul>
+            <label for="photo">사진 업로드</label>
+            <div class="file-input-container">
+                <button type="button" id="fileSelectButton">파일 선택</button>
+                <span id="fileLabelText">선택된 파일 없음</span>
+                <input type="file" id="photo" name="photo" accept="image/*" multiple>
+            </div>
+            <ul id="fileList" class="file-list"></ul>
 
-      <label for="message">내용 작성:</label>
-      <textarea id="message" name="message" rows="4" required></textarea>
+            <label for="message">내용 작성:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
 
-      <button type="submit" class="submit-button">전송</button>
-    </form>
-  </div>
+            <button type="submit" class="submit-button">전송</button>
+        </form>
+    </div>
 </div>
 
-<!-- JavaScript -->
-<script src="/js/sidebar.js"></script>
-<script src="/js/scrollbar.js"></script>
+
 <script src="/js/tmp/police_table.js"></script> <!-- 공통 JavaScript 파일 추가 -->
 <!-- 추가 JavaScript 파일이 필요하면 여기에 추가 -->
 </body>

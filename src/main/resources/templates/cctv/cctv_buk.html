@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CCTV Viewer</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" th:href="@{/css/cctv_dashboard.css}">
 
@@ -38,6 +38,9 @@
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
 
 <!-- 메인 콘텐츠 -->
 <div class="container">

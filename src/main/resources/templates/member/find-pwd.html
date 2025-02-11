@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
     maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
     <title>비밀번호 찾기</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <!-- CSRF 메타 태그 (Thymeleaf로 서버에서 값 주입) -->
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -130,6 +130,9 @@
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
 
 <div id="wrapper">
     <div class="container">

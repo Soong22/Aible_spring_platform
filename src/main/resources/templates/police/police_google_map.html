@@ -2,11 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>광주광역시 경찰서 지도</title>
-    <!--    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">-->
-    <!--    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">-->
     <link rel="stylesheet" th:href="@{/css/google_map.css}">
     <!-- Google Maps API -->
     <link rel="stylesheet" type="text/css" href="/css/font.css" />
@@ -26,10 +24,14 @@
     <script src="/js/cctv/common.js"></script>
     <script src="/js/cctv/main.js"></script>
 </head>
+
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
-<body>
 
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
+<body>
 
 <!-- 지도 콘텐츠 -->
 <div class="container">

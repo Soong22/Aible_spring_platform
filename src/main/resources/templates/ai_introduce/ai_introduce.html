@@ -35,6 +35,9 @@
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
 <!-- 메인 타이틀 -->
 <header class="hero">
   <h3 class="sub-title">AI Model</h3>
@@ -130,7 +133,7 @@
     <img src="/images/model_image/pose15.png" alt="이상행동 감지 모델" class="row-image">
   </div>
 </section>
-<p class="section-text"> 범죄자 얼굴 10000장, 범죄자 외 얼굴 10000장 Roboflow 을 통해 Annotate, Augmentation 작업 진행, google Colab 통해 학습 진행하였습니다.</p>
+<p class="section-text"> Yolo-face + Retina face -> SCRFED + Arcface 학습 진행하였습니다. </p>
 <!-- 공간 추가 -->
 <div class="spacer"></div>
 <p class="section-text"> 2. 모델 테스트 및 결과 </p>
