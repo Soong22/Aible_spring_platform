@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes" />
     <meta name="keywords" content="KT Avile School 6기 24조" />
     <meta name="description" content="범죄와 전쟁 : AI 범죄모니터링 시스템은, 시민의 안전하고 행복한 생활을 위하여 24시간 방범관제 및 범죄자 예측을 제공하고 있습니다." />
 
@@ -30,24 +29,28 @@
 </head>
 
 <body>
-
-<!-- 헤더 -->
+<!-- 헤더 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
-<!-- 알림 -->
-<div th:replace="~{fragments/notification :: notification}"></div>
-
-<!-- 전체화면 토글 버튼 -->
-<button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
-
 <div class="grid-container">
-    <!-- 좌측: 스트리밍 영상 혹은 기타 콘텐츠 (원래 코드에서 사용하던 부분, 필요에 따라 수정) -->
+    <!-- 좌측: 스트리밍 영상 혹은 기타 콘텐츠 -->
     <div class="video-section">
         <img src="https://crime-detect.run.goorm.io/predict" alt="MJPEG Stream" />
     </div>
 
     <!-- 우측: 최신 범죄 알림 이미지 -->
     <div class="image-section">
+        <!-- 전체화면 토글 버튼 -->
+        <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
+
+        <!-- 다운로드 버튼 -->
+        <button id="downloadBtn" onclick="downloadImage()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10.4a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+        </button>
+
         <img id="crime-image" src="/images/placeholder.jpg" alt="범죄 알림 이미지" />
     </div>
 
@@ -56,15 +59,13 @@
         <table id="crime-table">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>분류</th>
-                <th>일시</th>
-                <th>정확도</th>
                 <th>이름</th>
                 <th>범죄 유형</th>
                 <th>범죄 횟수</th>
                 <th>출소 여부</th>
                 <th>위험도</th>
+                <th>정확도</th>
+                <th>일시</th>
             </tr>
             </thead>
             <tbody>
@@ -75,7 +76,24 @@
 </div>
 
 <script>
-    // 전체화면 토글 함수
+    // 타임스탬프 포맷팅 함수: "yyyyMMdd_HHmmss" → "yyyy년 MM월 dd일 HH:mm:ss"
+    function formatTimestamp(ts) {
+        if (ts) {
+            var parts = ts.split("_");
+            if (parts.length === 2 && parts[0].length === 8 && parts[1].length === 6) {
+                var year = parts[0].substring(0, 4);
+                var month = parts[0].substring(4, 6);
+                var day = parts[0].substring(6, 8);
+                var hour = parts[1].substring(0, 2);
+                var minute = parts[1].substring(2, 4);
+                var second = parts[1].substring(4, 6);
+                return year + "년 " + month + "월 " + day + "일 " + hour + ":" + minute + ":" + second;
+            }
+        }
+        return ts;
+    }
+
+    // 전체화면 토글 함수 (문서 전체를 대상으로 함)
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
             document.body.requestFullscreen().then(() => {
@@ -92,33 +110,44 @@
         }
     }
 
+    // 다운로드 버튼 클릭 시 호출되는 함수
+    function downloadImage() {
+        const image = document.getElementById("crime-image");
+        const imageUrl = image.src;
+        const link = document.createElement("a");
+        link.href = imageUrl;
+        let fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+        if(fileName.indexOf('?') !== -1){
+            fileName = fileName.substring(0, fileName.indexOf('?'));
+        }
+        link.download = fileName || "downloaded_image.jpg";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     // 범죄 알림 데이터를 주기적으로 갱신하는 함수
     function updateCrimeData() {
         $.ajax({
-            url: '/api/crime',  // CrimeController의 GET 매핑 주소
+            url: '/api/crime',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
                 var tableBody = $('#crime-table tbody');
                 tableBody.empty();
-
-                // 최신 데이터부터 표시 (역순 정렬)
                 data.slice().reverse().forEach(function(alert) {
+                    var formattedTimestamp = formatTimestamp(alert.timestamp);
                     var row = `<tr>
-                                    <td>${alert.id}</td>
-                                    <td>${alert.type}</td>
-                                    <td>${alert.timestamp}</td>
-                                    <td>${parseFloat(alert.accuracy).toFixed(1)}%</td>
-                                    <td>${alert.name ? alert.name : '-'}</td>
-                                    <td>${alert.crimeType ? alert.crimeType : '-'}</td>
-                                    <td>${alert.crimeCount}</td>
-                                    <td>${alert.released ? '출소' : '미출소'}</td>
-                                    <td>${alert.riskLevel ? alert.riskLevel : '-'}</td>
-                               </tr>`;
+                                        <td>${alert.name ? alert.name : '-'}</td>
+                                        <td>${alert.crimeType ? alert.crimeType : '-'}</td>
+                                        <td>${alert.crimeCount}</td>
+                                        <td>${alert.released ? '출소' : '미출소'}</td>
+                                        <td>${alert.riskLevel ? alert.riskLevel : '-'}</td>
+                                        <td>${parseFloat(alert.accuracy).toFixed(1)}%</td>
+                                        <td>${formattedTimestamp}</td>
+                                   </tr>`;
                     tableBody.append(row);
                 });
-
-                // 최신 알림 이미지 업데이트 (이미지가 존재할 경우)
                 if (data.length > 0) {
                     var latest = data[data.length - 1];
                     $('#crime-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
@@ -130,7 +159,6 @@
         });
     }
 
-    // 페이지 로드 시 및 5초마다 갱신
     $(document).ready(function(){
         updateCrimeData();
         setInterval(updateCrimeData, 5000);

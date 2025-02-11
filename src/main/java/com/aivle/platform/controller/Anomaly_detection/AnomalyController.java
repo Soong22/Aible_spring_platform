@@ -2,33 +2,31 @@ package com.aivle.platform.controller.Anomaly_detection;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller; // @RestController 대신 @Controller 사용
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@RestController
+@Controller
 @RequestMapping("/api")
 public class AnomalyController {
 
-    // 간단하게 메모리 내에 저장 (실제 서비스에서는 DB 사용 권장)
+    // 메모리 내에 저장 (실제 서비스에서는 DB 사용 권장)
     private List<AnomalyData> anomalyList = new CopyOnWriteArrayList<>();
 
     @PostMapping("/anomalies")
+    @ResponseBody  // JSON 응답으로 처리
     public ResponseEntity<?> receiveAnomaly(@RequestParam("file") MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
         if(originalFileName == null) {
             originalFileName = "anomaly_" + System.currentTimeMillis() + ".jpg";
         }
         // 파일명 형식 예시: Danger_98.7_20250207_153045.jpg
-        // 원본 파일명이 해당 형식을 따르도록 FastAPI에서 전송하면, 파싱할 수 있습니다.
         String[] parts = originalFileName.split("_");
         String type = (parts.length >= 1) ? parts[0] : "Unknown";
         String accuracyStr = (parts.length >= 2) ? parts[1] : "0";
@@ -67,7 +65,16 @@ public class AnomalyController {
     }
 
     @GetMapping("/anomalies")
+    @ResponseBody  // JSON 응답으로 처리
     public List<AnomalyData> getAnomalies() {
         return anomalyList;
+    }
+
+    // 관리 페이지로 이동하는 매핑 추가 (뷰를 렌더링)
+    // 전체 URL은 "/api/management/anomaly.html"이 됩니다.
+    @GetMapping("/management/anomaly")
+    public String anomalyManagementPage() {
+        // templates/management/anomaly.html 파일을 렌더링합니다.
+        return "management/anomaly";
     }
 }
