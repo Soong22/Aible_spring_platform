@@ -47,7 +47,17 @@
     <div class="image-section">
         <!-- 전체화면 토글 버튼 -->
         <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
-        <img id="alarm-image" src="/images/AI.jpeg" alt="Alarm" />
+
+        <!-- 다운로드 버튼 추가 -->
+        <button id="downloadBtn" onclick="downloadImage()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10.4a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+        </button>
+
+        <img id="alarm-image" src="" alt="이상 행동 탐지 이미지" />
+
     </div>
 
     <!-- 하단: 알람 정보 테이블 -->
@@ -68,6 +78,25 @@
 </div>
 
 <script>
+
+    // 타임스탬프 포맷팅 함수: "yyyyMMdd_HHmmss" → "yyyy년 MM월 dd일 HH:mm:ss"
+    // 타임스탬프 포맷팅 함수
+    function formatTimestamp(ts) {
+        if (ts) {
+            var parts = ts.split("_");
+            if (parts.length === 2 && parts[0].length === 8 && parts[1].length === 6) {
+                var year = parts[0].substring(0, 4);
+                var month = parts[0].substring(4, 6);
+                var day = parts[0].substring(6, 8);
+                var hour = parts[1].substring(0, 2);
+                var minute = parts[1].substring(2, 4);
+                var second = parts[1].substring(4, 6);
+                return year + "년 " + month + "월 " + day + "일 " + hour + ":" + minute + ":" + second;
+            }
+        }
+        return "0000년 00월 00일 00:00:00";
+    }
+
     // 전체화면 토글 함수: 헤더와 푸터는 제외하고, fullscreen-container만 전체화면 전환
 function toggleFullscreen() {
     const elem = document.getElementById("fullscreen-container");
@@ -87,38 +116,54 @@ function toggleFullscreen() {
 }
 
 // 알람 데이터를 주기적으로 갱신하는 함수
-function updateAnomalyData() {
-$.ajax({
-    url: '/api/anomalies',
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) {
-        // data: AnomalyData 객체들의 배열
-        let tableBody = $('#alarm-table tbody');
-        tableBody.empty();
+    function updateAnomalyData() {
+        $.ajax({
+            url: '/api/anomalies',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                let tableBody = $('#alarm-table tbody');
+                tableBody.empty();
 
-        // 최신 데이터부터 표시 (역순 정렬)
-        data.slice().reverse().forEach(function(anomaly) {
-            // 임의로 위치, 경찰서 등은 고정값 또는 필요에 따라 업데이트
-            let row = `<tr>
-                <td>${anomaly.class_name}</td>
-                <td>${anomaly.accuracy.toFixed(1)}%</td>
-                <td>${anomaly.timestamp}</td>
-            </tr>`;
-            tableBody.append(row);
+                // 최신 데이터부터 역순 정렬하여 추가
+                data.slice().reverse().forEach(function(anomaly) {
+                    let row = `<tr>
+                    <td>${anomaly.type}</td>
+                    <td>${anomaly.accuracy.toFixed(1)}%</td>
+                    <td>${formatTimestamp(anomaly.timestamp)}</td>
+                </tr>`;
+                    tableBody.append(row);
+                });
+
+                // 최신 알람 이미지 업데이트 (캐시 무효화를 위해 타임스탬프 추가)
+                if(data.length > 0) {
+                    let latest = data[data.length - 1];
+                    $('#alarm-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
+                }
+            },
+            error: function(err) {
+                console.error('알람 데이터 조회 에러:', err);
+            }
         });
-
-        // 알람 이미지 업데이트: 가장 최신 알람 이미지 사용
-        if(data.length > 0) {
-            let latest = data[data.length - 1];
-            $('#alarm-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
-            // 캐시 무효화를 위해 타임스탬프 추가
-        }
-    },
-    error: function(err) {
-        console.error('알람 데이터 조회 에러:', err);
     }
-});
+
+// 다운로드 버튼 클릭 시 호출되는 함수
+function downloadImage() {
+    const image = document.getElementById("alarm-image");
+    const imageUrl = image.src;
+    // 임시 <a> 엘리먼트를 생성하여 다운로드 속성을 추가한 후 클릭
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    // URL에서 파일 이름 추출 (쿼리스트링은 제거)
+    let fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+    if(fileName.indexOf('?') !== -1){
+        fileName = fileName.substring(0, fileName.indexOf('?'));
+    }
+    // 다운로드될 파일명 지정 (없으면 기본값 사용)
+    link.download = fileName || "downloaded_image.jpg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // 페이지 로드시와 5초마다 업데이트

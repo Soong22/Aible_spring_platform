@@ -89,3 +89,35 @@ th {
 .image-section:hover .fullscreen-btn {
   opacity: 1;
 }
+
+/* 다운로드 버튼: 흰색 아이콘, 배경 없음, 오른쪽 하단 배치 */
+#downloadBtn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: none;   /* 배경 제거 */
+  border: none;       /* 테두리 제거 */
+  color: #fff;        /* 아이콘을 흰색으로 지정 (SVG의 fill="currentColor"를 사용) */
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0;         /* 기본 숨김: 필요시 부모 hover 시 보이도록 설정 */
+}
+
+/* 이미지 섹션에 마우스를 올렸을 때 다운로드 버튼이 나타나도록 */
+.image-section:hover #downloadBtn {
+  opacity: 1;
+}
+
+/* 마우스 오버 시 살짝 확대 효과 */
+#downloadBtn:hover {
+  transform: scale(1.1);
+}
+
+/* 버튼 내부의 SVG 아이콘 크기 지정 */
+#downloadBtn svg {
+  width: 28px;
+  height: 28px;
+}

@@ -36,6 +36,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        // API 경로에 대해 CSRF 보호 비활성화
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**")
+        );
+
         // 헤더 설정
         http.headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // 동일 출처의 iframe 허용
