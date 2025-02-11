@@ -51,7 +51,9 @@ public class SecurityConfig {
                 .requestMatchers("/", "/error/**", "/api/**", "/member/find-email", "/member/find-pwd",
                         "/ai_introduce/ai_introduce", "/introduce/team_introduce",
                         "/boards/important", "/police/police_google_map",
-                        "/police.json", "/cctv/google_map", "/cctv/**").permitAll()
+                        "/police.json", "/cctv/google_map", "/cctv/**",
+                        "/cctv_data_1.json", "cctv_data_2.json", "cctv_data_3.json",
+                        "cctv_data_4.json", "cctv_data_5.json").permitAll()
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/mp3/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
 

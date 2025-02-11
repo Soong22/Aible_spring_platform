@@ -3,7 +3,7 @@ let currentInfoWindow = null;
 
 function loadCCTVData() {
     const region = document.getElementById("region-select").value; // 선택된 구
-    const dataUrl = `/cctv/cctv_data_${region}.json`; // 구별 JSON 파일 경로
+    const dataUrl = `/cctv_data_${region}.json`; // 구별 JSON 파일 경로
 
     // 사용자 지정 CCTV 아이콘 설정
     const cctvIconUrl = {
