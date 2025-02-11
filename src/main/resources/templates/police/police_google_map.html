@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>광주광역시 경찰서 지도</title>
+    <!--    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">-->
+    <!--    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">-->
+    <link rel="stylesheet" th:href="@{/css/google_map.css}">
+    <!-- Google Maps API -->
+    <link rel="stylesheet" type="text/css" href="/css/font.css" />
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe8yGUEAzf3rrlE2PJ8zs68mYkwNLmlyE"></script>
+
+    <script src="/js/police_google_map.js" defer></script>
+    <!--[if lt IE 9]><script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+</head>
+<!-- 헤더 -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+<body>
+
+
+<!-- 지도 콘텐츠 -->
+<div class="container">
+    <div class="main-content">
+
+        <!-- 구 선택 -->
+        <div class="select-container">
+            <label for="region-select">구 선택:</label>
+            <select id="region-select" onchange="loadCCTVData()">
+                <option value="광산구">광산구</option>
+                <option value="남구">남구</option>
+                <option value="서구">서구</option>
+                <option value="북구">북구</option>
+                <option value="동구">동구</option>
+            </select>
+        </div>
+
+        <!-- 지도 영역 -->
+        <div id="map"></div>
+    </div>
+</div>
+
+
+</body>
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
+</html>

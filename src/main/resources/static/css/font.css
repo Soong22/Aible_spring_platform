@@ -134,3 +134,9 @@
 	font-weight: 600;
 	src: url("../font/GmarketSansBold.woff") format('woff');
 }
+
+#header .depth_text.depth1_text,
+#header .depth_title.depth2_title {
+	font-family: 'NotoKr', sans-serif;
+	font-weight: 800;
+}

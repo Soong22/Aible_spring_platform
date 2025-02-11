@@ -80,4 +80,12 @@ public class HomeController {
         return "ai_introduce/ai_introduce";
     }
 
+    // 경찰 Google Map 페이지 매핑
+    @GetMapping("/police/police_google_map")
+    public String policeGoogleMap(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "police/police_google_map";
+    }
+
 }

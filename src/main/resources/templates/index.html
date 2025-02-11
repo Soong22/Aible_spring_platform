@@ -2,23 +2,26 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes" />
-    <meta name="keywords" content="KT Avile School 6기 24조" />
-    <meta name="description" content="범죄와 전쟁 : AI 범죄모니터링 시스템은, 시민의 안전하고 행복한 생활을 위하여 24시간 방범관제 및 범죄자 예측을 제공하고 있습니다." />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport"
+          content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
+    <meta name="keywords" content="KT Avile School 6기 24조"/>
+    <meta name="description" content="범죄와 전쟁 : AI 범죄모니터링 시스템은, 시민의 안전하고 행복한 생활을 위하여 24시간 방범관제 및 범죄자 예측을 제공하고 있습니다."/>
 
     <title>kt Aivle School 24조</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <!-- css -->
-    <!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="/css/font_ie8.css" /><![endif]-->
-    <link rel="stylesheet" type="text/css" href="/css/font.css" />
-    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
     <link rel="stylesheet" type="text/css" href="/css/loading.css">
-    <link rel="stylesheet" type="text/css" href="/css/top_button.css" />
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
 
     <!-- js -->
-    <!--[if lt IE 9]><script src="/js/html5.js"></script><![endif]-->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
     <script src="/js/jquery-1.12.4.min.js"></script>
     <script src="/js/jquery.screen.min.js"></script>
     <script src="/js/jquery.menu.min.js"></script>
@@ -43,11 +46,10 @@
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
     <!-- toastr CSS (head 태그 내에 추가) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
 
     <!-- toastr JS (body 태그 끝부분이나 필요한 곳에 추가) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
 
 
     <script>
@@ -55,10 +57,10 @@
         var socket = new SockJS('/ws');
         var stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, function(frame) {
+        stompClient.connect({}, function (frame) {
             console.log('WebSocket 연결됨: ' + frame);
 
-            stompClient.subscribe('/user/queue/notifications', function(message) {
+            stompClient.subscribe('/user/queue/notifications', function (message) {
                 var notification = JSON.parse(message.body);
                 showNotificationPopup(notification);
             });
@@ -74,7 +76,7 @@
                 "positionClass": "toast-top-right", // 우측 상단 위치
                 "preventDuplicates": false,
 
-                "onclick": function() {
+                "onclick": function () {
                     // 토스트를 클릭하면 해당 알림의 id를 URL에 포함하여 이동
                     window.location.href = "/notification/" + notification.notificationId;
                 },
@@ -118,7 +120,7 @@
 
             background-color: #007bff !important; /* 변경된 파란색 배경 */
             color: #ffffff !important;
-            border: 1px solid #0056b3 !important;   /* 파란색 테두리 (원하는 색상으로 수정 가능) */
+            border: 1px solid #0056b3 !important; /* 파란색 테두리 (원하는 색상으로 수정 가능) */
         }
 
         /* 토스트 닫기 버튼 스타일 */
@@ -163,7 +165,8 @@
 
 
                     <div class="visual_item">
-                        <a href="/cctv/contents.do?key=8205" target="_blank" rel="noopener noreferrer" class="visual_anchor">
+                        <a href="/cctv/contents.do?key=8205" target="_blank" rel="noopener noreferrer"
+                           class="visual_anchor">
                                 <span class="visual_intro">
                                     <span class="sub_title fade delay25">국민이 행복하고 범죄없는 나라 </span>
                                     <span class="visual_title fade delay50">kt Aivle 24조</span>
@@ -196,7 +199,7 @@
 
                     <div class="info_list fade">
                         <div class="info_item">
-                            <a href="/ai/ai_introduce" class="info_anchor">
+                            <a href="ai_introduce/ai_introduce" class="info_anchor">
             <span class="info_image">
               <img src="/images/AI.jpeg" alt="AI 이미지">
             </span>
@@ -231,7 +234,7 @@
                 <h2 class="skip">데이터</h2>
                 <div class="wrap">
                     <div class="databox n2 fade">
-                        <div class="image_container"> </div>
+                        <div class="image_container"></div>
                     </div>
                 </div>
             </section>
