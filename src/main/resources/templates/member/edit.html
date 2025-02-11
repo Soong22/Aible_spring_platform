@@ -5,6 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
     maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
+
+    <!-- CSRF 메타 태그 -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <title>회원 수정</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -81,6 +86,45 @@
         }
     </style>
 
+    <style>
+        /* 인증 섹션 전체 레이아웃 */
+        .email-auth-container {
+            display: flex;
+            gap: 8px; /* 요소 간격 */
+            align-items: center; /* 세로축 정렬 */
+        }
+
+        /* 입력창 기본 스타일 */
+        #authCodeInput {
+            width: 150px;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* 버튼 기본 스타일 (커스텀) */
+        #sendAuthCodeBtn, #verifyAuthCodeBtn {
+            padding: 6px 10px !important;
+            background-color: #000820 !important; /* 버튼 배경색 */
+            color: #ffffff !important; /* 글자색 */
+            border: none !important; /* 테두리 제거 */
+            border-radius: 4px !important; /* 모서리 */
+            cursor: pointer !important;
+            font-size: 14px !important;
+        }
+
+        /* 버튼 마우스오버 시 색상 */
+        #sendAuthCodeBtn:hover, #verifyAuthCodeBtn:hover {
+            background-color: #444f6e !important;
+        }
+
+        /* 비활성화된 버튼 스타일 */
+        #sendAuthCodeBtn:disabled, #verifyAuthCodeBtn:disabled {
+            background-color: #444f6e !important;
+            cursor: not-allowed !important;
+        }
+    </style>
+
 </head>
 <body>
 
@@ -107,6 +151,20 @@
                     <input type="email" class="form-control" id="email" name="email" th:value="${response.email}"
                            required>
                     <button class="btn btn-outline-secondary" type="button" id="checkEmailBtn">중복 확인</button>
+                </div>
+            </div>
+
+            <!-- [이메일 영역 바로 아래, 숨긴 상태로 삽입] -->
+            <div id="emailAuthSection" style="display:none; margin-top: 10px;">
+                <div style="margin-top:5px; margin-bottom: 10px;">
+                    <div class="email-auth-container">
+                        <input type="text" class="form-control" id="authCodeInput" placeholder="인증번호 입력">
+                        <button type="button" class="btn btn-outline-secondary" id="sendAuthCodeBtn">인증 요청</button>
+                        <button type="button" class="btn btn-outline-secondary" id="verifyAuthCodeBtn">인증 확인</button>
+                        <!-- 타이머를 표시할 영역 -->
+                        <span id="authCountdown" style="margin-left: 10px;"></span>
+                        <span id="emailAuthResult"></span>
+                    </div>
                 </div>
             </div>
 
@@ -208,12 +266,13 @@
     let originalPoliceUnitId = policeUnitId; // 초기 PoliceUnitId
 
     let isEmailValid = false; // 이메일 중복 확인 결과
+    let isEmailAuthOk = false;      // 이메일 인증 완료 여부 (새로 추가)
     let isPoliceUnitValid = false; // 파출소 중복 확인 결과
 
     // 버튼 활성화 조건 확인 함수
     function checkFormValidity() {
         const submitBtn = document.getElementById('submitBtn');
-        if (isEmailValid && isPoliceUnitValid) {
+        if (isEmailValid && isEmailAuthOk && isPoliceUnitValid) {
             submitBtn.disabled = false; // 버튼 활성화
         } else {
             submitBtn.disabled = true; // 버튼 비활성화
@@ -248,6 +307,7 @@
 
                         // hidden 필드에 이메일 값 저장
                         hiddenEmailInput.value = emailValue;
+                        document.getElementById('emailAuthSection').style.display = 'block'; // 인증 섹션 표시
                     }
                 })
                 .catch(error => {
@@ -266,6 +326,7 @@
 
             // hidden 필드에 이메일 값 저장
             hiddenEmailInput.value = emailValue;
+            document.getElementById('emailAuthSection').style.display = 'block'; // 인증 섹션 표시
         }
     });
 
@@ -320,6 +381,128 @@
                 alert('지구대/파출소 사용 여부 확인에 실패했습니다.');
             });
     });
+
+
+    // 메타 태그에서 가져온 CSRF 토큰 & 헤더 (예시)
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+    let countdownInterval; // 타이머 setInterval ID
+
+    const sendAuthCodeBtn = document.getElementById('sendAuthCodeBtn');
+    sendAuthCodeBtn.addEventListener('click', function () {
+        const email = emailValue; // 중복확인 후 저장한 이메일
+        if (!email) {
+            alert("이메일 중복확인을 먼저 해주세요!");
+            return;
+        }
+
+        // 기존에 타이머가 작동 중이면 초기화
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+
+        // POST 요청 + CSRF 헤더
+        fetch(`/api/email/send?email=${encodeURIComponent(email)}`, {
+            method: 'POST',
+            headers: {
+                // 필수: x-www-form-urlencoded 로 보내거나, query에 이미 email 있으면 생략 가능
+                'Content-Type': 'application/x-www-form-urlencoded',
+                // CSRF 토큰 헤더 추가
+                [csrfHeader]: csrfToken
+            }
+            // body: 'email=' + encodeURIComponent(email)
+            // 만약 이메일을 body로 전송하고 싶다면 주석 해제
+        })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.success) {
+                    alert("인증번호가 전송되었습니다.");
+                    // 인증번호 전송 성공 시 3분 타이머 시작 (180초)
+                    startCountdown(180);
+                } else {
+                    alert("인증번호 전송 실패: " + data.message);
+                }
+            })
+            .catch(err => {
+                alert("서버 오류: 이메일 인증 요청 실패");
+                console.error(err);
+            });
+    });
+
+
+    const verifyAuthCodeBtn = document.getElementById('verifyAuthCodeBtn');
+    verifyAuthCodeBtn.addEventListener('click', function () {
+        const code = document.getElementById('authCodeInput').value;
+        if (!code) {
+            alert("인증번호를 입력하세요.");
+            return;
+        }
+        const email = emailValue; // 중복확인 후 저장된 이메일
+        fetch(`/api/email/verify?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`, {
+            method: 'POST',
+            headers: {
+                // 필수: x-www-form-urlencoded 로 보내거나, query에 이미 email 있으면 생략 가능
+                'Content-Type': 'application/x-www-form-urlencoded',
+                // CSRF 토큰 헤더 추가
+                [csrfHeader]: csrfToken
+            }
+            // body: 'email=' + encodeURIComponent(email)
+            // 만약 이메일을 body로 전송하고 싶다면 주석 해제
+        })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.success) {
+                    alert("이메일 인증이 완료되었습니다.");
+                    isEmailAuthOk = true;
+
+                    // 인증버튼 비활성화
+                    verifyAuthCodeBtn.disabled = true;
+                    sendAuthCodeBtn.disabled = true;
+                    document.getElementById('authCodeInput').disabled = true;
+
+                    // 인증 성공 시 타이머 종료
+                    clearInterval(countdownInterval);
+                    document.getElementById('authCountdown').textContent = ""; // 내용 지우기
+
+                    // 결과 표시
+                    document.getElementById('emailAuthResult').textContent = "인증 완료";
+                } else {
+                    alert("인증 실패: " + data.message);
+                    isEmailAuthOk = false;
+                }
+                checkFormValidity();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("인증번호 확인에 실패했습니다.");
+            });
+    });
+
+    // 타이머 시작 함수 (duration: 초 단위)
+    function startCountdown(duration) {
+        let timer = duration;
+        updateCountdownDisplay(timer); // 초기값 표시
+
+        countdownInterval = setInterval(() => {
+            timer--;
+            if (timer <= 0) {
+                clearInterval(countdownInterval);
+                // 타이머 종료 시 '시간초과' 메시지 표시 (원하는 경우 추가 동작 가능)
+                document.getElementById('authCountdown').textContent = "시간초과";
+            } else {
+                updateCountdownDisplay(timer);
+            }
+        }, 1000);
+    }
+
+    // 남은 시간을 mm:ss 형식으로 표시
+    function updateCountdownDisplay(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        document.getElementById('authCountdown').textContent =
+            (minutes < 10 ? "0" + minutes : minutes) + ":" + (sec < 10 ? "0" + sec : sec);
+    }
+
 
     // 폼 제출 시 이메일, 사용자 이름, 전화번호, 비밀번호 검증
     document.getElementById('editForm').addEventListener('submit', function (event) {
