@@ -47,7 +47,7 @@ public class SecurityConfig {
                         "/ai_introduce/ai_introduce", "/introduce/team_introduce",
                         "/boards/important", "/police/police_google_map",
                         "/police.json", "/cctv/google_map", "/cctv/**").permitAll()
-                .requestMatchers("/css/**", "/images/**", "/js/**").permitAll()
+                .requestMatchers("/css/**", "/images/**", "/js/**", "/mp3/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
 
                 // 인증이 필요한 경로

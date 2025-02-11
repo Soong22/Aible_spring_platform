@@ -87,7 +87,7 @@
 .visual_control{position:absolute; right:0; bottom:0; z-index:9999; width:550px; height:145px; padding:45px 65px 49px 86px; border-top-left-radius:55px; background-color:#0b258a; font-size:0; line-height:0}
 .visual_control .visual_count{display:inline-block; margin-top: 11px; vertical-align:middle}
 .visual_control .visual_count > span{display:inline-block; width:25px; margin-left:14px; color:#fff; font-size:16px; font-weight:600; text-align:center; line-height:38px; vertical-align:middle; font-family:"Montserrat"}
-.visual_control .visual_count .progress{width:156px; height:4px; background-color:#5567ad}
+.visual_control .visual_count .progress{width:300px !important; height:4px; background-color:#5567ad}
 .visual_control .visual_count > span:first-child{margin-left:0}
 .visual_control .visual_btn{float: right;margin-right: 16px;position: relative;top: 0;right: 0;vertical-align: top}
 .visual_control .visual_btn button{display:inline-block; position:relative; width:53px; height:53px; margin-right:9px; border:3px solid #fff; vertical-align:middle; border-radius:50%; opacity:0.3;}
@@ -104,7 +104,16 @@
     0%{width:0}
     100%{width:100%}
 }
+/* 슬라이드 번호 숨기기 */
+.visual_current,
+.visual_total {
+    display: none !important;
+}
 
+/* 이전/다음 버튼 숨기기 */
+.visual_btn {
+    display: none !important;
+}
 
 /*애니메이션*/
 .visual .sub_title{opacity:0; transform:translateX(-50px); transition-property:opacity,transform; transition-duration:1s; transition-timing-function:ease-in-out}
