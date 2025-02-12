@@ -53,7 +53,7 @@ public class SecurityConfig {
                         "/boards/important", "/police/police_google_map",
                         "/police.json", "/cctv/google_map", "/cctv/**",
                         "/cctv_data_1.json", "cctv_data_2.json", "cctv_data_3.json",
-                        "cctv_data_4.json", "cctv_data_5.json").permitAll()
+                        "cctv_data_4.json", "cctv_data_5.json", "/videos/**").permitAll()
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/mp3/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
 
