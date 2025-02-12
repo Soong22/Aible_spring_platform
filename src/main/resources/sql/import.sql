@@ -45,9 +45,7 @@ VALUES
     ('광주청', '광주북부', '문흥', 'DISTRICT', '광주광역시 북구 대천로 146', 35.187096, 126.9215437),
     ('광주청', '광주북부', '역전', 'DISTRICT', '광주광역시 북구 태봉로 57', 35.16256898, 126.9050367),
     ('광주청', '광주북부', '건국', 'DISTRICT', '광주광역시 북구 본촌마을길102번길 17', 35.21854545, 126.8796907),
-    ('광주청', '광주북부', '석곡', 'OUTPOST', '광주광역시 북구 동문대로 642', 35.21388341, 126.9488323),
-    ('서울청', '서울용산', '이태원', 'OUTPOST', '서울특별시 용산구 이태원로184', 36, 127),
-    ('수원청', '팔달', '인계', 'OUTPOST', '수원시 팔달구 인계동777', 37, 128);
+    ('광주청', '광주북부', '석곡', 'OUTPOST', '광주광역시 북구 동문대로 642', 35.21388341, 126.9488323);
 
 
 
@@ -69,6 +67,25 @@ INSERT INTO member (
       (NOW(), 12, 12, NULL, '010-1234-5678', '유저11', 'user11@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
       (NOW(), 13, 13, NULL, '010-1234-5678', '유저12', 'user12@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
       (NOW(), 14, 14, NULL, '010-1234-5678', '유저13', 'user13@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER')
+;
+
+INSERT INTO member (
+    created_at, member_id, police_unit_id, office_phone, person_phone, member_name, email, password, role
+) VALUES
+      (NOW(), 15, 15, NULL, '010-4773-5141', '관리자', 'admin@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'ADMIN'),
+      (NOW(), 16, 16, NULL, '010-1234-5678', '유저1', 'user1@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 17, 17, NULL, '010-1234-5678', '유저2', 'user2@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 18, 4, NULL, '010-1234-5678', '유저3', 'user3@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 19, 5, NULL, '010-1234-5678', '유저4', 'user4@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 20, 6, NULL, '010-1234-5678', '유저5', 'user5@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 21, 7, NULL, '010-1234-5678', '유저6', 'user6@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 22, 8, NULL, '010-1234-5678', '유저7', 'user7@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 23, 9, NULL, '010-1234-5678', '유저8', 'user8@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 24, 10, NULL, '010-1234-5678', '유저9', 'user9@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 25, 11, NULL, '010-1234-5678', '유저10', 'user10@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 26, 12, NULL, '010-1234-5678', '유저11', 'user11@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 27, 13, NULL, '010-1234-5678', '유저12', 'user12@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 28, 14, NULL, '010-1234-5678', '유저13', 'user13@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER')
 ;
 
 
@@ -106,3 +123,49 @@ INSERT INTO board (
 # UPDATE member
 # SET member_name = '관리자'
 # WHERE member_id = 1;
+
+
+INSERT INTO member (
+    created_at, member_id, police_unit_id, office_phone, person_phone, member_name, email, password, role
+) VALUES
+      (NOW(), 1, 1, NULL, '010-4773-5141', '관리자', 'admin@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'ADMIN'),
+      (NOW(), 2, 2, NULL, '010-1234-5678', '유저1', 'user1@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 3, 3, NULL, '010-1234-5678', '유저2', 'user2@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 4, 4, NULL, '010-1234-5678', '유저3', 'user3@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 5, 5, NULL, '010-1234-5678', '유저4', 'user4@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 6, 6, NULL, '010-1234-5678', '유저5', 'user5@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 7, 7, NULL, '010-1234-5678', '유저6', 'user6@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 8, 8, NULL, '010-1234-5678', '유저7', 'user7@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 9, 9, NULL, '010-1234-5678', '유저8', 'user8@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 10, 10, NULL, '010-1234-5678', '유저9', 'user9@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 11, 11, NULL, '010-1234-5678', '유저10', 'user10@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 12, 12, NULL, '010-1234-5678', '유저11', 'user11@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 13, 13, NULL, '010-1234-5678', '유저12', 'user12@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 14, 14, NULL, '010-1234-5678', '유저13', 'user13@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 15, 15, NULL, '010-1234-5678', '유저14', 'user14@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 16, 16, NULL, '010-1234-5678', '유저15', 'user15@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+#       (NOW(), 17, 17, NULL, '010-1234-5678', '유저16', 'user16@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 18, 18, NULL, '010-1234-5678', '유저17', 'user17@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 19, 19, NULL, '010-1234-5678', '유저18', 'user18@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 20, 20, NULL, '010-1234-5678', '유저19', 'user19@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 21, 21, NULL, '010-1234-5678', '유저20', 'user20@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 22, 22, NULL, '010-1234-5678', '유저21', 'user21@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 23, 23, NULL, '010-1234-5678', '유저22', 'user22@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 24, 24, NULL, '010-1234-5678', '유저23', 'user23@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 25, 25, NULL, '010-1234-5678', '유저24', 'user24@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 26, 26, NULL, '010-1234-5678', '유저25', 'user25@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 27, 27, NULL, '010-1234-5678', '유저26', 'user26@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 28, 28, NULL, '010-1234-5678', '유저27', 'user27@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 29, 29, NULL, '010-1234-5678', '유저28', 'user28@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 30, 30, NULL, '010-1234-5678', '유저29', 'user29@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 31, 31, NULL, '010-1234-5678', '유저30', 'user30@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 32, 32, NULL, '010-1234-5678', '유저31', 'user31@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 33, 33, NULL, '010-1234-5678', '유저32', 'user32@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 34, 34, NULL, '010-1234-5678', '유저33', 'user33@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 35, 35, NULL, '010-1234-5678', '유저34', 'user34@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 36, 36, NULL, '010-1234-5678', '유저35', 'user35@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 37, 37, NULL, '010-1234-5678', '유저36', 'user36@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
+      (NOW(), 38, 38, NULL, '010-1234-5678', '유저37', 'user37@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
+      (NOW(), 39, 39, NULL, '010-1234-5678', '유저38', 'user38@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
+      (NOW(), 40, 40, NULL, '010-1234-5678', '유저39', 'user39@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
+      (NOW(), 41, 41, NULL, '010-1234-5678', '유저40', 'user40@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER');
