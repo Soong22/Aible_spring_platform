@@ -71,20 +71,112 @@ article,aside,audio,blockquote,body,canvas,caption,dd,details,div,dl,dt,embed,fi
 .gnb .site_anchor:hover{text-decoration:none;}
 .gnb .site_anchor:hover:before{opacity:1;}
 
-/* gnb 링크 */
-.gnb .link{position:absolute; top:0; right:0; z-index:50; padding-top:50px; padding-bottom:50px; font-size:0; line-height:0}
-.gnb .link_item{display:inline-block; margin-left:13px; vertical-align:top}
-.gnb .link_item:first-child{margin-left:0}
-.gnb .link_anchor{display:inline-block; width:30px; height:30px; background-repeat:no-repeat; background-position:center center; font-size:0; line-height:0;}
-.gnb .link_anchor.search_open{background-image:url(/images/search_icon.png);}
-.gnb .link_item .link_anchor.login{background-image:url(/images/login_icon.png);}
-.gnb .link_item .link_anchor.logout{background-image:url(/images/logout_icon.png);}
+
+.gnb .link {
+    position: absolute;
+    top: 90%; /* 화면 아래로 완전히 내림 */
+    right: -20px;
+    transform: translateY(85%); /* 추가로 더 내려줌 */
+    z-index: 100;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* 로그인/로그아웃 버튼 스타일 */
+.gnb .link_item {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* 버튼 크기 조정 및 스타일 */
+.gnb .link_anchor {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    padding: 12px 22px;
+    min-width: 120px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: none;
+    text-align: center;
+    line-height: normal;
+}
+
+/* 마우스 오버 효과 */
+.gnb .link_anchor:hover {
+    background-color: #f0f0f0;
+}
+
+/* 사이트맵 아이콘만 보이게 변경 */
+.gnb .sitemap .link_anchor {
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-image: url(/images/sitemap_icon.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-indent: -9999px; /* 텍스트 숨김 */
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 로그인/로그아웃 버튼만 유지 */
+.gnb .link_item:not(.login):not(.logout) {
+    display: none; /* 로그인/로그아웃 버튼 외 숨김 */
+}
+
+/* 반응형: 작은 화면에서 간격 조정 */
+@media screen and (max-width: 768px) {
+    .gnb .link {
+        top: 10px;
+        right: 20px;
+        transform: none;
+        gap: 8px;
+    }
+
+    .gnb .link_anchor {
+        font-size: 14px;
+        padding: 8px 12px;
+        min-width: 80px;
+    }
+}
+
+/* 모바일에서 로그인/로그아웃 메뉴 스타일 */
+@media (max-width: 1000px) {
+    .login-menu, .logout-menu {
+        display: block !important;
+        text-align: center;
+        background: #f8f9fa;
+        padding: 12px 0;
+        border-top: 1px solid #ddd;
+    }
+
+    .login-menu a, .logout-menu a {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        text-decoration: none;
+        padding: 10px;
+    }
+
+    .login-menu a:hover, .logout-menu a:hover {
+        background-color: #e9ecef;
+    }
+}
+
+
+
 .gnb .sitemap .link_anchor{background-image:url(/images/sitemap_icon.png);}
 .gnb .sitemap .link_anchor{background-image:url(/images/sitemap_icon.png);}
 @media all and (max-width:1760px){
     .gnb .site{left:300px;}
     .gnb .site_item{margin-left:10px;}
-	.gnb .site_item:before{left: -5px;}
+    .gnb .site_item:before{left: -5px;}
 }
 @media all and (max-width: 1400px){
     .gnb .site{left:220px;}
@@ -99,7 +191,7 @@ article,aside,audio,blockquote,body,canvas,caption,dd,details,div,dl,dt,embed,fi
     .gnb .site{display:none;}
 
     .gnb .link{right:49px; padding-top:25px; padding-bottom:25px;}
-	.gnb .login{display:none}
+    .gnb .login{display:none}
     .gnb .sitemap{display:none}
 }
 @media all and (max-width:640px){
@@ -338,7 +430,7 @@ article,aside,audio,blockquote,body,canvas,caption,dd,details,div,dl,dt,embed,fi
     .lnb .menu .depth1_item.active .depth2_list{padding-bottom:26px;}
     .lnb .menu .depth1_item.active .depth2_item{border-bottom:none;}
     .lnb .menu .depth1_item.active .depth2_text{padding-top:17px; padding-bottom:17px; background-color:#fff; color:#000; font-size:16px; line-height:21px}
-	.lnb .menu .depth1_item.active .depth2_item.active .depth2_text,
+    .lnb .menu .depth1_item.active .depth2_item.active .depth2_text,
     .lnb .menu .depth1_item.active .depth2_text:hover{font-weight:600; text-decoration:underline; text-underline-position:under;}
     .lnb .menu .depth1_item.active .depth2_text:after{visibility:visible; opacity:1}
     .lnb .menu .depth1_item.has .depth2_item.has.active .depth2_text:after{background-color:#000}
@@ -350,19 +442,17 @@ article,aside,audio,blockquote,body,canvas,caption,dd,details,div,dl,dt,embed,fi
     .lnb .menu .depth_link .sitemap:before{display:block; position:absolute; top:0; bottom:0; left:-20px; width:1px; height:16px; margin:auto; background-color:#fff; opacity:0.2;}
     .lnb .menu .depth_link .link_item .link_anchor{position:relative; padding-left:28px; font-size:14px; color:#fff; line-height:50px;}
     .lnb .menu .depth_link .link_item .link_anchor:before{display:block; position:absolute; top:0; bottom:0; left:0; margin:auto; background-repeat:no-repeat;}
-    .lnb .menu .depth_link .link_item .login:before{bottom:1px; width:19px; height:20px; background-image:url(/images/login_icon2.png);}
-    .lnb .menu .depth_link .link_item .logout:before{bottom:1px; width:19px; height:20px; background-image:url(/images/logout_icon2.png);}
     .lnb .menu .depth_link .sitemap .link_anchor:before{width:19px; height:16px; background-image:url(/images/sitemap_icon2.png);}
 
 }
 @media all and (max-width:1000px){
-	.lnb .menu .depth_link .link_item .link_anchor{text-decoration: none;}
+    .lnb .menu .depth_link .link_item .link_anchor{text-decoration: none;}
 }
 @media all and (max-width:640px){
     .lnb{height:70px;}
     .lnb:before{top:70px;}
     .lnb .menu{top:70px;}
-	.lnb .menu .depth_link{bottom:70px;}
+    .lnb .menu .depth_link{bottom:70px;}
 
     /* 열기 버튼 */
     .lnb .menu_show{width:30px; height:30px;}
