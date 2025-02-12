@@ -54,7 +54,7 @@
         }
 
         .spacer {
-            height: 100px; /* 여백 크기 */
+            height: 200px; /* 여백 크기 */
             background: transparent; /* 배경 없음 */
         }
 
@@ -276,10 +276,11 @@
         setInterval(updateAnomalyData, 5000);
     });
 </script>
-</body>
 
-<!-- 푸터 아래 추가 여백 -->
-<div class="team24-footer-padding"></div>
+<!-- 공간 추가 -->
+<div class="spacer"></div>
+
+</body>
 
 <!-- 푸터 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/footer :: footer}"></div>
