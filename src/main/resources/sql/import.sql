@@ -169,3 +169,28 @@ INSERT INTO member (
       (NOW(), 39, 39, NULL, '010-1234-5678', '유저38', 'user38@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'USER'),
       (NOW(), 40, 40, NULL, '010-1234-5678', '유저39', 'user39@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
       (NOW(), 41, 41, NULL, '010-1234-5678', '유저40', 'user40@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO member (
+    created_at, member_id, police_unit_id, office_phone, person_phone, member_name, email, password, role
+) VALUES
+      (NOW(), 17, 17, NULL, '010-1234-5678', '전홍석', 'user16@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER');
