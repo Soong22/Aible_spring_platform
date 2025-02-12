@@ -30,7 +30,6 @@
     <script src="/js/cctv/main.js"></script>
     <script src="/js/loading.js"></script>
     <script src="/js/top_button.js"></script>
-    <script src="/js/myLogin.js"></script>
 
     <style>
         /* 컨테이너 스타일 (유저 전체 조회와 동일) */
@@ -323,32 +322,29 @@
             background-color: #f8f9fa;
         }
     </style>
-
 </head>
 <body>
+
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
 
-<!-- 메인 타이틀 -->
-<header class="hero">
-    <h3 class="sub-title"> 게시판 작성 </h3>
-    <h1 class="main-title">범죄와의 전쟁</h1>
-</header>
 
 <!-- 메인 타이틀 -->
 <header class="hero">
-    <h1 class="main-title">게시판</h1>
-    <!--    <h1 class="main-title">범죄와의 전쟁</h1>-->
+    <h3 class="sub-title"> 게시판 목록 </h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
 </header>
+
 
 <!-- 게시판 컨테이너 -->
 <div id="wrapper">
     <div class="team24-boards-table-container">
-<!--        <h1>게시판 목록</h1>-->
+        <h1>게시판 목록</h1>
 
         <div th:if="${#lists.isEmpty(boards.content)}" class="team24-no-content">
             <h2>게시글이 없습니다</h2>

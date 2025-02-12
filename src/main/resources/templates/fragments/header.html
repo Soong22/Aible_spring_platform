@@ -27,6 +27,17 @@
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}">
                             </form>
                         </li>
+
+<!--                        &lt;!&ndash;회원가입&ndash;&gt;-->
+<!--                        &lt;!&ndash;로그인안한 사용자만 보이게 변경&ndash;&gt;-->
+<!--                        <li class="link_anchor search_open">-->
+<!--                            <a th:if="${!isUser and !isAdmin}" href="/member/register" class="link_anchor search_open">회원가입</a>-->
+<!--                        </li>-->
+
+                        <!--로그인한 사용자만 보이게 변경-->
+<!--                        <li class="link_item sitemap">-->
+<!--                            <a th:if="${isUser or isAdmin}" href="/cctv/sub.do?key=8497" class="link_anchor">사이트맵</a>-->
+<!--                        </li>-->
                     </ul>
                 </div>
 
@@ -50,6 +61,7 @@
                         </div>
 
                         <ul class="depth_list depth1_list clearfix">
+
                             <!--로그인 없이 접근가능-->
                             <li class="depth_item depth1_item">
                                 <a href="/introduce/team_introduce" class="depth_text depth1_text"
@@ -65,12 +77,11 @@
                                                    target="_self">인사말</a>
                                             </li>
                                             <li class="depth_item depth2_item">
-                                                <a href="/introduce/team_introduce#introduce"
-                                                   class="depth_text depth2_text"
+                                                <a href="/introduce/team_introduce" class="depth_text depth2_text"
                                                    target="_self">팀원 소개</a>
                                             </li>
                                             <li class="depth_item depth2_item">
-                                                <a href="/introduce/team_introduce#video" class="depth_text depth2_text"
+                                                <a href="/introduce/team_introduce" class="depth_text depth2_text"
                                                    target="_self">팀 소개 영상</a>
                                             </li>
                                         </ul>
@@ -88,16 +99,16 @@
                                             수사 요청 확인
                                         </div>
                                         <ul class="depth_list depth2_list cut">
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/region/gwangjumap" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">광주광역시 현황 </a>-->
-                                            <!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/region/gwangjumap" class="depth_text depth2_text"-->
+<!--                                                   target="_self">광주광역시 현황 </a>-->
+<!--                                            </li>-->
                                             <li class="depth_item depth2_item">
-                                                <a href="/notifications/requested" class="depth_text depth2_text"
+                                                <a href="/notification/requested" class="depth_text depth2_text"
                                                    target="_self"> 요청된 알림 </a>
                                             </li>
                                             <li class="depth_item depth2_item">
-                                                <a href="/notifications/completed" class="depth_text depth2_text"
+                                                <a href="/notification/completed" class="depth_text depth2_text"
                                                    target="_self"> 완료된 알림 </a>
                                             </li>
                                         </ul>
@@ -124,10 +135,10 @@
                                                    target="_self">사건 보고서</a>
                                             </li>
 
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/boards" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">자유 게시판</a>-->
-                                            <!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/boards" class="depth_text depth2_text"-->
+<!--                                                   target="_self">자유 게시판</a>-->
+<!--                                            </li>-->
                                         </ul>
                                     </div>
                                 </div>
@@ -177,31 +188,31 @@
                                                    target="_self">알림 보내기</a>
                                             </li>
 
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/members/광주광산" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">광산구</a>-->
-                                            <!--                                            </li>-->
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/members/광주북구" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">북구</a>-->
-                                            <!--                                            </li>-->
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/members/광주서구" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">서구</a>-->
-                                            <!--                                            </li>-->
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/members/광주동구" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">동구</a>-->
-                                            <!--                                            </li>-->
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/members/광주남구" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">남구</a>-->
-                                            <!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주광산" class="depth_text depth2_text"-->
+<!--                                                   target="_self">광산구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주북구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">북구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주서구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">서구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주동구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">동구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주남구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">남구</a>-->
+<!--                                            </li>-->
 
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/notification/register" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">알림 보내기</a>-->
-                                            <!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/notification/register" class="depth_text depth2_text"-->
+<!--                                                   target="_self">알림 보내기</a>-->
+<!--                                            </li>-->
 
                                             <li class="depth_item depth2_item">
                                                 <a href="/notifications" class="depth_text depth2_text"
@@ -209,17 +220,17 @@
                                             </li>
 
                                             <li class="depth_item depth2_item">
-                                                <a href="/notifications/admin-unread" class="depth_text depth2_text"
+                                                <a href="/notification/admin-unread" class="depth_text depth2_text"
                                                    target="_self">읽지 않은 알림 조회</a>
                                             </li>
 
                                             <li class="depth_item depth2_item">
-                                                <a href="/notifications/admin-read" class="depth_text depth2_text"
+                                                <a href="/notification/admin-read" class="depth_text depth2_text"
                                                    target="_self">읽은 알림 조회</a>
                                             </li>
 
                                             <li class="depth_item depth2_item">
-                                                <a href="/notifications/admin-completed" class="depth_text depth2_text"
+                                                <a href="/notification/admin-completed" class="depth_text depth2_text"
                                                    target="_self">완료된 알림 조회</a>
                                             </li>
 
@@ -287,10 +298,6 @@
                                                 <a href="/management/crime" class="depth_text depth2_text"
                                                    target="_self">범죄 이력 관리</a>
                                             </li>
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/management/anomaly" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">통계</a>-->
-                                            <!--                                            </li>-->
                                         </ul>
                                     </div>
                                 </div>
@@ -312,16 +319,16 @@
                                             </li>
                                             <li class="depth_item depth2_item">
                                                 <a href="/boards/report-unread" class="depth_text depth2_text"
-                                                   target="_self">사건 보고서 관리(미완료)</a>
+                                                   target="_self">사건 보고서 관리(읽지않음)</a>
                                             </li>
                                             <li class="depth_item depth2_item">
                                                 <a href="/boards/report-read" class="depth_text depth2_text"
-                                                   target="_self">사건 보고서 관리(완료)</a>
+                                                   target="_self">사건 보고서 관리(읽음)</a>
                                             </li>
-                                            <!--                                            <li class="depth_item depth2_item">-->
-                                            <!--                                                <a href="/boards" class="depth_text depth2_text"-->
-                                            <!--                                                   target="_self">전체게시글 관리</a>-->
-                                            <!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/boards" class="depth_text depth2_text"-->
+<!--                                                   target="_self">전체게시글 관리</a>-->
+<!--                                            </li>-->
                                             <li class="depth_item depth2_item">
                                                 <a href="/members" class="depth_text depth2_text"
                                                    target="_self">전체 회원 관리</a>
@@ -350,28 +357,6 @@
                                     </div>
                                 </div>
                             </li>
-
-                            <li class="depth_item depth1_item" id="loginLogoutMenu" style="display: none;">
-                                <!-- 로그인 상태에 따라 다른 동작 -->
-                                <a th:if="${!isUser and !isAdmin}" href="/login" class="depth_text depth1_text" target="_self">
-                                    로그인
-                                </a>
-
-                                <a th:if="${isUser or isAdmin}" href="javascript:void(0);"
-                                   onclick="document.getElementById('logoutForm').submit();"
-                                   class="depth_text depth1_text">
-                                    로그아웃
-                                </a>
-
-                                <!-- 숨겨진 로그아웃 폼 -->
-                                <form action="/logout" method="post" style="display: none;">
-                                    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-                                </form>
-                            </li>
-
-
-
-
                         </ul>
 
                     </div>

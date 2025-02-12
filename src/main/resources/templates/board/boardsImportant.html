@@ -30,7 +30,6 @@
     <script src="/js/cctv/main.js"></script>
     <script src="/js/loading.js"></script>
     <script src="/js/top_button.js"></script>
-    <script src="/js/myLogin.js"></script>
 
     <style>
         /* 컨테이너 스타일 (유저 전체 조회와 동일) */
@@ -322,22 +321,27 @@
         .team24-footer-padding {
             background-color: #f8f9fa;
         }
-    </style>
 
+
+    </style>
 </head>
 <body>
+
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
-<!-- 알림 -->
-<div th:replace="~{fragments/notification :: notification}"></div>
 
 <!-- 메인 타이틀 -->
 <header class="hero">
-    <h1 class="main-title">공지사항</h1>
-    <!--    <h1 class="main-title">범죄와의 전쟁</h1>-->
+    <h3 class="sub-title"> 공지사항 </h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
 </header>
+
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
 
 <!-- 게시판 컨테이너 -->
 <div id="wrapper">
@@ -404,7 +408,7 @@
 
                     <!-- 처음(<<) 버튼 -->
                     <li class="team24-page-item" th:classappend="${boards.number == 0 ? 'disabled' : ''}">
-                        <a th:if="${boards.number > 0}" class="team24-page-link" th:href="@{/boards/important(page=0)}"
+                        <a th:if="${boards.number > 0}" class="team24-page-link" th:href="@{/boards(page=0)}"
                            aria-label="처음">
                             &laquo;
                         </a>
@@ -415,7 +419,7 @@
                     <!-- 이전(<) 버튼 -->
                     <li class="team24-page-item" th:classappend="${boards.number > 0 ? '' : 'disabled'}">
                         <a th:if="${boards.number > 0}" class="team24-page-link"
-                           th:href="@{/boards/important(page=${boards.number - 1})}"
+                           th:href="@{/boards(page=${boards.number - 1})}"
                            aria-label="이전">
                             &lt;
                         </a>
@@ -432,14 +436,14 @@
                     (boards.number == boards.totalPages - 1 ? boards.totalPages - 1 : boards.number + 1)))
                 )}"
                         th:classappend="${pageNum == boards.number ? 'active' : ''}">
-                        <a class="team24-page-link" th:href="@{/boards/important(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                        <a class="team24-page-link" th:href="@{/boards(page=${pageNum})}" th:text="${pageNum + 1}"></a>
                     </li>
 
                     <!-- 다음(>) 버튼 -->
                     <li class="team24-page-item"
                         th:classappend="${boards.number < boards.totalPages - 1 ? '' : 'disabled'}">
                         <a th:if="${boards.number < boards.totalPages - 1}" class="team24-page-link"
-                           th:href="@{/boards/important(page=${boards.number + 1})}"
+                           th:href="@{/boards(page=${boards.number + 1})}"
                            aria-label="다음">
                             &gt;
                         </a>
@@ -451,7 +455,7 @@
                     <li class="team24-page-item"
                         th:classappend="${boards.number == boards.totalPages - 1 ? 'disabled' : ''}">
                         <a th:if="${boards.number < boards.totalPages - 1}" class="team24-page-link"
-                           th:href="@{/boards/important(page=${boards.totalPages - 1})}"
+                           th:href="@{/boards(page=${boards.totalPages - 1})}"
                            aria-label="마지막">
                             &raquo;
                         </a>
@@ -461,8 +465,6 @@
 
                 </ul>
             </nav>
-
-
         </div>
 
     </div>

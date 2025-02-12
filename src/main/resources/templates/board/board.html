@@ -32,7 +32,6 @@
     <script src="/js/cctv/main.js"></script>
     <script src="/js/loading.js"></script>
     <script src="/js/top_button.js"></script>
-    <script src="/js/myLogin.js"></script>
 
     <style>
         /* ================================
@@ -526,7 +525,6 @@
                 element.textContent = relativeTime;
             });
         });
-
     </script>
 
     <!-- 메인 타이틀 -->
@@ -562,24 +560,26 @@
             background-color: #f8f9fa;
         }
     </style>
-
 </head>
-<body>
+
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
-<!-- 알림 -->
-<div th:replace="~{fragments/notification :: notification}"></div>
 
 <!-- 메인 타이틀 -->
 <header class="hero">
-    <!--    <h1 class="main-title" th:text="${board.title}">게시글 제목</h1>-->
-    <!--    <h1 class="main-title">게시글</h1>-->
-    <!--    <h1 class="main-title">범죄와의 전쟁</h1>-->
+    <h3 class="sub-title" th:text="${board.title}">게시글 제목 </h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
 </header>
 
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
+
 <!-- 메인 콘텐츠 -->
+<body>
 <div id="wrapper">
     <div class="team24-board-container">
         <!-- 게시글 제목 -->
@@ -663,17 +663,17 @@
                 </form>
 
                 <!-- 우측: 목록 버튼 -->
-                <button type="button" class="btn btn-list"
-                        th:onclick="
-                ${#authorization.expression('hasRole(''USER'')')
-                and (board.status == '확인대기' or board.status == '확인완료')}
-                ? 'location.href=\'/boards/report\''
-                : (${board.status == '일반'} ? 'location.href=\'/boards\''
-                : (${board.status == '공지사항'} ? 'location.href=\'/boards/important\''
-                : (${board.status == '확인대기'} ? 'location.href=\'/boards/report-unread\''
-                : 'location.href=\'/boards/report-read\'')))">
-                    목록
-                </button>
+<!--                <button type="button" class="btn btn-list"-->
+<!--                        th:onclick="-->
+<!--                ${#authorization.expression('hasRole(''USER'')')-->
+<!--                and (board.status == '확인대기' or board.status == '확인완료')}-->
+<!--                ? 'location.href=\'/boards/report\''-->
+<!--                : (${board.status == '일반'} ? 'location.href=\'/boards\''-->
+<!--                : (${board.status == '공지사항'} ? 'location.href=\'/boards/important\''-->
+<!--                : (${board.status == '확인대기'} ? 'location.href=\'/boards/report-unread\''-->
+<!--                : 'location.href=\'/boards/report-read\'')))">-->
+<!--                    목록-->
+<!--                </button>-->
             </div>
 
 

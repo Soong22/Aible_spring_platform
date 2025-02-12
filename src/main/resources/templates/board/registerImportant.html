@@ -32,7 +32,6 @@
     <script src="/js/cctv/main.js"></script>
     <script src="/js/loading.js"></script>
     <script src="/js/top_button.js"></script>
-    <script src="/js/myLogin.js"></script>
 
     <style>
         .form-container {
@@ -190,26 +189,26 @@
         #wrapper {
             background-color: #f8f9fa;
         }
-
-        .team24-footer-padding {
-            background-color: #f8f9fa;
-        }
     </style>
 
 </head>
 <body>
 
+
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
+
 
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
 
+
 <!-- 메인 타이틀 -->
 <header class="hero">
-<!--    <h3 class="sub-title"></h3>-->
-    <h1 class="main-title">공지사항 작성</h1>
+    <h3 class="sub-title">공지사항 작성</h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
 </header>
+
 
 <!-- Main Content -->
 <div id="wrapper">
