@@ -27,17 +27,6 @@
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}">
                             </form>
                         </li>
-
-<!--                        &lt;!&ndash;회원가입&ndash;&gt;-->
-<!--                        &lt;!&ndash;로그인안한 사용자만 보이게 변경&ndash;&gt;-->
-<!--                        <li class="link_anchor search_open">-->
-<!--                            <a th:if="${!isUser and !isAdmin}" href="/member/register" class="link_anchor search_open">회원가입</a>-->
-<!--                        </li>-->
-
-                        <!--로그인한 사용자만 보이게 변경-->
-<!--                        <li class="link_item sitemap">-->
-<!--                            <a th:if="${isUser or isAdmin}" href="/cctv/sub.do?key=8497" class="link_anchor">사이트맵</a>-->
-<!--                        </li>-->
                     </ul>
                 </div>
 
@@ -77,11 +66,11 @@
                                                    target="_self">인사말</a>
                                             </li>
                                             <li class="depth_item depth2_item">
-                                                <a href="/introduce/team_introduce" class="depth_text depth2_text"
+                                                <a href="/introduce/team_introduce#introduce" class="depth_text depth2_text"
                                                    target="_self">팀원 소개</a>
                                             </li>
                                             <li class="depth_item depth2_item">
-                                                <a href="/introduce/team_introduce" class="depth_text depth2_text"
+                                                <a href="/introduce/team_introduce#video" class="depth_text depth2_text"
                                                    target="_self">팀 소개 영상</a>
                                             </li>
                                         </ul>
