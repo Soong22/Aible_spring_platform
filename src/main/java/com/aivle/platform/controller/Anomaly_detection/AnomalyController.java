@@ -1,8 +1,11 @@
 package com.aivle.platform.controller.Anomaly_detection;
 
+import com.aivle.platform.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller; // @RestController 대신 @Controller 사용
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,8 +76,10 @@ public class AnomalyController {
     // 관리 페이지로 이동하는 매핑 추가 (뷰를 렌더링)
     // 전체 URL은 "/api/management/anomaly.html"이 됩니다.
     @GetMapping("/management/anomaly")
-    public String anomalyManagementPage() {
+    public String anomalyManagementPage(Model model, Authentication authentication) {
         // templates/management/anomaly.html 파일을 렌더링합니다.
+        MemberService.addMemberInfoToModel(model, authentication);
+
         return "management/anomaly";
     }
 }
