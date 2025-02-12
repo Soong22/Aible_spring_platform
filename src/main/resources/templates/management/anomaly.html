@@ -30,7 +30,7 @@
 
     <title>이상 행동 탐지</title>
 
-    <!-- 메인 타이틀 -->
+    <!-- 메인 타이틀 및 스타일 -->
     <style>
         .hero {
             padding: 60px 20px;
@@ -95,7 +95,7 @@
             z-index: 10;
         }
 
-        /* 경고 메시지 – 알림 보내기 버튼 위에(혹은 옆에) 고정 */
+        /* 경고 메시지 – 알림 보내기 버튼 옆에 고정 */
         #alertMessage {
             position: fixed;
             bottom: 30px;      /* 알림 보내기 버튼 위쪽에 위치 (버튼 높이 40px + 여백) */
@@ -103,19 +103,22 @@
             background: rgba(255, 0, 0, 0.8);
             color: white;
             padding: 10px 20px;
+            padding-right: 50px; /* 텍스트와 x 버튼 사이에 여백 추가 */
             border-radius: 5px;
             font-size: 18px;
             display: none;
             z-index: 200;
         }
-
+        .table-section {
+            /* 푸터를 넘어가지 않도록 최대 높이 설정 */
+            max-height: 300px; /* 필요에 따라 조절 */
+            overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
+        }
     </style>
 </head>
 
-
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
-
 
 <!-- 메인 타이틀 -->
 <header class="hero">
@@ -123,6 +126,45 @@
     <h1 class="main-title">범죄와의 전쟁</h1>
 </header>
 
+<!-- 알림 보내기 버튼: warning.png 아이콘 사용, title 속성으로 툴팁 제공 -->
+<a id="sendAlertBtn" href="/region/gwangjumap" title="알림 보내기">
+    <img src="/images/warning.png" alt="알림 보내기" />
+</a>
+
+<!-- 경고 메시지 – 알림 보내기 버튼 옆에 고정 -->
+<div id="alertMessage">
+    이상 행동이 감지 되었습니다. 알림을 보내주세요.
+    <button id="closeAlertBtn">&times;</button>
+</div>
+
+<style>
+    /* 닫기 버튼 스타일 */
+    #closeAlertBtn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+</style>
+
+<script>
+    // 마지막 알림의 timestamp와 사용자가 닫았는지 여부를 추적
+    var lastAlertTimestamp = null;
+    var alertDismissed = false;
+
+    // 닫기 버튼 클릭 시 알림 메시지와 아이콘 숨김 및 닫힘 상태 기록
+    $(document).ready(function() {
+        $("#closeAlertBtn").click(function() {
+            $("#alertMessage, #sendAlertBtn").fadeOut();
+            alertDismissed = true;
+        });
+    });
+</script>
 
 <!-- 메인 콘텐츠 -->
 <body class="fullscreen-container" id="fullscreen-container">
@@ -145,14 +187,6 @@
             </svg>
         </button>
 
-        <!-- 알림 보내기 버튼: warning.png 아이콘 사용, title 속성으로 툴팁 제공 -->
-        <a id="sendAlertBtn" href="/region/gwangjumap" title="알림 보내기">
-            <img src="/images/warning.png" alt="알림 보내기" />
-        </a>
-
-        <!-- 경고 메시지 (알림 감지 시 잠깐 표시) -->
-        <div id="alertMessage">이상 행동이 감지 되었습니다. 알림을 보내주세요.</div>
-
         <img id="alarm-image" src="" alt="이상 행동 탐지 이미지" />
 
     </div>
@@ -168,16 +202,13 @@
             </tr>
             </thead>
             <tbody>
-
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-
     // 타임스탬프 포맷팅 함수: "yyyyMMdd_HHmmss" → "yyyy년 MM월 dd일 HH:mm:ss"
-    // 타임스탬프 포맷팅 함수
     function formatTimestamp(ts) {
         if (ts) {
             var parts = ts.split("_");
@@ -194,7 +225,7 @@
         return "0000년 00월 00일 00:00:00";
     }
 
-    // 전체화면 토글 함수: 헤더와 푸터는 제외하고, fullscreen-container만 전체화면 전환
+    // 전체화면 토글 함수 (fullscreen-container만 전체화면)
     function toggleFullscreen() {
         const elem = document.getElementById("fullscreen-container");
         if (!document.fullscreenElement) {
@@ -225,23 +256,32 @@
                 // 최신 데이터부터 역순 정렬하여 테이블에 추가
                 data.slice().reverse().forEach(function(anomaly) {
                     let row = `<tr>
-                    <td>${anomaly.type}</td>
-                    <td>${anomaly.accuracy.toFixed(1)}%</td>
-                    <td>${formatTimestamp(anomaly.timestamp)}</td>
-                </tr>`;
+                                <td>${anomaly.type}</td>
+                                <td>${anomaly.accuracy.toFixed(1)}%</td>
+                                <td>${formatTimestamp(anomaly.timestamp)}</td>
+                            </tr>`;
                     tableBody.append(row);
                 });
 
-                // 알람 이미지 업데이트 및 "알림 보내기" 버튼 제어
-                if(data.length > 0) {
+                // 알람 이미지 업데이트 및 알림 아이콘 제어
+                if (data.length > 0) {
                     let latest = data[data.length - 1];
+                    // 이미지 갱신 (브라우저 캐시를 피하기 위해 타임스탬프 쿼리 추가)
                     $('#alarm-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
-                    // 알람 데이터가 있으면 버튼 보이기
-                    $('#sendAlertBtn').show();
-                    // 경고 메시지를 표시한 후 2초 후 자동으로 사라지게 함
-                    $('#alertMessage').stop(true, true).fadeIn(500).delay(2000).fadeOut(500);
+
+                    // 새 알림(새로운 timestamp)이면 알림 표시
+                    if (latest.timestamp !== lastAlertTimestamp) {
+                        lastAlertTimestamp = latest.timestamp;
+                        alertDismissed = false; // 새 알림 발생으로 닫힘 상태 초기화
+                        $('#sendAlertBtn').show();
+                        $('#alertMessage').stop(true, true).fadeIn(500).delay(2000).fadeOut(500);
+                    } else {
+                        // 이전 알림을 사용자가 닫은 경우 아이콘 숨김
+                        if (alertDismissed) {
+                            $('#sendAlertBtn').hide();
+                        }
+                    }
                 } else {
-                    // 데이터가 없으면 버튼 숨기기
                     $('#sendAlertBtn').hide();
                 }
             },
@@ -255,33 +295,30 @@
     function downloadImage() {
         const image = document.getElementById("alarm-image");
         const imageUrl = image.src;
-        // 임시 <a> 엘리먼트를 생성하여 다운로드 속성을 추가한 후 클릭
         const link = document.createElement("a");
         link.href = imageUrl;
-        // URL에서 파일 이름 추출 (쿼리스트링은 제거)
+        // URL에서 파일명 추출 (쿼리스트링 제거)
         let fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
-        if(fileName.indexOf('?') !== -1){
+        if (fileName.indexOf('?') !== -1) {
             fileName = fileName.substring(0, fileName.indexOf('?'));
         }
-        // 다운로드될 파일명 지정 (없으면 기본값 사용)
         link.download = fileName || "downloaded_image.jpg";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     }
 
-    // 페이지 로드시와 5초마다 업데이트
+    // 페이지 로드 시와 5초마다 데이터 갱신
     $(document).ready(function(){
         updateAnomalyData();
         setInterval(updateAnomalyData, 5000);
     });
 </script>
 
-<!-- 공간 추가 -->
+<!-- 추가 여백 -->
 <div class="spacer"></div>
-
-</body>
 
 <!-- 푸터 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
 </html>
