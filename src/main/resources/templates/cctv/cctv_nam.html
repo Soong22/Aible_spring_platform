@@ -16,6 +16,44 @@
     <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
     <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            background-color: #f8f9fa;
+        }
+    </style>
+
     <!-- js -->
     <!--[if lt IE 9]>
     <script src="/js/html5.js"></script><![endif]-->
@@ -42,10 +80,16 @@
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
 
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title">남구 CCTV 현황</h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
 <!-- 메인 콘텐츠 -->
 <div class="container">
     <div class="main-content">
-        <h1>남구 CCTV 현황</h1>
+<!--        <h1>남구 CCTV 현황</h1>-->
 
         <!-- CCTV 동적 비디오 컨테이너 -->
         <div class="cctv-container">

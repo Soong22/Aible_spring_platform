@@ -89,7 +89,8 @@
 
         /* 헤더 스타일 */
         .table thead th {
-            background-color: var(--table-header-bg) !important;
+            /*background-color: var(--table-header-bg) !important;*/
+            background-color: #060c23 !important;
             color: var(--table-header-text) !important;
             text-align: center !important;
             vertical-align: middle !important;
@@ -194,7 +195,7 @@
         .team24-button {
             position: absolute;
             left: 0;
-            background-color: #000820;
+            background-color: #060c23;
             color: white !important;
             font-weight: bold;
             padding: 10px 16px;
@@ -227,9 +228,9 @@
             display: block;
             padding: 8px 12px;
             text-decoration: none;
-            color: #000820;
+            color: #060c23;
             font-weight: bold;
-            border: 1px solid #000820;
+            border: 1px solid #060c23;
             border-radius: 5px;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
@@ -241,9 +242,9 @@
 
         /* 현재 페이지(active) */
         .team24-page-item.active .team24-page-link {
-            background-color: #000820;
+            background-color: #060c23;
             color: white;
-            border-color: #000820;
+            border-color: #060c23;
         }
 
         /* 비활성화된 버튼 (이전/다음) */
@@ -310,6 +311,39 @@
         }
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
 
@@ -319,12 +353,18 @@
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
 
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title">전체 유저 조회</h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
 <!-- 메인 콘텐츠 -->
 <div id="wrapper">
     <div class="container mt-5">
         <div class="table-container">
             <div class="table-responsive">
-                <h1 class="mb-4 text-left">전체 유저 조회</h1>
+<!--                <h1 class="mb-4 text-left">전체 유저 조회</h1>-->
                 <table class="table table-hover">
                     <colgroup>
                         <col style="width: 5%;">

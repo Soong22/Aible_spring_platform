@@ -104,7 +104,7 @@
             display: block;
             width: 100%;
             height: 100%;
-            background-color: #000820;
+            background-color: #060c23;
             color: white;
             text-align: center;
             line-height: 50px;
@@ -129,8 +129,8 @@
 
         /* 작성하기 버튼 색상 변경 */
         .btn-primary {
-            background-color: #000820 !important;
-            border-color: #000820 !important;
+            background-color: #060c23 !important;
+            border-color: #060c23 !important;
             color: white !important;
         }
 
@@ -157,19 +157,63 @@
         /*]]>*/
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+    </style>
+
 </head>
 <body>
+
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
+
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title">공지사항 작성</h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
 
 <!-- Main Content -->
 <div id="wrapper">
     <div class="form-container">
-        <h1>공지사항 작성</h1>
+<!--        <h1>공지사항 작성</h1>-->
 
         <form id="boardForm" action="/board/register-important" method="post" enctype="multipart/form-data">
 
