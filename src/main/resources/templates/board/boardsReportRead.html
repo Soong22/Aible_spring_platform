@@ -360,7 +360,7 @@
 
                     <!-- 처음(<<) 버튼 -->
                     <li class="team24-page-item" th:classappend="${boards.number == 0 ? 'disabled' : ''}">
-                        <a th:if="${boards.number > 0}" class="team24-page-link" th:href="@{/boards/report(page=0)}"
+                        <a th:if="${boards.number > 0}" class="team24-page-link" th:href="@{/boards/report-read(page=0)}"
                            aria-label="처음">
                             &laquo;
                         </a>
@@ -371,7 +371,7 @@
                     <!-- 이전(<) 버튼 -->
                     <li class="team24-page-item" th:classappend="${boards.number > 0 ? '' : 'disabled'}">
                         <a th:if="${boards.number > 0}" class="team24-page-link"
-                           th:href="@{/boards/report(page=${boards.number - 1})}"
+                           th:href="@{/boards/report-read(page=${boards.number - 1})}"
                            aria-label="이전">
                             &lt;
                         </a>
@@ -388,14 +388,15 @@
                     (boards.number == boards.totalPages - 1 ? boards.totalPages - 1 : boards.number + 1)))
                 )}"
                         th:classappend="${pageNum == boards.number ? 'active' : ''}">
-                        <a class="team24-page-link" th:href="@{/boards/report(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                        <a class="team24-page-link" th:href="@{/boards/report-read(page=${pageNum})}"
+                           th:text="${pageNum + 1}"></a>
                     </li>
 
                     <!-- 다음(>) 버튼 -->
                     <li class="team24-page-item"
                         th:classappend="${boards.number < boards.totalPages - 1 ? '' : 'disabled'}">
                         <a th:if="${boards.number < boards.totalPages - 1}" class="team24-page-link"
-                           th:href="@{/boards/report(page=${boards.number + 1})}"
+                           th:href="@{/boards/report-read(page=${boards.number + 1})}"
                            aria-label="다음">
                             &gt;
                         </a>
@@ -407,7 +408,7 @@
                     <li class="team24-page-item"
                         th:classappend="${boards.number == boards.totalPages - 1 ? 'disabled' : ''}">
                         <a th:if="${boards.number < boards.totalPages - 1}" class="team24-page-link"
-                           th:href="@{/boards/report(page=${boards.totalPages - 1})}"
+                           th:href="@{/boards/report-read(page=${boards.totalPages - 1})}"
                            aria-label="마지막">
                             &raquo;
                         </a>

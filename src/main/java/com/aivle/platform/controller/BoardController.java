@@ -257,7 +257,7 @@ public class BoardController {
         model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
 
-        return "board/boardsReport";
+        return "board/boardsReportUnread";
     }
 
     @GetMapping("/boards/report-read")
@@ -280,7 +280,7 @@ public class BoardController {
         model.addAttribute("totalPages", boards.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", boards.getTotalElements()); // 전체 항목 수
 
-        return "board/boardsReport";
+        return "board/boardsReportRead";
     }
 
     @GetMapping("/board/{boardId}")
