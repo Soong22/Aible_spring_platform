@@ -14,6 +14,7 @@ import com.aivle.platform.exception.notification.NotificationNotFoundException;
 import com.aivle.platform.service.FileService;
 import com.aivle.platform.service.MemberService;
 import com.aivle.platform.service.NotificationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -129,13 +130,26 @@ public class NotificationController {
         model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
 
         return "notification/notifications";
+    }
 
+    @GetMapping("/notifications/back")
+    public String notificationsBack(HttpServletRequest request) {
+        String previousUrl = (String) request.getSession().getAttribute("previousUrl");
+        if (previousUrl != null) {
+            return "redirect:" + previousUrl;
+        } else {
+            return "redirect:/"; // 이전 URL이 없을 경우 메인 페이지로 이동
+        }
     }
 
     @GetMapping("/notification/{notificationId}")
     public String getNotification(@PathVariable("notificationId") Long notificationId, Model model,
-                                  Authentication authentication, RedirectAttributes redirectAttributes) {
+                                  Authentication authentication, RedirectAttributes redirectAttributes,
+                                  HttpServletRequest request) {
         try {
+            String previousUrl = request.getHeader("Referer").split("\\?")[0];
+            request.getSession().setAttribute("previousUrl", previousUrl); // query parameter가 제거된 URL 저장
+
             MemberService.addMemberInfoToModel(model, authentication);
 
             Member member = memberService.getMemberEmail(authentication.getName());
@@ -156,12 +170,13 @@ public class NotificationController {
         }
     }
 
-    // 일반 사용자가 자신에게 들어온 요청알림 확인
-    @GetMapping("/notification/requested")
-    public String getNotificationsByReceiverRequested(Model model, Authentication authentication,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "5") int size) {
 
+    // 일반 사용자가 자신에게 들어온 요청알림 확인
+    @GetMapping("/notifications/requested")
+    public String getNotificationsByReceiverRequested(Model model, Authentication authentication,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "5") int size
+    ) {
         MemberService.addMemberInfoToModel(model, authentication);
         Member receiver = memberService.getMemberEmail(authentication.getName());
 
@@ -178,14 +193,14 @@ public class NotificationController {
         model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
 
-        return "notification/notifications";
+        return "notification/notificationsRequested";
     }
 
     // 일반 사용자가 자신이 완료한 요청알림 확인
-    @GetMapping("/notification/completed")
+    @GetMapping("/notifications/completed")
     public String getNotificationsByReceiverCompleted(Model model, Authentication authentication,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "5") int size) {
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "5") int size) {
 
         MemberService.addMemberInfoToModel(model, authentication);
         Member receiver = memberService.getMemberEmail(authentication.getName());
@@ -204,14 +219,14 @@ public class NotificationController {
         model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
 
-        return "notification/notifications";
+        return "notification/notificationsCompleted";
     }
 
     // 관리자가 완료상태의 알림 확인
-    @GetMapping("/notification/admin-completed")
+    @GetMapping("/notifications/admin-completed")
     public String getNotificationsByCompleted(Model model, Authentication authentication,
-                                                      @RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "5") int size) {
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "5") int size) {
 
         MemberService.addMemberInfoToModel(model, authentication);
 
@@ -229,14 +244,14 @@ public class NotificationController {
         model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
 
-        return "notification/notifications";
+        return "notification/notificationsAdminCompleted";
     }
 
     // 관리자가 읽은상태의 알림 확인
-    @GetMapping("/notification/admin-read")
+    @GetMapping("/notifications/admin-read")
     public String getNotificationsByRead(Model model, Authentication authentication,
-                                              @RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "5") int size) {
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "5") int size) {
 
         MemberService.addMemberInfoToModel(model, authentication);
 
@@ -254,14 +269,14 @@ public class NotificationController {
         model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
 
-        return "notification/notifications";
+        return "notification/notificationsAdminRead";
     }
 
     // 관리자가 읽은상태의 알림 확인
-    @GetMapping("/notification/admin-unread")
+    @GetMapping("/notifications/admin-unread")
     public String getNotificationsByUnRead(Model model, Authentication authentication,
-                                         @RequestParam(defaultValue = "0") int page,
-                                         @RequestParam(defaultValue = "5") int size) {
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "5") int size) {
 
         MemberService.addMemberInfoToModel(model, authentication);
 
@@ -279,16 +294,18 @@ public class NotificationController {
         model.addAttribute("totalPages", notifications.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", notifications.getTotalElements()); // 전체 항목 수
 
-        return "notification/notifications";
+        return "notification/notificationsAdminUnread";
     }
 
     // 사용자가 알림을 처리완료로 변경하기 위한 버튼
     @PostMapping("/notification/complete")
-    public String setNotificationComplete(@RequestParam("notificationId") Long notificationId){
+    public String setNotificationComplete(@RequestParam("notificationId") Long notificationId) {
 
         notificationService.setNotificationComplete(notificationId);
 
-        return "redirect:/notification/" + notificationId;
+
+        return "redirect:/notifications/requested";
+//        return "redirect:/notification/" + notificationId;
     }
 
 

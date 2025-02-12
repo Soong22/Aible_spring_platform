@@ -224,10 +224,10 @@
     transform: translateX(-200px);
 }
 .info_list .slick-slide:nth-child(2) {
-    transform: translateX(50px);
+    transform: translateX(0px);
 }
 .info_list .slick-slide:nth-child(3) {
-    transform: translateX(300px);
+    transform: translateX(200px);
 }
 
 
