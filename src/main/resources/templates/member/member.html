@@ -79,13 +79,15 @@
 
         /* 왼쪽 열 스타일 (폭 30% 줄이기) */
         .inner-table th {
-            background-color: var(--table-header-bg) !important; /* 배경색 */
+            /*background-color: var(--table-header-bg) !important; !* 배경색 *!*/
+            background-color: #060c23 !important; /* 배경색 */
             color: var(--table-header-text) !important; /* 글씨색 */
-            text-align: left !important;
+            text-align: center !important;
             padding: 16px !important;
             width: 20% !important; /* 기존 대비 30% 줄이기 */
             border-right: 1px solid var(--table-border-color) !important; /* 컬럼 구분선 */
             border-bottom: 1px solid var(--table-border-color) !important; /* 행 구분선 */
+            font-weight: bold !important;
         }
 
         /* 오른쪽 열 스타일 */
@@ -153,7 +155,7 @@
 
         /* 목록 버튼 */
         .custom-btn-primary {
-            background-color: #000820;
+            background-color: #060c23;
         }
 
         .custom-btn-primary:hover {
@@ -171,6 +173,40 @@
         /*]]>*/
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+    </style>
+
 </head>
 <body>
 
@@ -180,11 +216,17 @@
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
 
+<!-- 메인 타이틀 -->
+<header class="hero">
+<!--    <h3 class="sub-title">회원 상세 조회</h3>-->
+    <h1 class="main-title">회원 조회</h1>
+</header>
+
 
 <!-- 메인 콘텐츠 -->
 <div id="wrapper">
     <div class="container table-container">
-        <h1 class="text-center mb-4">회원 상세 조회</h1>
+<!--        <h1 class="text-center mb-4">회원 상세 조회</h1>-->
 
         <!-- 회원 정보 테이블 -->
         <table class="inner-table table table-bordered">

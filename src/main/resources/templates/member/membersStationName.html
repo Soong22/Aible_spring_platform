@@ -312,6 +312,40 @@
         }
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+    </style>
+
 </head>
 <body>
 
@@ -321,12 +355,18 @@
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
 
+<!-- 메인 타이틀 -->
+<header class="hero">
+<!--    <h3 class="sub-title" th:text="${stationName}">지역구</h3>-->
+    <h1 th:text="${stationName}" class="main-title">지역구</h1>
+</header>
+
 <!-- 메인 콘텐츠 -->
 <div id="wrapper">
     <div class="container mt-5">
         <div class="table-container">
             <div class="table-responsive">
-                <h1 th:text="${stationName}" class="mb-4 text-left"></h1>
+<!--                <h1 th:text="${stationName}" class="mb-4 text-left"></h1>-->
                 <table class="table table-hover">
                     <colgroup>
                         <col style="width: 35%;">

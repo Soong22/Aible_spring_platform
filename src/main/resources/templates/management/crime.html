@@ -25,13 +25,57 @@
     <script src="/js/cctv/main.js"></script>
     <script src="/js/loading.js"></script>
 
-    <title>범죄 알림 관리</title>
+    <title>범죄 이력 관리</title>
+
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 
-<body>
+
 <!-- 헤더 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title"> 범죄 이력 관리 </h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
+
+<!-- 메인 콘텐츠 -->
+<body>
 <div class="grid-container">
     <!-- 좌측: 스트리밍 영상 혹은 기타 콘텐츠 -->
     <div class="video-section">

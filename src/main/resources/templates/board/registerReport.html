@@ -157,6 +157,44 @@
         /*]]>*/
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+
+        .team24-footer-padding {
+            background-color: #f8f9fa;
+        }
+    </style>
+
 </head>
 <body>
 
@@ -166,10 +204,16 @@
 <!-- 알림 -->
 <div th:replace="~{fragments/notification :: notification}"></div>
 
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h1 class="main-title">보고서 작성</h1>
+    <!--    <h1 class="main-title">범죄와의 전쟁</h1>-->
+</header>
+
 <!-- Main Content -->
 <div id="wrapper">
     <div class="form-container">
-        <h1>보고서 작성</h1>
+<!--        <h1>보고서 작성</h1>-->
 
         <form id="boardForm" action="/board/register" method="post" enctype="multipart/form-data">
 

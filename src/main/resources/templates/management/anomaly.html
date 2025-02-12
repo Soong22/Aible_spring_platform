@@ -28,16 +28,104 @@
     <script src="/js/loading.js"></script>
 
     <title>이상 행동 탐지</title>
+
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+
+        /* 알림 보내기 버튼 (원형 아이콘) – 페이지 오른쪽 하단에 고정 */
+        #sendAlertBtn {
+            position: fixed;
+            bottom: 10px;      /* 페이지 아래에서 10px */
+            right: 10px;       /* 페이지 오른쪽에서 10px */
+            background: transparent;
+            border: none;
+            padding: 0;
+            display: none;     /* JS에서 데이터가 있으면 노출 */
+            cursor: pointer;
+            z-index: 10000;
+        }
+        #sendAlertBtn img {
+            width: 100px;
+            height: 100px;
+        }
+
+        /* 커스텀 툴팁: 버튼 위에 마우스를 올리면 표시 (필요시 유지) */
+        #sendAlertBtn:hover::after {
+            content: "알림 보내기";
+            position: absolute;
+            bottom: 50px;      /* 버튼 위쪽에 표시 (조정 가능) */
+            right: 0;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        /* 경고 메시지 – 알림 보내기 버튼 위에(혹은 옆에) 고정 */
+        #alertMessage {
+            position: fixed;
+            bottom: 30px;      /* 알림 보내기 버튼 위쪽에 위치 (버튼 높이 40px + 여백) */
+            right: 140px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            display: none;
+            z-index: 200;
+        }
+
+    </style>
 </head>
+
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
 
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title"> 이상 행동 탐지 </h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
+
 <!-- 메인 콘텐츠 -->
 <body class="fullscreen-container" id="fullscreen-container">
 <div class="grid-container">
-
     <!-- 좌측: MJPEG 스트리밍 (FastAPI의 /predict URL) -->
     <div class="video-section">
         <img src="https://crime-detect.run.goorm.io/predict" alt="MJPEG Stream" />
@@ -55,6 +143,14 @@
                 <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
             </svg>
         </button>
+
+        <!-- 알림 보내기 버튼: warning.png 아이콘 사용, title 속성으로 툴팁 제공 -->
+        <a id="sendAlertBtn" href="/region/gwangjumap" title="알림 보내기">
+            <img src="/images/warning.png" alt="알림 보내기" />
+        </a>
+
+        <!-- 경고 메시지 (알림 감지 시 잠깐 표시) -->
+        <div id="alertMessage">이상 행동이 감지 되었습니다. 알림을 보내주세요.</div>
 
         <img id="alarm-image" src="" alt="이상 행동 탐지 이미지" />
 
@@ -125,7 +221,7 @@
                 let tableBody = $('#alarm-table tbody');
                 tableBody.empty();
 
-                // 최신 데이터부터 역순 정렬하여 추가
+                // 최신 데이터부터 역순 정렬하여 테이블에 추가
                 data.slice().reverse().forEach(function(anomaly) {
                     let row = `<tr>
                     <td>${anomaly.type}</td>
@@ -135,10 +231,17 @@
                     tableBody.append(row);
                 });
 
-                // 최신 알람 이미지 업데이트 (캐시 무효화를 위해 타임스탬프 추가)
+                // 알람 이미지 업데이트 및 "알림 보내기" 버튼 제어
                 if(data.length > 0) {
                     let latest = data[data.length - 1];
                     $('#alarm-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
+                    // 알람 데이터가 있으면 버튼 보이기
+                    $('#sendAlertBtn').show();
+                    // 경고 메시지를 표시한 후 2초 후 자동으로 사라지게 함
+                    $('#alertMessage').stop(true, true).fadeIn(500).delay(2000).fadeOut(500);
+                } else {
+                    // 데이터가 없으면 버튼 숨기기
+                    $('#sendAlertBtn').hide();
                 }
             },
             error: function(err) {
@@ -173,6 +276,9 @@
     });
 </script>
 </body>
+
+<!-- 푸터 아래 추가 여백 -->
+<div class="team24-footer-padding"></div>
 
 <!-- 푸터 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/footer :: footer}"></div>
