@@ -52,13 +52,19 @@
         }
 
         .spacer {
-            height: 100px; /* 여백 크기 */
+            height: 300px; /* 여백 크기 */
             background: transparent; /* 배경 없음 */
         }
 
         /* 배경색 */
         #wrapper {
             background-color: #f8f9fa;
+        }
+
+        .table-section {
+            /* 🔥 푸터를 넘어가지 않도록 최대 높이 설정 */
+            max-height: 300px; /* 필요에 따라 조절 */
+            overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
         }
     </style>
 </head>
@@ -209,6 +215,9 @@
         setInterval(updateCrimeData, 5000);
     });
 </script>
+
+<!-- 공간 추가 -->
+<div class="spacer"></div>
 
 <!-- 푸터 (Thymeleaf 사용) -->
 <div th:replace="~{fragments/footer :: footer}"></div>
