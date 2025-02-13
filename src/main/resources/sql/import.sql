@@ -1,5 +1,7 @@
 USE platform;
 
+select * from member;
+select * from board;
 
 INSERT INTO police_unit (dept_name, station_name, police_unit_name, police_unit_type, address, latitude, longitude)
 VALUES
@@ -53,7 +55,7 @@ VALUES
 INSERT INTO member (
     created_at, member_id, police_unit_id, office_phone, person_phone, member_name, email, password, role
 ) VALUES
-      (NOW(), 1, 1, NULL, '010-4773-5141', '관리자(김형준)', 'admin@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'ADMIN'),
+      (NOW(), 1, 1, NULL, '010-4773-5141', '관리자', 'admin@email.com', '$2a$10$ZWm0tSioCSg1E8COGsNNN.gF.qzXGNfbcwiwAgIzgiXMw32j9jeWu', 'ADMIN'),
       (NOW(), 2, 2, NULL, '010-1234-5678', '유저1', 'user1@email.com', '$2a$10$yUxTiZfXIQ0k.Btw6ewEcOkeFV.h0Jk64/0xL0QPHScNCW3CVj0SO', 'USER'),
       (NOW(), 3, 3, NULL, '010-1234-5678', '유저2', 'user2@email.com', '$2a$10$pdd2/vGGnjWLt2//2G9DaeATZpSzQLgehgd91DXk8C6VDz/nU6kgK', 'USER'),
       (NOW(), 4, 4, NULL, '010-1234-5678', '유저3', 'user3@email.com', '$2a$10$mstjo6AH0wWQtkca2kAshO9NIiNaKj3aWkWWuGmgmECpEoUwUofvG', 'USER'),
@@ -75,28 +77,32 @@ INSERT INTO board (
     view_count, board_id, created_at, member_id, updated_at, title, content, status
 ) VALUES
       -- 한참 지난 작성일 (2024-12-01)
-      (11, 1, '2024-12-01 10:00:00.000000', 1, NULL, '오래된 작성', '이 글은 한참 전에 작성되었습니다.', 'GENERAL'),
+      (11, 1, '2024-12-01 10:00:00.000000', 1, NULL, '오래된 작성', '이 글은 한참 전에 작성되었습니다.', 'COMPLETED'),
       -- 몇 시간 전 작성일 (3시간 전)
-      (12, 2, DATE_SUB(NOW(), INTERVAL 3 HOUR), 2, NULL, '몇 시간 전 작성', '이 글은 3시간 전에 작성되었습니다.', 'PENDING'),
+      (12, 2, DATE_SUB(NOW(), INTERVAL 3 HOUR), 2, NULL, '몇 시간 전 작성', '이 글은 3시간 전에 작성되었습니다.', 'COMPLETED'),
       -- 몇 분 전 작성일 (10분 전)
       (13, 3, DATE_SUB(NOW(), INTERVAL 10 MINUTE), 3, NULL, '몇 분 전 작성', '이 글은 10분 전에 작성되었습니다.', 'COMPLETED'),
       -- 한참 지난 작성일 (2024-12-01)
-      (14, 4, NOW(), 4, NULL, '오래된 작성', '이 글은 한참 전에 작성되었습니다.', 'GENERAL'),
+      (14, 4, NOW(), 4, NULL, '오래된 작성', '이 글은 한참 전에 작성되었습니다.', 'COMPLETED'),
       -- 몇 시간 전 작성일 (3시간 전)
       (15, 5, DATE_ADD(NOW(), INTERVAL 3 HOUR), 5, NULL, '몇 시간 후 수정', '이 글은 3시간 후에 수정되었습니다.', 'PENDING'),
       -- 몇 분 전 작성일 (10분 전)
-      (16, 6, DATE_ADD(NOW(), INTERVAL 10 MINUTE), 1, NULL, '몇 분 후 수전', '이 글은 10분 후에 수정되었습니다.', 'COMPLETED'),
+      (16, 6, DATE_ADD(NOW(), INTERVAL 10 MINUTE), 1, NULL, '몇 분 후 수전', '이 글은 10분 후에 수정되었습니다.', 'PENDING'),
       -- 한참 지난 작성일 (2024-12-01)
-      (17, 7, NOW(), 2, NULL, '테스트1', '테스트1로 작성되었습니다.', 'GENERAL'),
+      (17, 7, NOW(), 2, NULL, '테스트1', '테스트1로 작성되었습니다.', 'PENDING'),
       -- 몇 시간 전 작성일 (3시간 전)
       (18, 8, NOW(), 3, NULL, '테스트2', '테스트2로 작성되었습니다.', 'PENDING'),
       -- 몇 분 전 작성일 (10분 전)
-      (19, 9, NOW(), 4, NULL, '테스트3', '테스트3로 작성되었습니다.', 'COMPLETED'),
+      (19, 9, NOW(), 4, NULL, '테스트3', '테스트3로 작성되었습니다.', 'IMPORTANT'),
       -- 한참 지난 작성일 (2024-12-01)
-      (20, 10, NOW(), 5, NULL, '테스트4', '테스트4로 작성되었습니다.', 'GENERAL'),
+      (20, 10, NOW(), 5, NULL, '테스트4', '테스트4로 작성되었습니다.', 'IMPORTANT'),
       -- 몇 시간 전 작성일 (3시간 전)
-      (21, 11, NOW(), 1, NULL, '테스트5', '테스트5로 작성되었습니다.', 'PENDING'),
+      (21, 11, NOW(), 1, NULL, '테스트5', '테스트5로 작성되었습니다.', 'IMPORTANT'),
       -- 몇 분 전 작성일 (10분 전)
-      (22, 12, NOW(), 2, NULL, '테스트6', '테스트6로 작성되었습니다.', 'COMPLETED')
+      (22, 12, NOW(), 2, NULL, '테스트6', '테스트6로 작성되었습니다.', 'IMPORTANT')
 ;
 
+
+# UPDATE member
+# SET member_name = '관리자'
+# WHERE member_id = 1;

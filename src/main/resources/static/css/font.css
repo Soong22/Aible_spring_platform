@@ -1,0 +1,142 @@
+@charset "UTF-8";
+
+/* 나눔 */
+@font-face{
+	font-family: 'NanumG';
+	font-weight: 400;
+	src: url("../font/NanumBarunGothic.woff") format('woff');
+}
+@font-face{
+	font-family: 'NanumG';
+	font-weight: 600;
+ 	src: url("../font/NanumGothicBold.woff2") format('woff2'),
+	    url("../font/NanumGothicBold.woff") format('woff');
+}
+@font-face{
+	font-family: 'NanumS';
+	font-weight: 400;
+	src: url("../font/NanumSquareR.woff") format('woff'),
+		url("../font/NanumSquareR.woff") format('woff');
+}
+@font-face{
+	font-family: 'NanumS';
+	font-weight: 600;
+	src: url("../font/NanumSquareB.woff2") format('woff2'),
+		url("../font/NanumSquareB.woff") format('woff');
+}
+@font-face{
+	font-family: 'NanumSR';
+	font-weight: 400;
+	src: url("../font/NanumSquareRoundR.woff2") format('woff2'),
+	url("../font/NanumSquareRoundR.woff") format('woff');
+}
+@font-face{
+	font-family: 'NanumSR';
+	font-weight: 600;
+	src: url("../font/NanumSquareRoundB.woff2") format('woff2'),
+	url("../font/NanumSquareRoundB.woff") format('woff');
+}
+@font-face{
+	font-family: 'NanumP';
+	font-weight: 400;
+	src: url("../font/NanumPen.woff") format('woff');
+}
+@font-face{
+	font-family: 'NanumM';
+	font-weight: 400;
+	src: url("../font/NanumMyeongjo.woff") format('woff');
+}
+
+/* 본고딕*/
+@font-face{
+	font-family: 'NotoKr';
+	font-weight: 300;
+	src: url("../font/NotoSansCJKkr-Light.woff2") format('woff2'),
+		url("../font/NotoSansCJKkr-Light.woff") format('woff');
+}
+@font-face{
+	font-family: 'NotoKr';
+	font-weight: 400;
+	src: url("../font/SpoqaHanSans-Regular.woff2") format('woff2'),
+		url("../font/SpoqaHanSans-Regular.woff") format('woff');
+}
+@font-face{
+	font-family: 'NotoKr';
+	font-weight: 500;
+	src: url("../font/NotoSansCJKkr-Medium.woff2") format('woff2'),
+		url("../font/NotoSansCJKkr-Medium.woff") format('woff');
+}
+@font-face{
+	font-family: 'NotoKr';
+	font-weight: 600;
+	src: url("../font/SpoqaHanSans-Bold.woff2") format('woff2'),
+		url("../font/SpoqaHanSans-Bold.woff") format('woff');
+}
+
+
+/* 서울한강 */
+@font-face{
+	font-family: 'SeoulN';
+	font-weight: 400;
+	src: url("../font/SeoulNamsanM.woff2") format('woff2'),
+		url("../font/SeoulNamsanM.woff") format('woff');
+}
+@font-face{
+	font-family: 'SeoulN';
+	font-weight: 600;
+ 	src: url("../font/SeoulNamsanB.woff2") format('woff2'),
+	    url("../font/SeoulNamsanB.woff") format('woff');
+}
+
+@font-face{
+	font-family: 'SeoulH';
+	font-weight: 400;
+	src: url("../font/SeoulHangangM.woff") format('woff');
+}
+@font-face{
+	font-family: 'SeoulH';
+	font-weight: 600;
+ 	src: url("../font/SeoulHangangB.woff") format('woff');
+}
+
+
+/* Opensans */
+@font-face{
+	font-family:'Opensans';
+	font-weight: 400;
+	src: url("../font/OpensansR.woff2") format('woff2'),
+	url("../font/OpensansR.woff") format('woff');
+}
+
+@font-face{
+	font-family:'Opensans';
+	font-weight: 600;
+	src: url("../font/OpensansB.woff2") format('woff2'),
+		url("../font/OpensansB.woff") format('woff');
+}
+
+/* 김포타이틀체 */
+@font-face{
+	font-family:'GimpoTitle';
+	font-weight: 600;
+	src: url("../font/GimpoTitle.woff2") format('woff2'),
+		url("../font/GimpoTitle.woff") format('woff');
+}
+
+/* 지마켓 */
+@font-face{
+	font-family: 'GmarketSans';
+	font-weight: 400;
+	src: url("../font/GmarketSansMedium.woff") format('woff');
+}
+@font-face{
+	font-family: 'GmarketSans';
+	font-weight: 600;
+	src: url("../font/GmarketSansBold.woff") format('woff');
+}
+
+#header .depth_text.depth1_text,
+#header .depth_title.depth2_title {
+	font-family: 'NotoKr', sans-serif;
+	font-weight: 800;
+}

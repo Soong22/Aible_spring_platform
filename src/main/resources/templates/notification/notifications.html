@@ -2,54 +2,76 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
+    maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
     <title>알림 내역</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <!-- CSS 파일 참조 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
+    <!-- css -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
+
+    <!-- js -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
+
 
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-        }
+        /*html, body {*/
+        /*    height: 100%;*/
+        /*    margin: 0;*/
+        /*    overflow-y: auto;*/
+        /*    background-color: #f8f9fa;*/
+        /*}*/
 
         :root {
-            --table-header-bg: #003366; /* 기본 헤더 색상 (파란색) */
-            --table-header-text: white;
+            --team24-notifications-table-header-bg: #000820; /* 기본 헤더 색상 (파란색) */
+            --team24-notifications-table-header-text: white;
         }
 
         /* 컨테이너 스타일 (유저 전체 조회와 동일) */
-        .table-container {
-            margin-top: 100px;
+        .team24-notifications-table-container {
             background-color: white;
             border: 1px solid #e9ecef;
             border-radius: 12px;
             padding: 20px 40px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-
+            margin: 50px auto 100px;
         }
 
-        .table-container h1 {
+        .team24-notifications-table-container h1 {
             text-align: left;
-            color: #003366;
+            color: #000820;
             margin-bottom: 20px;
+            font-size: 30pt;
+        }
+
+        .team24-notifications-table-container h2 {
+            text-align: center;
+            font-size: 20pt;
         }
 
         /* 게시글 항목 */
-        .notification-item {
+        .team24-notification-item {
             display: flex;
             align-items: center;
             padding: 15px;
@@ -59,7 +81,7 @@
         }
 
         /* 이미지 박스 */
-        .notification-image-container {
+        .team24-notification-image-container {
             position: relative;
             width: 100px;
             height: 100px;
@@ -67,7 +89,7 @@
         }
 
         /* 게시글 대표 이미지 */
-        .notification-image {
+        .team24-notification-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -89,52 +111,163 @@
         }
 
         /* 게시글 내용 */
-        .notification-content {
+        .team24-notification-content {
             flex-grow: 1;
         }
 
-        .notification-meta {
+        .team24-notification-meta {
             font-size: 0.85rem;
             color: #666;
         }
 
-        .notification-status {
+        .team24-notification-status {
             font-size: 0.85rem;
             font-weight: bold;
             color: #28a745;
         }
 
-        /* 버튼 스타일 */
-        .pagination .page-link {
-            color: #003366;
-            margin-top: 15px;
-        }
+        /*!* 버튼 스타일 *!*/
+        /*.pagination .page-link {*/
+        /*    color: #003366;*/
+        /*    margin-top: 15px;*/
+        /*}*/
 
-        .pagination .page-item.active .page-link {
-            background-color: #003366;
-            border-color: #003366;
-            color: white;
-        }
+        /*.pagination .page-item.active .page-link {*/
+        /*    background-color: #003366;*/
+        /*    border-color: #003366;*/
+        /*    color: white;*/
+        /*}*/
 
-        /* 페이지 버튼 호버 시 색상 변경 */
-        .pagination .page-link:hover {
-            background-color: #0073e6; /* 조금 더 밝은 파란색 */
-            border-color: #0073e6;
-            color: white;
-        }
+        /*!* 페이지 버튼 호버 시 색상 변경 *!*/
+        /*.pagination .page-link:hover {*/
+        /*    background-color: #0073e6; !* 조금 더 밝은 파란색 *!*/
+        /*    border-color: #0073e6;*/
+        /*    color: white;*/
+        /*}*/
 
-        .pagination-container {
-            position: relative;
+        /*.pagination-container {*/
+        /*    position: relative;*/
+        /*    display: flex;*/
+        /*    justify-content: center; !* 페이지네이션을 중앙에 둠 *!*/
+        /*    align-items: center;*/
+        /*    margin-top: 20px;*/
+        /*}*/
+
+        /* 페이지네이션 컨테이너 */
+        .team24-pagination-container {
             display: flex;
-            justify-content: center; /* 페이지네이션을 중앙에 둠 */
+            justify-content: center;
             align-items: center;
+            width: 100%;
             margin-top: 20px;
+            position: relative;
+        }
+
+        /* 작성하기 버튼 */
+        .team24-button {
+            position: absolute;
+            left: 0;
+            background-color: #000820;
+            color: white !important;
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .team24-button:hover {
+            background-color: #444f6e;
+            color: white;
+        }
+
+        /* 페이지네이션 */
+        .team24-pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 개별 페이지 버튼 */
+        .team24-page-item {
+            margin: 0 3px;
+        }
+
+        .team24-page-link {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #000820;
+            font-weight: bold;
+            border: 1px solid #000820;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .team24-page-link:hover {
+            background-color: #444f6e;
+            color: white;
+        }
+
+        /* 현재 페이지(active) */
+        .team24-page-item.active .team24-page-link {
+            background-color: #000820;
+            color: white;
+            border-color: #000820;
+        }
+
+        /* 비활성화된 버튼 (이전/다음) */
+        .team24-page-item.disabled .team24-page-link,
+        .team24-page-link.disabled {
+            color: #444f6e;
+            border-color: #ddd;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        #footer {
+            visibility: hidden; /* 초기 로딩 시 숨김 */
+        }
+
+        .team24-footer-padding {
+            height: auto;
+            visibility: hidden; /* 처음엔 숨김 */
         }
 
     </style>
 
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+    <script>
+        function setFooterPadding() {
+            const windowHeight = window.innerHeight; // 전체 화면 높이
+            const mainContent = document.querySelector('.team24-notifications-table-container'); // 메인 콘텐츠
+            const footerPadding = document.querySelector('.team24-footer-padding'); // 푸터 패딩
+            const footer = document.querySelector('#footer'); // 푸터
+
+            if (mainContent && footerPadding && footer) {
+                const contentHeight = mainContent.offsetHeight; // 본문 높이
+                const footerHeight = footer.offsetHeight; // 푸터 높이
+
+                // 남은 공간 계산 (최소 0 이상)
+                let remainingSpace = windowHeight - (contentHeight + footerHeight);
+                remainingSpace = remainingSpace > 0 ? remainingSpace : 0;
+
+                // 높이 즉시 설정 (사용자가 움직이는 걸 인식 못 하도록)
+                footerPadding.style.height = `${remainingSpace}px`;
+
+                // 푸터와 패딩을 즉시 보이게 변경
+                footerPadding.style.visibility = "visible";
+                footer.style.visibility = "visible";
+            }
+        }
+
+        // 페이지가 완전히 로드되기 전에 실행 (즉시 반영)
+        document.addEventListener('DOMContentLoaded', setFooterPadding);
+
+
+    </script>
 
     <script th:inline="javascript" th:if="${errorMessage != null}">
         /*<![CDATA[*/
@@ -180,30 +313,77 @@
         }
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+
+        .team24-footer-padding {
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
-
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title">알림 내역</h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
 <!-- 메인 콘텐츠 -->
-<div class="team24-container">
+<div id="wrapper">
     <!-- 게시판 컨테이너 -->
-    <div class="table-container">
-        <h1>알림 내역</h1>
+    <div class="team24-notifications-table-container">
+<!--        <h1>알림 내역</h1>-->
+
+        <div th:if="${#lists.isEmpty(notifications.content)}" class="team24-no-content">
+            <h2>알림이 없습니다</h2>
+        </div>
 
         <!-- 게시판 목록 -->
-        <div th:each="notification : ${notifications.content}" class="notification-item" th:onclick="|goTonotificationPage(${notification.notificationId})|">
+        <div th:each="notification : ${notifications.content}" class="team24-notification-item" th:onclick="|goTonotificationPage(${notification.notificationId})|">
 
             <!-- 대표 이미지 -->
-            <div class="notification-image-container">
+            <div class="team24-notification-image-container">
                 <img th:if="${notification.imageUrls.size() > 0}" th:src="${notification.imageUrls[0]}" alt="대표 이미지"
-                     class="notification-image">
+                     class="team24-notification-image">
                 <img th:if="${notification.imageUrls.size() == 0}" th:src="@{/images/noImage2.png}" alt="기본 이미지"
-                     class="notification-image">
+                     class="team24-notification-image">
 
                 <!-- 이미지 개수 표시 -->
                 <div th:if="${notification.imageUrls.size() > 1}" class="image-count"
@@ -211,11 +391,11 @@
             </div>
 
             <!-- 게시글 정보 -->
-            <div class="notification-content">
+            <div class="team24-notification-content">
 
-                <div class="notification-status" th:text="${notification.readStatus}"></div>
+                <div class="team24-notification-status" th:text="${notification.readStatus}"></div>
 
-                <div class="notification-meta">
+                <div class="team24-notification-meta">
                     <span class="relative-time" th:attr="data-created-at=${notification.createdAt}"></span> ·
 <!--                    <span th:text="${notification.receiverPoliceUnitName} + ' ' + ${notification.receiverPoliceUnitType}"></span>에 요청-->
 
@@ -229,31 +409,74 @@
         </div>
 
         <!-- 페이징 & 작성하기 버튼 컨테이너 -->
-        <div class="pagination-container">
+        <div class="team24-pagination-container">
             <!-- 작성하기 버튼 -->
-<!--            <a href="/notification/register" class="btn btn-create">작성하기</a>-->
+<!--            <a href="/board/register" class="team24-button">작성하기</a>-->
 
-            <!-- 기존 페이지네이션 -->
+            <!-- 페이지네이션 -->
             <nav th:if="${notifications.totalPages > 1}">
-                <ul class="pagination">
-                    <li class="page-item" th:classappend="${notifications.hasPrevious() ? '' : 'disabled'}">
-                        <a class="page-link" th:href="@{/notifications(page=${notifications.number - 1})}" aria-label="이전">
-                            <span aria-hidden="true">&laquo;</span>
+                <ul class="team24-pagination">
+
+                    <!-- 처음(<<) 버튼 -->
+                    <li class="team24-page-item" th:classappend="${notifications.number == 0 ? 'disabled' : ''}">
+                        <a th:if="${notifications.number > 0}" class="team24-page-link" th:href="@{/notifications(page=0)}"
+                           aria-label="처음">
+                            &laquo;
                         </a>
+                        <span th:unless="${notifications.number > 0}" class="team24-page-link disabled"
+                              aria-label="처음">&laquo;</span>
                     </li>
-                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, notifications.totalPages - 1)}"
+
+                    <!-- 이전(<) 버튼 -->
+                    <li class="team24-page-item" th:classappend="${notifications.number > 0 ? '' : 'disabled'}">
+                        <a th:if="${notifications.number > 0}" class="team24-page-link"
+                           th:href="@{/notifications(page=${notifications.number - 1})}"
+                           aria-label="이전">
+                            &lt;
+                        </a>
+                        <span th:unless="${notifications.number > 0}" class="team24-page-link disabled"
+                              aria-label="이전">&lt;</span>
+                    </li>
+
+                    <!-- 숫자 버튼 (3개씩 표시하되, 총 페이지가 3 미만이면 조절) -->
+                    <li class="team24-page-item"
+                        th:each="pageNum : ${#numbers.sequence(
+                    0,
+                    (notifications.totalPages < 3 ? notifications.totalPages - 1 :
+                    (notifications.number == 0 ? 2 :
+                    (notifications.number == notifications.totalPages - 1 ? notifications.totalPages - 1 : notifications.number + 1)))
+                )}"
                         th:classappend="${pageNum == notifications.number ? 'active' : ''}">
-                        <a class="page-link" th:href="@{/notifications(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                        <a class="team24-page-link" th:href="@{/notifications(page=${pageNum})}" th:text="${pageNum + 1}"></a>
                     </li>
-                    <li class="page-item" th:classappend="${notifications.hasNext() ? '' : 'disabled'}">
-                        <a class="page-link" th:href="@{/notifications(page=${notifications.number + 1})}" aria-label="다음">
-                            <span aria-hidden="true">&raquo;</span>
+
+                    <!-- 다음(>) 버튼 -->
+                    <li class="team24-page-item"
+                        th:classappend="${notifications.number < notifications.totalPages - 1 ? '' : 'disabled'}">
+                        <a th:if="${notifications.number < notifications.totalPages - 1}" class="team24-page-link"
+                           th:href="@{/notifications(page=${notifications.number + 1})}"
+                           aria-label="다음">
+                            &gt;
                         </a>
+                        <span th:unless="${notifications.number < notifications.totalPages - 1}" class="team24-page-link disabled"
+                              aria-label="다음">&gt;</span>
                     </li>
+
+                    <!-- 마지막(>>) 버튼 -->
+                    <li class="team24-page-item"
+                        th:classappend="${notifications.number == notifications.totalPages - 1 ? 'disabled' : ''}">
+                        <a th:if="${notifications.number < notifications.totalPages - 1}" class="team24-page-link"
+                           th:href="@{/notifications(page=${notifications.totalPages - 1})}"
+                           aria-label="마지막">
+                            &raquo;
+                        </a>
+                        <span th:unless="${notifications.number < notifications.totalPages - 1}" class="team24-page-link disabled"
+                              aria-label="마지막">&raquo;</span>
+                    </li>
+
                 </ul>
             </nav>
         </div>
-
 
 
     </div>
@@ -262,12 +485,8 @@
 <!-- 푸터 아래 추가 여백 -->
 <div class="team24-footer-padding"></div>
 
-<!-- 푸터 -->
-<div th:replace="~{fragments/footer :: footer}"></div>
-
-<!-- JavaScript -->
-<script src="/js/fragments/sidebar.js"></script>
-<script src="/js/fragments/scrollbar.js"></script>
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
 
 </body>
 </html>

@@ -1,154 +1,170 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
+    maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
     <title>회원 상세 조회</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"-->
+<!--          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
 
-    <!-- CSS 파일 참조 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
+    <!-- css -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
+
+    <!-- js -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
 
     <style>
-        html, body {
-            height: 100%; /* 페이지 전체를 스크롤 가능하게 설정 */
-            margin: 0;
-            overflow-y: auto; /* 세로 스크롤 허용 */
-            background-color: #f8f9fa;
-        }
 
         :root {
-            --table-header-bg: #003366; /* 왼쪽 컬럼 배경색 */
+            --table-header-bg: #444f6e; /* 왼쪽 컬럼 배경색 */
             --table-header-text: white; /* 왼쪽 컬럼 글씨색 */
             --table-border-color: #ddd; /* 구분선 색 */
         }
 
         /* 외부 컨테이너 */
         .table-container {
-            margin-top: 100px;
             /*background: #f8f9fa;*/
-            border-radius: 12px;
-            padding: 40px 60px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 1100px;
-            min-height: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            border-radius: 12px !important;
+            padding: 40px 60px !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+            max-width: 1100px !important;
+            min-height: 900px !important;
+            margin: 100px auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
 
-            background-color: white;
-            border: 1px solid #e9ecef;
+            background-color: white !important;
+            border: 1px solid #e9ecef !important;
+        }
+
+        .table-container h1 {
+            text-align: left !important;
+            color: #000820 !important;
+            margin-bottom: 20px !important;
+            font-size: 30pt;
         }
 
         /* 내부 회원 상세 테이블 */
         .inner-table {
-            width: 100%;
-            min-height: 700px;
-            border-collapse: separate;
-            border-spacing: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            background: white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 100% !important;
+            min-height: 700px !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            background: white !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
         }
 
         /* 왼쪽 열 스타일 (폭 30% 줄이기) */
         .inner-table th {
-            background-color: var(--table-header-bg); /* 배경색 */
-            color: var(--table-header-text); /* 글씨색 */
-            text-align: left;
-            padding: 16px;
-            width: 20%; /* 기존 대비 30% 줄이기 */
-            border-right: 1px solid var(--table-border-color); /* 컬럼 구분선 */
-            border-bottom: 1px solid var(--table-border-color); /* 행 구분선 */
+            /*background-color: var(--table-header-bg) !important; !* 배경색 *!*/
+            background-color: #060c23 !important; /* 배경색 */
+            color: var(--table-header-text) !important; /* 글씨색 */
+            text-align: center !important;
+            padding: 16px !important;
+            width: 20% !important; /* 기존 대비 30% 줄이기 */
+            border-right: 1px solid var(--table-border-color) !important; /* 컬럼 구분선 */
+            border-bottom: 1px solid var(--table-border-color) !important; /* 행 구분선 */
+            font-weight: bold !important;
         }
 
         /* 오른쪽 열 스타일 */
         .inner-table td {
-            padding: 16px;
-            background: white;
-            border-bottom: 1px solid var(--table-border-color); /* 행 구분선 */
-            font-size: 1.1rem;
+            padding: 16px !important;
+            background: white !important;
+            border-bottom: 1px solid var(--table-border-color) !important; /* 행 구분선 */
+            font-size: 1.1rem !important;
         }
 
         .inner-table tbody tr:last-child td {
-            border-bottom: none;
+            border-bottom: none !important;
         }
+
 
         /* 버튼 컨테이너 */
-        .button-container {
+        .custom-button-container {
             display: flex;
             justify-content: space-between; /* 좌측(수정+탈퇴) + 우측(목록) */
+            align-items: center;
             padding-top: 20px;
+            width: 100%;
         }
 
-        /* 버튼 크기 조정 (폭 2배, 높이 50% 증가) */
-        .btn-primary, .btn-success, .btn-danger {
+        /* 좌측 버튼 그룹 (수정 + 탈퇴) */
+        .custom-button-group {
+            display: flex;
+            gap: 15px; /* 버튼 간격 조정 */
+            align-items: center;
+        }
+
+        /* 개별 버튼 스타일 */
+        .custom-btn {
             width: 100px;
             height: 40px;
             font-size: 1.2rem;
             font-weight: bold;
+            text-align: center;
+            color: white;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            color: white !important;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
-        /* 수정 버튼 (초록색) */
-        .btn-success {
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
+        /* 수정 버튼 */
+        .custom-btn-success {
+            background-color: #28a745;
         }
 
-        .btn-success:hover {
-            background-color: #218838 !important;
-            border-color: #1e7e34 !important;
+        .custom-btn-success:hover {
+            background-color: #218838;
         }
 
-        /* 탈퇴 버튼 (빨간색) */
-        .btn-danger {
-            background-color: #dc3545 !important;
-            border-color: #dc3545 !important;
+        /* 탈퇴 버튼 */
+        .custom-btn-danger {
+            background-color: #dc3545;
         }
 
-        .btn-danger:hover {
-            background-color: #b52a37 !important;
-            border-color: #b52a37 !important;
+        .custom-btn-danger:hover {
+            background-color: #b52a37;
         }
 
-        /* 목록 버튼 (파란색) */
-        .btn-primary {
-            background-color: #003366 !important;
-            border-color: #003366 !important;
+        /* 목록 버튼 */
+        .custom-btn-primary {
+            background-color: #060c23;
         }
 
-        .btn-primary:hover {
-            background-color: #0073e6 !important;
-            border-color: #0073e6 !important;
+        .custom-btn-primary:hover {
+            background-color: #444f6e;
         }
 
-        /* 버튼 정렬 */
-        .left-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .right-buttons {
-            align-items: center;
-        }
 
     </style>
 
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
 
     <script th:inline="javascript" th:if="${errorMessage != null}">
         /*<![CDATA[*/
@@ -157,19 +173,58 @@
         /*]]>*/
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
-
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title">회원 상세 조회</h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
 <!-- 메인 콘텐츠 -->
-<div class="team24-container">
+<div id="wrapper">
     <div class="container table-container">
-        <h2 class="text-center mb-4">회원 상세 조회</h2>
+<!--        <h1 class="text-center mb-4">회원 상세 조회</h1>-->
 
         <!-- 회원 정보 테이블 -->
         <table class="inner-table table table-bordered">
@@ -221,35 +276,29 @@
         </table>
 
         <!-- 버튼 -->
-        <div class="button-container">
+        <div class="custom-button-container">
             <!-- 좌측: 수정 + 탈퇴 버튼 -->
-            <div class="left-buttons">
-                <button class="btn btn-success btn-sm"
+            <div class="custom-button-group">
+                <button class="custom-btn custom-btn-success"
                         th:onclick="|location.href='/member/edit/' + ${member.memberId}|">수정
                 </button>
                 <form th:action="@{/member/delete/{memberId}(memberId=${member.memberId})}" method="post"
                       onsubmit="return confirm('정말로 탈퇴하시겠습니까?');" class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm">탈퇴</button>
+                    <button type="submit" class="custom-btn custom-btn-danger">탈퇴</button>
                 </form>
             </div>
 
-            <!-- 우측: 목록 버튼 -->
-            <button class="btn btn-primary btn-sm right-buttons" th:onclick="|location.href='/members'|">목록</button>
+            <!-- 관리자만 볼 수 있는 목록 버튼 -->
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <button class="custom-btn custom-btn-primary" th:onclick="|location.href='/members'|">목록</button>
+            </div>
+
         </div>
-
-
     </div>
 </div>
 
-<!-- 푸터 아래 추가 여백 -->
-<div class="team24-footer-padding"></div>
-
-<!-- 푸터 -->
-<div th:replace="~{fragments/footer :: footer}"></div>
-
-<!-- JavaScript -->
-<script src="/js/fragments/sidebar.js"></script>
-<script src="/js/fragments/scrollbar.js"></script>
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
 
 </body>
 </html>

@@ -20,5 +20,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     // 처리완료인 알림 불러오기
     Page<Notification> findAllByReceiverAndReadStatus(Member receiver, ReadStatus readStatus, Pageable pageable);
 
-
 }

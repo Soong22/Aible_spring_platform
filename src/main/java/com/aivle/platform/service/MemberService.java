@@ -102,6 +102,13 @@ public class MemberService {
         return members.map(MemberResponseDto::fromEntity);
     }
 
+    @Transactional(readOnly = true)
+    public Page<MemberResponseDto> getAllMembersByStationName(String stationName, Pageable pageable) {
+        Page<Member> members = memberRepository.findAllByPoliceUnit_StationName(stationName, pageable);
+
+        return members.map(MemberResponseDto::fromEntity);
+    }
+
     // 전체 수정
     public MemberResponseDto updateMember(Long memberId, MemberRequestDto request) {
         PoliceUnit policeUnit = policeUnitRepository.findById(request.getPoliceUnitId())
@@ -185,6 +192,21 @@ public class MemberService {
     // 탈퇴자가 아닌 유저 목록 조회 (지구대/파출소 정보 포함)
     public List<NotificationForMemberResponseDto> getActiveMembers() {
         return memberRepository.findActiveMembersWithPoliceUnit();
+    }
+
+    public boolean checkEmail(String email, String memberName) {
+        return memberRepository.existsByEmailAndMemberName(email, memberName);
+    }
+
+    public boolean changePassword(String email, String password) {
+        try {
+            Member member = getMemberEmail(email);
+            member.setPassword(passwordEncoder.encode(password));
+            memberRepository.save(member);
+            return true;
+        } catch (Exception e){
+            throw new MemberUpdateFailedException("회원 수정에 실패하였습니다: " + e.getMessage(), e.getCause());
+        }
     }
 
 }

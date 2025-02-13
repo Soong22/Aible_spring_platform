@@ -35,6 +35,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        // API 경로에 대해 CSRF 보호 비활성화
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**")
+        );
+
         // 헤더 설정
         http.headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // 동일 출처의 iframe 허용
@@ -43,12 +48,17 @@ public class SecurityConfig {
         // 권한 설정
         http.authorizeHttpRequests(authorize -> authorize
                 // 인증 없이 접근 가능한 경로
-                .requestMatchers("/", "/error/**", "/api/**").permitAll()
-                .requestMatchers("/css/**", "/images/**", "/js/**").permitAll()
+                .requestMatchers("/", "/error/**", "/api/**", "/member/find-email", "/member/find-pwd",
+                        "/ai_introduce/ai_introduce", "/introduce/team_introduce",
+                        "/boards/important", "/police/police_google_map",
+                        "/police.json", "/cctv/google_map", "/cctv/**",
+                        "/cctv_data_1.json", "cctv_data_2.json", "cctv_data_3.json",
+                        "cctv_data_4.json", "cctv_data_5.json").permitAll()
+                .requestMatchers("/css/**", "/images/**", "/js/**", "/mp3/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
 
                 // 인증이 필요한 경로
-                .requestMatchers("/member/**", "/mypage/**", "/cctv/**", "/notice_board/boards", "/region/**", "/index2").authenticated()
+                .requestMatchers("/member/**", "/mypage/**", "/notice_board/boards", "/region/**", "/index2", "/introduce/**").authenticated()
                 .requestMatchers("/board/**", "/boards", "/comment/**", "/comments").authenticated()
 
                 .requestMatchers("/notification/**").authenticated()
@@ -80,7 +90,7 @@ public class SecurityConfig {
 
         // 중복 로그인 차단을 위한 세션 관리
         http.sessionManagement(session -> session
-                .maximumSessions(1) // 세션 최대 허용 수: 1
+                .maximumSessions(1000) // 세션 최대 허용 수: 1
 //                .maxSessionsPreventsLogin(true) // 새로운 로그인 차단
                 .maxSessionsPreventsLogin(false) // 기존 세션 만료, 새로운 로그인 허용
                 .expiredSessionStrategy(customSessionExpiredStrategy) // 커스텀 전략 적용

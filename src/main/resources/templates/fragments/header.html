@@ -1,22 +1,368 @@
-<div th:fragment="header" class="team24-header" id="team24-header">
-    <!-- 로고와 텍스트 -->
-    <span class="team24-greeting">
-        <a href="/" id="team24-logo">
-            <img th:src="@{/images/kt.png}" alt="KT 로고">
-        </a>
-        <span class="team24-greeting-text">AI 전남 / 전북 24조 화이팅!</span>
-    </span>
+<body id="cctv" class="cctv">
+<div id="wrapper">
+    <header id="header">
+        <div class="accessibility">
+            <a href="#container">본문 바로가기</a>
+        </div>
+        <div class="wrap">
+            <div class="gnb">
+                <div class="logo">
+                    <a href="/" class="logo_anchor">
+                        <!--                        <span class="logo_text"> <br/>kt AIVLE SCHOOL 24조 </span>-->
+                        <img src="/images/kt-ci.png" alt="KT logo" class="logo_image">
+                    </a>
+                </div>
 
-    <!-- 로그인/로그아웃 버튼 -->
-    <div class="team24-header-buttons">
-        <!-- 로그인 버튼 -->
-        <a th:if="${!isUser and !isAdmin}" class="team24-btn-outline-light team24-custom-button" href="/login">로그인</a>
+                <div class="link">
+                    <ul class="link_list">
+                        <li class="link_item login">
+                            <!-- 로그인 버튼 -->
+                            <a th:if="${!isUser and !isAdmin}" href="/login" class="link_anchor login">로그인</a>
 
-        <!-- 로그아웃 버튼 -->
-        <form th:if="${isUser or isAdmin}" action="/logout" method="post" class="team24-logout-form">
-            <input type="hidden" id="_csrf" name="_csrf" th:value="${_csrf.token}">
-            <button class="team24-btn-outline-light team24-custom-button" type="submit">로그아웃</button>
-        </form>
-    </div>
+                            <!-- 로그아웃 버튼 -->
+                            <a th:if="${isUser or isAdmin}" href="javascript:void(0);" onclick="document
+                            .getElementById('logoutForm').submit();" class="link_anchor logout">로그아웃</a>
 
+                            <form id="logoutForm" action="/logout" method="post" style="display: none;">
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                            </form>
+                        </li>
+
+<!--                        &lt;!&ndash;회원가입&ndash;&gt;-->
+<!--                        &lt;!&ndash;로그인안한 사용자만 보이게 변경&ndash;&gt;-->
+<!--                        <li class="link_anchor search_open">-->
+<!--                            <a th:if="${!isUser and !isAdmin}" href="/member/register" class="link_anchor search_open">회원가입</a>-->
+<!--                        </li>-->
+
+                        <!--로그인한 사용자만 보이게 변경-->
+<!--                        <li class="link_item sitemap">-->
+<!--                            <a th:if="${isUser or isAdmin}" href="/cctv/sub.do?key=8497" class="link_anchor">사이트맵</a>-->
+<!--                        </li>-->
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="lnb">
+            <div class="menu_show">
+                <button type="button" class="menu_button">주메뉴 열기</button>
+            </div>
+            <nav class="menu after pulldown">
+                <h2 class="skip">주메뉴</h2>
+                <div class="wrap">
+                    <!-- 차수에 맞는 숫자와 조합하여 클래스를 넣어주세요 (예 : depth#, depth#_#) -->
+                    <div class="depth depth1">
+                        <div class="depth_info depth1_info">
+                            <div class="depth1_slogan">
+                                <span>365일 국민이 행복하고 안전한<br/>스마트 도시를 만들겠습니다.</span>
+                            </div>
+                        </div>
+
+                        <ul class="depth_list depth1_list clearfix">
+
+                            <!--로그인 없이 접근가능-->
+                            <li class="depth_item depth1_item">
+                                <a href="/introduce/team_introduce" class="depth_text depth1_text"
+                                   target="_self">24조 소개</a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            팀 소개
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/introduce/team_introduce" class="depth_text depth2_text"
+                                                   target="_self">인사말</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/introduce/team_introduce" class="depth_text depth2_text"
+                                                   target="_self">팀원 소개</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/introduce/team_introduce" class="depth_text depth2_text"
+                                                   target="_self">팀 소개 영상</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--일반 사용자만 접근가능-->
+                            <li th:if="${isUser}" class="depth_item depth1_item">
+                                <a class="depth_text depth1_text" target="_self">알림
+                                    확인</a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            수사 요청 확인
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/region/gwangjumap" class="depth_text depth2_text"-->
+<!--                                                   target="_self">광주광역시 현황 </a>-->
+<!--                                            </li>-->
+                                            <li class="depth_item depth2_item">
+                                                <a href="/notification/requested" class="depth_text depth2_text"
+                                                   target="_self"> 요청된 알림 </a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/notification/completed" class="depth_text depth2_text"
+                                                   target="_self"> 완료된 알림 </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--일반 사용자만 접근가능-->
+                            <li th:if="${isUser}" class="depth_item depth1_item">
+                                <a class="depth_text depth1_text"
+                                   target="_self">게시판</a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            게시판
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/boards/important" class="depth_text depth2_text"
+                                                   target="_self">공지사항</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/boards/report" class="depth_text depth2_text"
+                                                   target="_self">사건 보고서</a>
+                                            </li>
+
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/boards" class="depth_text depth2_text"-->
+<!--                                                   target="_self">자유 게시판</a>-->
+<!--                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--일반 사용자만 접근가능-->
+                            <li th:if="${isUser}" class="depth_item depth1_item">
+                                <a class="depth_text depth1_text"
+                                   target="_self">마이페이지</a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            마이페이지
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/mypage" class="depth_text depth2_text"
+                                                   target="_self">내 정보</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/mypage/edit" class="depth_text depth2_text"
+                                                   target="_self">내 정보 수정</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--관리자만 접근가능-->
+                            <li th:if="${isAdmin}" class="depth_item depth1_item">
+                                <a class="depth_text depth1_text" target="_self">
+                                    수사 요청
+                                </a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            수사 요청
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/notification/police_map" class="depth_text depth2_text"
+                                                   target="_self">지구대/파출소 분포</a>
+                                            </li>
+
+                                            <li class="depth_item depth2_item">
+                                                <a href="/region/gwangjumap" class="depth_text depth2_text"
+                                                   target="_self">알림 보내기</a>
+                                            </li>
+
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주광산" class="depth_text depth2_text"-->
+<!--                                                   target="_self">광산구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주북구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">북구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주서구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">서구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주동구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">동구</a>-->
+<!--                                            </li>-->
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/members/광주남구" class="depth_text depth2_text"-->
+<!--                                                   target="_self">남구</a>-->
+<!--                                            </li>-->
+
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/notification/register" class="depth_text depth2_text"-->
+<!--                                                   target="_self">알림 보내기</a>-->
+<!--                                            </li>-->
+
+                                            <li class="depth_item depth2_item">
+                                                <a href="/notifications" class="depth_text depth2_text"
+                                                   target="_self">전체 알림 조회</a>
+                                            </li>
+
+                                            <li class="depth_item depth2_item">
+                                                <a href="/notification/admin-unread" class="depth_text depth2_text"
+                                                   target="_self">읽지 않은 알림 조회</a>
+                                            </li>
+
+                                            <li class="depth_item depth2_item">
+                                                <a href="/notification/admin-read" class="depth_text depth2_text"
+                                                   target="_self">읽은 알림 조회</a>
+                                            </li>
+
+                                            <li class="depth_item depth2_item">
+                                                <a href="/notification/admin-completed" class="depth_text depth2_text"
+                                                   target="_self">완료된 알림 조회</a>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--관리자만 접근가능-->
+                            <li th:if="${isAdmin}" class="depth_item depth1_item">
+                                <a class="depth_text depth1_text" target="_self">
+                                    CCTV 관리
+                                </a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            CCTV 관리
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/cctv/gwangju_cctv" class="depth_text depth2_text"
+                                                   target="_self">광주광역시 CCTV</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/cctv/cctv_gwang" class="depth_text depth2_text"
+                                                   target="_self">광산구 CCTV</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/cctv/cctv_buk" class="depth_text depth2_text"
+                                                   target="_self">북구 CCTV</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/cctv/cctv_seo" class="depth_text depth2_text"
+                                                   target="_self">서구 CCTV</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/cctv/cctv_dong" class="depth_text depth2_text"
+                                                   target="_self">동구 CCTV</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/cctv/cctv_nam" class="depth_text depth2_text"
+                                                   target="_self">남구 CCTV</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--관리자만 접근가능-->
+                            <li th:if="${isAdmin}" class="depth_item depth1_item">
+                                <a class="depth_text depth1_text" target="_self">
+                                    예측 모델 관리</a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            예측 모델 관리
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/management/anomaly" class="depth_text depth2_text"
+                                                   target="_self">이상 행동 탐지</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/management/crime" class="depth_text depth2_text"
+                                                   target="_self">범죄 이력 관리</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--관리자만 접근가능-->
+                            <li th:if="${isAdmin}" class="depth_item depth1_item">
+                                <a class="depth_text depth1_text" target="_self">
+                                    관리자 센터</a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            관리자 센터
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/boards/important" class="depth_text depth2_text"
+                                                   target="_self">공지사항 관리</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/boards/report-unread" class="depth_text depth2_text"
+                                                   target="_self">사건 보고서 관리(읽지않음)</a>
+                                            </li>
+                                            <li class="depth_item depth2_item">
+                                                <a href="/boards/report-read" class="depth_text depth2_text"
+                                                   target="_self">사건 보고서 관리(읽음)</a>
+                                            </li>
+<!--                                            <li class="depth_item depth2_item">-->
+<!--                                                <a href="/boards" class="depth_text depth2_text"-->
+<!--                                                   target="_self">전체게시글 관리</a>-->
+<!--                                            </li>-->
+                                            <li class="depth_item depth2_item">
+                                                <a href="/members" class="depth_text depth2_text"
+                                                   target="_self">전체 회원 관리</a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!--로그인 안한 사람만 접근가능-->
+                            <li th:if="${!isUser and !isAdmin}" class="depth_item depth1_item">
+                                <a href="/cctv/selectBbsNttList.do?bbsNo=1904&key=8218" class="depth_text depth1_text"
+                                   target="_self">알림마당</a>
+                                <div class="depth depth2">
+                                    <div class="depth2_content">
+                                        <div class="depth_title depth2_title">
+                                            알림마당
+                                        </div>
+                                        <ul class="depth_list depth2_list cut">
+                                            <li class="depth_item depth2_item">
+                                                <a href="/boards/important" class="depth_text depth2_text"
+                                                   target="_self">공지사항</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
 </div>
+</body>

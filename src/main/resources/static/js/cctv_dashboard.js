@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     const cctvUrls = [
-        "http://your-cctv-stream-url-1",
-        "http://your-cctv-stream-url-2",
-        "http://your-cctv-stream-url-3",
-        "http://your-cctv-stream-url-4",
-        "http://your-cctv-stream-url-5",
-        "http://your-cctv-stream-url-6",
-        "http://your-cctv-stream-url-7",
-        "http://your-cctv-stream-url-8"
+        "https://crime-detect.run.goorm.io/predict",
+        "https://crime-detect.run.goorm.io/predict",
+        "https://crime-detect.run.goorm.io/predict",
+        "https://crime-detect.run.goorm.io/predict",
+        "https://crime-detect.run.goorm.io/predict",
+        "https://crime-detect.run.goorm.io/predict",
+        "https://crime-detect.run.goorm.io/predict",
+        "https://crime-detect.run.goorm.io/predict"
     ];
 
     const itemsPerPage = 4; // 한 페이지에 표시할 CCTV 개수

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
+    maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
+    <title>비밀번호 찾기</title>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <!-- CSRF 메타 태그 (Thymeleaf로 서버에서 값 주입) -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
+    <!-- css -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
+
+    <!-- js -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
+    <script src="/js/myLogin.js"></script>
+
+    <style>
+        .container {
+            max-width: 500px !important;
+            margin: 50px auto !important;
+            padding: 20px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 5px !important;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+            background-color: #f9f9f9 !important;
+        }
+
+        .container h2 {
+            text-align: center !important;
+            margin-bottom: 20px !important;
+        }
+
+        .form-group {
+            margin-bottom: 15px !important;
+        }
+
+        /* 가로 배치 그룹 */
+        .horizontal-group {
+            display: flex !important;
+            align-items: center !important;
+            margin-bottom: 10px !important;
+        }
+
+        .horizontal-group label {
+            margin-right: 10px !important;
+            min-width: 80px !important;
+        }
+
+        .horizontal-group input {
+            flex: 1 !important;
+            margin-right: 10px !important;
+            padding: 8px !important;
+            border: 1px solid #aaa !important;
+            border-radius: 3px !important;
+            box-sizing: border-box !important;
+        }
+
+        button {
+            padding: 10px 15px !important;
+            border: none !important;
+            border-radius: 3px !important;
+            background-color: #000820 !important;
+            color: #fff !important;
+            font-size: 16px !important;
+            cursor: pointer !important;
+        }
+
+        /* 비활성화 상태에서는 호버 효과를 적용하지 않음 */
+        button:not(:disabled):hover {
+            background-color: #444f6e !important;
+        }
+
+        button:disabled {
+            background-color: #444f6e !important;
+            cursor: not-allowed !important;
+        }
+
+        #message {
+            margin-top: 10px !important;
+            font-weight: bold !important;
+            text-align: center !important;
+        }
+
+        /* 비밀번호 폼은 세로 배치 */
+        .password-group input {
+            width: 100% !important;
+            padding: 8px !important;
+            border: 1px solid #aaa !important;
+            border-radius: 3px !important;
+            box-sizing: border-box !important;
+            margin-bottom: 5px !important;
+        }
+
+        /* 비밀번호 변경 버튼을 가운데 정렬 */
+        .center-button {
+            display: block !important;
+            margin: 0 auto !important;
+        }
+
+        #footer{
+            position: fixed; !important;
+            bottom: 0 !important;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
+<div id="wrapper">
+    <div class="container">
+        <h2>비밀번호 찾기</h2>
+
+        <!-- 1. 이메일 인증 섹션 -->
+        <div id="emailVerificationSection">
+            <!-- 그룹 1: 이메일 입력 + 인증번호 전송 (가로 배치) -->
+            <div id="emailGroup" class="horizontal-group">
+                <label for="emailInput">이메일</label>
+                <input type="email" id="emailInput" placeholder="이메일을 입력하세요" required>
+                <button type="button" id="sendBtn">인증번호 전송</button>
+            </div>
+            <!-- 그룹 2: 인증번호 입력 + 인증번호 확인 (가로 배치) -->
+            <div id="codeGroup" class="horizontal-group">
+                <label for="codeInput">인증번호</label>
+                <input type="text" id="codeInput" placeholder="인증번호를 입력하세요" required>
+                <button type="button" id="verifyBtn">인증번호 확인</button>
+            </div>
+            <div id="message"></div>
+        </div>
+
+        <!-- 2. 비밀번호 변경 폼 (초기엔 숨김, 세로 배치) -->
+        <div id="passwordForm" style="display: none;">
+            <div class="form-group password-group">
+                <label for="newPassword">새 비밀번호</label>
+                <input type="password" id="newPassword" placeholder="새 비밀번호를 입력하세요" required>
+            </div>
+            <div class="form-group password-group">
+                <label for="confirmPassword">새 비밀번호 확인</label>
+                <input type="password" id="confirmPassword" placeholder="새 비밀번호 확인" required>
+            </div>
+            <div class="form-group">
+                <button type="button" id="changePwdBtn" class="center-button">비밀번호 변경</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
+
+<script>
+    // CSRF 토큰 및 헤더 가져오기
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    // 인증번호 전송 버튼 클릭 시
+    document.getElementById('sendBtn').addEventListener('click', function () {
+        const email = document.getElementById('emailInput').value;
+        if (!email) {
+            alert("이메일을 입력하세요.");
+            return;
+        }
+        fetch('/api/email/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [csrfHeader]: csrfToken
+            },
+            body: 'email=' + encodeURIComponent(email)
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').textContent = data.message;
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('message').textContent = "전송 오류";
+            });
+    });
+
+    // 인증번호 확인 버튼 클릭 시
+    document.getElementById('verifyBtn').addEventListener('click', function () {
+        const email = document.getElementById('emailInput').value;
+        const code = document.getElementById('codeInput').value;
+        if (!email || !code) {
+            alert("이메일과 인증번호를 모두 입력하세요.");
+            return;
+        }
+        fetch('/api/email/verify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [csrfHeader]: csrfToken
+            },
+            body: 'email=' + encodeURIComponent(email) + '&code=' + encodeURIComponent(code)
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').textContent = data.message;
+                if (data.success) {
+                    // 인증 성공 시, 동시에 해당 이메일이 존재하는지 체크
+                    fetch(`/api/check-email-pwd?email=${encodeURIComponent(email)}`)
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result === true) {
+                                // 존재하는 이메일이면 비밀번호 변경 폼 노출
+                                document.getElementById('passwordForm').style.display = 'block';
+                                // 전송 및 확인 버튼만 비활성화 (입력 필드는 그대로 유지)
+                                document.getElementById('sendBtn').disabled = true;
+                                document.getElementById('verifyBtn').disabled = true;
+                            } else {
+                                alert("존재하지 않는 이메일입니다.");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert("이메일 존재 여부 확인 중 오류가 발생했습니다.");
+                        });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('message').textContent = "확인 오류";
+            });
+    });
+
+    // 비밀번호 변경 버튼 클릭 시
+    document.getElementById('changePwdBtn').addEventListener('click', function () {
+        const email = document.getElementById('emailInput').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (!newPassword || !confirmPassword) {
+            alert("새 비밀번호와 확인 비밀번호를 모두 입력하세요.");
+            return;
+        }
+        if (newPassword.length < 8) {
+            alert("비밀번호는 8자 이상이어야 합니다.");
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            alert("비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        // (선택) 제출 전에 이메일 존재 여부 재확인
+        fetch(`/api/check-email-pwd?email=${encodeURIComponent(email)}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result === true) {
+                    // 이메일이 존재하면 비밀번호 변경 API 호출
+                    fetch('/api/change-pwd', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            [csrfHeader]: csrfToken
+                        },
+                        body: 'email=' + encodeURIComponent(email) +
+                            '&newPassword=' + encodeURIComponent(newPassword)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("비밀번호가 성공적으로 변경되었습니다.");
+                                // 성공 시 메인 페이지로 이동
+                                window.location.href = "/";
+                            } else {
+                                alert("비밀번호 변경 실패: " + data.message);
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("비밀번호 변경 중 오류가 발생했습니다.");
+                        });
+                } else {
+                    alert("존재하지 않는 이메일입니다.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("이메일 존재 여부 확인 중 오류가 발생했습니다.");
+            });
+    });
+</script>
+</body>
+</html>

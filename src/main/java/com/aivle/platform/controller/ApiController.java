@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -80,6 +82,39 @@ public class ApiController {
     public ResponseEntity<List<NotificationForMemberResponseDto>> getActiveMembers() {
         List<NotificationForMemberResponseDto> members = memberService.getActiveMembers();
         return ResponseEntity.ok(members);
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkMemberExists(
+            @RequestParam String email,
+            @RequestParam String memberName) {
+        boolean response = memberService.checkEmail(email, memberName);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/check-email-pwd")
+    public ResponseEntity<Boolean> checkEmailExists(
+            @RequestParam String email) {
+        boolean response = memberService.existsByEmail(email);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/change-pwd")
+    public ResponseEntity<Map<String, Object>> changePassword(
+            @RequestParam String email,
+            @RequestParam String newPassword) {
+
+        boolean success = memberService.changePassword(email, newPassword);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        if (success) {
+            response.put("message", "비밀번호 변경 성공");
+        } else {
+            response.put("message", "비밀번호 변경 실패: 해당 이메일을 찾을 수 없습니다.");
+        }
+        return ResponseEntity.ok(response);
     }
 
 }

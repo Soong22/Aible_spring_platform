@@ -154,3 +154,10 @@
     color: #0056b3; /* 호버 시 색상 변경 */
     text-decoration: none; /* 호버 시 밑줄 추가 */
 }
+
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
