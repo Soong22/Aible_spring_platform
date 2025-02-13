@@ -87,7 +87,7 @@ public class MemberController {
         model.addAttribute("totalPages", members.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", members.getTotalElements()); // 전체 항목 수
 
-        return "member/members"; // register.html 페이지로 반환
+        return "member/members";
     }
 
     // 단건 조회

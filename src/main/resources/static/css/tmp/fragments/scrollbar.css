@@ -1,0 +1,26 @@
+/* 기본적으로 스크롤바와 트랙을 완전히 숨김 */
+html, body {
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+}
+
+::-webkit-scrollbar {
+    width: 10px; /* 스크롤바 너비 */
+    background-color: transparent; /* 트랙 기본 숨김 */
+    opacity: 0; /* 스크롤바 완전히 숨김 */
+    transition: opacity 0.3s ease; /* 부드럽게 나타나고 사라짐 */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #b4b4b4; /* 스크롤바 손잡이 색상 */
+    border-radius: 10px; /* 손잡이 모서리 둥글게 */
+}
+
+/* 스크롤 중에만 스크롤바 표시 */
+html.scrolling ::-webkit-scrollbar {
+    opacity: 1; /* 스크롤 중일 때만 나타남 */
+}
+
+/* 스크롤 트랙(박스)도 항상 숨김 */
+::-webkit-scrollbar-track {
+    background-color: transparent; /* 트랙 숨김 */
+}

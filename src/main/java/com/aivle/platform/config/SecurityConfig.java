@@ -32,6 +32,7 @@ public class SecurityConfig {
         return new CustomAccessDeniedHandler(); // Security 핸들러 등록
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -44,6 +45,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                 // 인증 없이 접근 가능한 경로
                 .requestMatchers("/", "/error/**", "/api/**").permitAll()
+                .requestMatchers("/ai_introduce/**", "/introduce/**", "/police/**","/cctv/**").permitAll()
                 .requestMatchers("/css/**", "/images/**", "/js/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
 

@@ -1,0 +1,40 @@
+/* 구 선택 컨테이너 스타일 */
+.select-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 90%;
+    padding: 10px 0;
+    background-color: #2c3e50;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.select-container label {
+    font-size: 18px;
+    color: #ecf0f1;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.select-container select {
+    font-size: 16px;
+    padding: 10px 15px;
+    background-color: #34495e;
+    color: #ecf0f1;
+    border: 2px solid #2c3e50;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+/* 지도 영역 */
+#map {
+    margin: 0 auto;
+    height: 80vh;
+    width: 90%;
+    border: 5px solid #2c3e50;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: block;
+}

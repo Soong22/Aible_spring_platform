@@ -1,0 +1,200 @@
+/* 전체 레이아웃 설정 */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    display: flex; /* flexbox 설정 */
+    flex-direction: column; /* 헤더와 푸터 사이 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
+    min-height: 100vh; /* 화면 전체 높이 */
+    box-sizing: border-box;
+    font-size: 16px; /* 기본 폰트 크기 약간 증가 */
+    line-height: 1.5; /* 가독성 향상을 위한 줄 높이 */
+}
+
+.container {
+    width: 60%;
+    max-width: 1000px; /* 최대 너비 설정을 조금 줄임 */
+    background: #fff;
+    padding: 2.5% 3.5%; /* 패딩을 적당히 증가 */
+    border-radius: 20px; /* 둥근 모서리 약간 줄임 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 그림자 약간 조정 */
+    text-align: center;
+    margin: 120px 0; /* 여백을 적당히 유지 */
+    flex-grow: 1; /* 남는 공간을 채우도록 설정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 내부 내용을 중앙으로 정렬 */
+    gap: 2%; /* 내부 요소 간의 간격을 적당히 설정 */
+}
+
+h1 {
+    font-size: 2.2em; /* 폰트 크기 약간 증가 */
+    margin-bottom: 1.8em; /* 마진을 적당히 증가 */
+    font-weight: bold;
+    color: #333;
+}
+
+.write-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8em; /* 간격을 적당히 증가 */
+    width: 100%;
+}
+
+.form-group {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 1em; /* 폰트 크기를 약간 증가 */
+    font-weight: bold;
+    margin-bottom: 0.6em; /* 마진을 약간 증가 */
+    color: #333;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 1em; /* 패딩을 약간 증가 */
+    font-size: 1em; /* 폰트 크기를 약간 증가 */
+    color: #333;
+    border: 2px solid #333;
+    border-radius: 25px; /* 둥근 모서리 약간 줄임 */
+    outline: none;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #002366;
+    box-shadow: 0 0 0.3em rgba(0, 35, 102, 0.3);
+    outline: none;
+}
+
+textarea {
+    height: 10em; /* 높이를 적당히 설정 */
+    resize: vertical; /* 사용자가 높이를 조절할 수 있도록 변경 */
+    font-size: 1em; /* 폰트 크기를 약간 증가 */
+    color: #333;
+    border-radius: 25px; /* 동일하게 둥글게 */
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.file-input {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #333;
+    border-radius: 25px; /* 둥근 모서리 약간 줄임 */
+    padding: 0.9em 1.8em; /* 패딩을 약간 증가 */
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s, transform 0.2s;
+    width: auto;
+    flex-shrink: 0;
+    font-size: 1em; /* 폰트 크기를 약간 증가 */
+}
+
+.file-input:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.02);
+}
+
+.file-input i {
+    font-size: 1.3em; /* 아이콘 크기를 약간 증가 */
+    color: #333;
+    margin-right: 0.6em; /* 마진을 약간 증가 */
+}
+
+.file-name {
+    margin-top: 0.6em; /* 마진을 약간 증가 */
+    font-size: 0.95em; /* 폰트 크기를 약간 증가 */
+    color: #555;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+button.btn-primary {
+    background-color: #002366;
+    color: white;
+    font-size: 1.1em; /* 폰트 크기를 약간 증가 */
+    font-weight: bold;
+    padding: 0.9em 1.8em; /* 패딩을 약간 증가 */
+    border-radius: 25px; /* 둥근 모서리 약간 줄임 */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+button.btn-primary:hover {
+    background-color: #001a4d;
+    transform: translateY(-0.15em); /* 이동 거리 약간 증가 */
+}
+
+button.btn-primary:active {
+    transform: translateY(0.075em); /* 이동 거리 약간 증가 */
+}
+
+button.btn-primary:disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1.2em; /* 간격을 적당히 증가 */
+    flex-wrap: wrap; /* 버튼이 줄 바꿈되도록 설정 */
+    width: 100%;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    body {
+        font-size: 15px; /* 모바일에서 기본 폰트 크기 약간 감소 */
+    }
+
+    .container {
+        width: 90%;
+        margin: 4% 0; /* 작은 화면에서는 여백을 적당히 유지 */
+        padding: 3% 4%; /* 패딩을 적당히 조정 */
+    }
+
+    h1 {
+        font-size: 2em; /* 폰트 크기 약간 감소 */
+    }
+
+    .write-form {
+        gap: 1.5em; /* 간격 약간 감소 */
+    }
+
+    textarea {
+        height: 9em; /* 높이를 적당히 감소 */
+    }
+
+    .file-input, button.btn-primary {
+        padding: 0.7em 1.4em; /* 패딩을 적당히 조정 */
+        font-size: 0.95em; /* 폰트 크기 약간 감소 */
+    }
+
+    .button-group {
+        gap: 1em; /* 간격 조정 */
+    }
+
+    .file-input i {
+        font-size: 1.2em; /* 아이콘 크기 약간 감소 */
+        margin-right: 0.5em; /* 마진 조정 */
+    }
+
+    .file-name {
+        font-size: 0.9em; /* 폰트 크기 조정 */
+    }
+}
