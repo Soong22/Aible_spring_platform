@@ -27,7 +27,7 @@ public class HomeController {
     public String loginPage(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
 
-        return "member/login"; // `login.html`로 이동
+        return "member/login";
     }
 
     @GetMapping("/index2")
@@ -87,5 +87,7 @@ public class HomeController {
             return ResponseEntity.status(404).body("JSON 파일을 찾을 수 없습니다: " + filePath);
         }
     }
+
+
 
 }

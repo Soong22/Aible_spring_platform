@@ -1,16 +1,4 @@
 // map_buttons.js
-
-// DOM이 준비되면 실행
-document.addEventListener('DOMContentLoaded', function() {
-  // 모든 region-group 요소에 대해 마우스 엔터 이벤트 핸들러 등록
-  document.querySelectorAll('.region-group').forEach(function(group) {
-    group.addEventListener('mouseenter', function() {
-      // 부모 SVG에 해당 그룹을 재배치하여 맨 마지막에 놓음(즉, 가장 위에 표시됨)
-      this.parentNode.appendChild(this);
-    });
-  });
-});
-
 function handleClick(region) {
     // 지역에 따라 다른 페이지로 이동
     switch(region) {

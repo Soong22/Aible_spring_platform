@@ -42,3 +42,8 @@ showSlide(currentSlide);
 
 // 5초마다 자동으로 슬라이드 변경
 setInterval(nextSlide, 5000);
+
+
+
+
+

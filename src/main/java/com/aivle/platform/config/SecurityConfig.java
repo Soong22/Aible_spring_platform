@@ -32,8 +32,14 @@ public class SecurityConfig {
         return new CustomAccessDeniedHandler(); // Security 핸들러 등록
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        // API 경로에 대해 CSRF 보호 비활성화
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**")
+        );
 
         // 헤더 설정
         http.headers(headers -> headers
@@ -44,14 +50,17 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                 // 인증 없이 접근 가능한 경로
                 .requestMatchers("/", "/error/**", "/api/**").permitAll()
+//                .requestMatchers("/ai_introduce/**", "/introduce/**", "/police/**","/cctv/**").permitAll()
+                .requestMatchers("/ai_introduce/**", "/introduce/**", "/police/**","/cctv/**", "/region/**", "/notification/**", "/management/**").permitAll()
                 .requestMatchers("/css/**", "/images/**", "/js/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
 
                 // 인증이 필요한 경로
+//                .requestMatchers("/member/**", "/mypage/**", "/cctv/**", "/notice_board/boards", "/region/**", "/index2").authenticated()
                 .requestMatchers("/member/**", "/mypage/**", "/cctv/**", "/notice_board/boards", "/region/**", "/index2").authenticated()
                 .requestMatchers("/board/**", "/boards", "/comment/**", "/comments").authenticated()
 
-                .requestMatchers("/notification/**").authenticated()
+//                .requestMatchers("/notification/**").authenticated()
 
                 // 관리자 권한이 필요한 경로
                 .requestMatchers("/members").hasRole("ADMIN")

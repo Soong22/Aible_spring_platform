@@ -1,0 +1,125 @@
+@charset "UTF-8";
+
+@media all and (min-width: 1401px){
+    #container .wrap{padding-right:100px; padding-left:100px;}
+}
+/* colgroup */
+.colgroup{position:relative; width:100%; margin-bottom:30px}
+
+/* 콘텐츠 */
+#contents{position:relative; width:100%; min-height:600px; margin-top:30px; margin-bottom:50px}
+@media all and (max-width: 1000px){
+    #contents{margin-top:50px; margin-bottom:54px;}
+}
+@media all and (max-width:640px){
+    #contents{min-height:400px; margin-top:0; margin-bottom:48px}
+}
+
+/* 서브헤드 */
+.sub_head{position:relative; padding-bottom:45px;}
+.sub_head:before{display:block; position:absolute; top:70px; left:calc(50% - 50vw); width:100vw; height:198px; background-color:#fafafa;}
+.sub_head .sub_title{position:relative; width:100%; padding-top:55px; color:#1f1f1f; text-align:center; font-size:40px; line-height:42px; letter-spacing:-0.03em}
+.sub_head .sub_title h2{font-weight:600; font-size:40px; line-height:42px;}
+@media all and (max-width: 1000px){
+    .sub_head{padding-bottom:30px;}
+    .sub_head:before{top:55px; height:148px;}
+    .sub_head .sub_title{padding-top:38px; padding-bottom:13px; font-size:32px; line-height:34px;}
+    .sub_head .sub_title h2{font-weight:600; font-size:32px; line-height:34px;}
+}
+@media all and (max-width:640px){
+    .sub_head{padding-bottom:25px;}
+    .sub_head:before{top:44px; height:54px;}
+    .sub_head .sub_title{margin-top:90px; padding-top:0; padding-bottom:13px; font-size:30px; line-height:32px;}
+}
+
+/* 브래드크럼-path */
+.path{position:relative; height:70px; text-align:center; font-size:0; line-height:0}
+.path:before{display:block; position:absolute; top:0; left:calc(50% - 50vw); width:100vw; height:70px; background-color:#0b258a;}
+.path .path_list{display:inline-block; overflow:visible;}
+.path .path_item{display:inline-block; position:relative; /*width:228px;*/ width:250px; height:70px; border-right:1px solid rgba(255,255,255,0.2); vertical-align:top;}
+.path .path_item.home{width:70px; border-left:1px solid rgba(255,255,255,0.2); background:url(/site/cctv/images/sub/path_home.png) no-repeat center center;}
+.path .path_item .path_button{display:inline-block; width:100%; height:100%; color:#fff; padding-right:40px; padding-left:25px; text-align:left; font-size:16px; font-weight:500; line-height:24px; letter-spacing:-0.03em; vertical-align:middle;}
+.path .path_item.home .path_button{padding-right:0; padding-left:0; font-size:0; line-height:0;}
+.path .path_item .path_button:before{display:block; position:absolute; top:33px; right:30px; width:11px; height:7px; background:url(/site/cctv/images/sub/path_button_arrow.png) no-repeat;}
+.path .path_item.home .path_button:before{display:none;}
+.path .path_item.active .path_button:before{transform:rotate(180deg);}
+.path .path_item .path_button:after{display:inline-block; height:100%; vertical-align:middle;}
+.path .path_item .path_button span{display:inline-block; vertical-align:middle;}
+.path .path_layer{display:none; position:absolute; top:100%; left:0; z-index:10; width:100%; border:1px solid #d2d2d2; background-color:#fff;}
+.path .path_item.active .path_layer{display:block;}
+.path .layer_item{border-top:1px solid #d2d2d2;}
+.path .layer_item:first-child{border-top-width:0;}
+.path .layer_anchor{display:block; position:relative; padding:14px 40px 15px 25px; color:#444; text-align:left; font-size:16px; line-height:21px; vertical-align:middle; transition-property:background-color, color; transition-duration:0.3s;}
+.path .layer_anchor:hover{background-color:#fafbfd; color:#0b258a; font-weight:600; text-decoration:none;}
+.path .layer_anchor:hover:before{display:block; position:absolute; top:calc(50% - 6px); right:24px; width:14px; height:10px; background:url(/site/cctv/images/sub/path_layer_arrow_.png) no-repeat;}
+.path .layer_anchor span{display:inline-block; vertical-align:middle;}
+@media all and (max-width: 1000px){
+    .path{height:55px;}
+    .path:before{height:55px;}
+    .path .path_item{/*width:182px;*/ width:226px; height:55px;}
+    .path .path_item.home{width:55px;}
+    .path .path_item .path_button{padding-right:35px; padding-left:20px; font-size:15px; line-height:21px;}
+    .path .path_item .path_button:before{top:25px; right:21px;}
+
+    .path .layer_anchor{padding:9px 35px 10px 20px; font-size:14px; line-height:19px;}
+    .path .layer_anchor:hover:before{top:calc(50% - 5px); right:18px;}
+}
+@media all and (max-width: 640px){
+    .path{height:44px; text-align:left;}
+    .path:before{height:44px;}
+    .path .path_item{width:auto; height:44px; border-width:0;}
+    .path .path_item.home{width:16px; margin-right:12px; border-left-width:0; background-size:16px auto;}
+    .path .path_item .path_button{padding-right:13px; padding-left:13px; font-weight:400; font-size:14px; line-height:20px; pointer-events:none;}
+    .path .path_item .path_button:before{top:17px; right:auto; left:-2px; width:7px; height:11px; background:url(/site/cctv/images/sub/path_arrow_mobile.png) no-repeat center center;}
+    .path .path_item.active .path_button:before{transform:rotate(0);}
+	.path .path_item.active .path_layer{display:none;}
+}
+
+
+/* 공유, 인쇄 */
+.addons{position:relative; text-align:center;}
+.addons .addons_list{font-size:0; line-height:0;}
+.addons .addons_item{display:inline-block; position:relative; padding-right:15px; padding-left:14px; vertical-align:top}
+.addons .addons_item + .addons_item:before{display:block; position:absolute; top:calc(50% - 9px); left:-2px; width:1px; height:18px; background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAAXNSR0IArs4c6QAAAA9JREFUGFdjKCws/M8AAgAQnAJTeehSPAAAAABJRU5ErkJggg==) repeat-y;}
+.addons .addons_button{width:33px; height:33px; background-repeat:no-repeat; background-position:center center; letter-spacing:-0.03em}
+.addons .addons_item.link .addons_button{background-image:url(/site/cctv/images/sub/addons_link.png);}
+.addons .addons_item.share .addons_button{background-image:url(/site/cctv/images/sub/addons_share.png);}
+.addons .addons_item.print .addons_button{background-image:url(/site/cctv/images/sub/addons_print.png);}
+.addons .share{position:relative; font-size:0; line-height:0}
+.addons .share_item{display:inline-block; margin-right:0 !important; margin-bottom:5px;}
+/*.addons .share_panel{display:none; position:absolute; top:0; right:15px; white-space:nowrap}*/
+.addons .share_panel{ visibility:hidden; overflow:hidden; position:absolute; top:0; right:0; left:0; width:43px; margin:auto; padding-top:39px; padding-bottom:0; border:1px solid #888888; border-radius:8px; background-color:#fff; opacity:0; text-align:center; transition-property:visibility, opacity; transition-duration:0.25s; transition-timing-function:linear;}
+
+/*.addons .share_list{display:inline-block}*/
+.addons .share_item:before{display:none;}
+.addons .share_anchor{display:block; width:33px; height:33px; border-radius:8px; background-color:#000}
+.addons .share_anchor.facebook{background:#1e4daf url(/site/cctv/images/sub/share_icon1.png) no-repeat center center;}
+.addons .share_anchor.twitter{background:#3495e0 url(/site/cctv/images/sub/share_icon2.png) no-repeat center center;}
+.addons .share_anchor.blog{background:#66b834 url(/site/cctv/images/sub/share_icon3.png) no-repeat center center;}
+.addons .share_anchor.kakao{background:#edb13e url(/site/cctv/images/sub/share_icon4.png) no-repeat center center;}
+.addons .share_hide{display:inline-block; position:absolute; top:3px; right:0; left:0; width:33px; height:33px; margin:auto; background:#fff url(/site/cctv/images/sub/share_close.png) no-repeat center center; vertical-align:top}
+.addons .share.active .share_panel{visibility:visible; opacity:1;}
+.addons .print .addons_button{font-weight:600}
+@media all and (max-width:1000px){
+    /*.addons .share_panel{right:17px;}*/
+    .sub_head .share_list li{width:33px;}
+    .sub_head .share_list{visibility:visible; position:relative; width:auto; height:auto; border-width:0; background:transparent; opacity:1;}
+	.addons .addons_item{padding-right:17px; padding-left:13px;}
+    .addons .addons_item.link .addons_button{background-size:24px 18px}
+    .addons .addons_item.share .addons_button{background-size:17px 18px}
+    .addons .addons_item.print .addons_button{background-size:20px 20px}
+    .addons .addons_item.print{display:none;}
+}
+
+@media all and (max-width:640px){
+    .addons{position:absolute; top:35px; right:0;}
+    .addons .addons_list{display:inline-block; margin-right:-5px;}
+    .addons .addons_item{padding-right:10px; padding-left:10px;}
+    .addons .share_panel{right:0;}
+}
+
+/* 인쇄화면 */
+@media print{
+    #header,.side,.path,#footer,.hanshin{display:none;}
+    .colgroup{width:100%;}
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- css -->
+  <!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="/css/font_ie8.css" /><![endif]-->
+  <link rel="stylesheet" type="text/css" href="/css/font.css" />
+  <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/ai_introduce.css" />
+  <link rel="stylesheet" type="text/css" href="/css/top_button.css" />
+  <link rel="stylesheet" type="text/css" href="/css/scroller_button.css" />
+
+  <!-- js -->
+  <!--[if lt IE 9]><script src="/js/html5.js"></script><![endif]-->
+  <script src="/js/jquery-1.12.4.min.js"></script>
+  <script src="/js/jquery.screen.min.js"></script>
+  <script src="/js/jquery.menu.min.js"></script>
+  <script src="/js/jquery.customForm.min.js"></script>
+  <script src="/js/slick.min.js"></script>
+  <script src="/js/slick.extensions.min.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/program.min.js"></script>
+  <script src="/js/cctv/common.js"></script>
+  <script src="/js/cctv/main.js"></script>
+  <script src="/js/ai_introduce.js"></script>
+  <script src="/js/top_button.js"></script>
+
+  <title>AI 모델 소개</title>
+</head>
+
+<body>
+
+<!-- 헤더 -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+  <h3 class="sub-title">AI Model</h3>
+  <h1 class="main-title">범죄와의 전쟁</h1>
+
+  <!-- 네비게이션 메뉴 -->
+  <nav class="nav-container">
+    <ul class="nav-menu">
+      <li><a href="#vision" class="nav-link">이상행동 감지 모델</a></li>
+      <li><a href="#journey" class="nav-link">흉기 탐지 모델</a></li>
+      <li><a href="#technologies" class="nav-link">얼굴 탐지 모델</a></li>
+    </ul>
+  </nav>
+
+</header>
+
+<!-- 이상행동 감지 모델 -->
+<section id="vision" class="section">
+  <h2 class="section-title">이상행동 감지 모델</h2>
+  <p class="section-text">이 모델은 YOLO-Pose와 LSTM을 활용하여 사람의 움직임을 분석하고, 행동을 '정상', '의심', '위험'으로 분류하는 AI 시스템입니다.</p>
+  <img src="/images/model_image/pose1.png" alt="이상행동 감지 모델" class="section-image">
+  <!-- 공간 추가 -->
+  <div class="spacer"></div>
+  <p class="section-text"> 1. 데이터 수집 및 학습 과정 </p>
+  <div class="image-row">
+    <img src="/images/model_image/pose2.png" alt="이상행동 감지 모델" class="row-image">
+    <img src="/images/model_image/plus_image.png" alt="이상행동 감지 모델" class="row-image">
+    <img src="/images/model_image/pose3.png" alt="이상행동 감지 모델" class="row-image">
+  </div>
+</section>
+<p class="section-text"> 데이터 수집 과정은 직접 촬영한 영상을 기반으로 하여 진행되었습니다. 주요 관절 17개를 감지하여 저장하고, 이를 이미지 및 CSV 파일로 변환하여 학습 데이터로 활용하였습니다.
+  <br></br>이후, 변환된 17개 관절 좌표를 바탕으로 LSTM 모델을 학습시켜
+  행동 패턴을 분석했습니다. </p>
+<!-- 공간 추가 -->
+<div class="spacer"></div>
+<p class="section-text"> 2. 모델 테스트 및 결과 </p>
+<img src="/images/model_image/pose5.gif" alt="이상행동 감지 모델" class="section-image">
+<p class="section-text"> <br> 학습된 모델을 테스트 결과, 사람의 움직임을 분석하여 행동 클래스를 정확히 예측할 수 있었습니다. <br>
+  <br> (1) 바운딩 박스를 통해 사람을 감지 <br> (2) 실시간 행동 예측 (Normal, Doubt, Danger) 표시 <br> (3) 정확도와 함께 예측 결과를 바운딩 박스 위에 출력 <br> </p>
+
+
+
+
+<!-- 공간 추가 -->
+<div class="spacer"></div>
+
+<!-- 흉기 탐지 모델 -->
+<section id="journey" class="section">
+  <h2 class="section-title">흉기 탐지 모델</h2>
+  <p class="section-text">YOLO를 활용하여 CCTV 영상에서 칼, 총, 몽둥이 등의 흉기를 탐지하고 실시간으로 분석합니다.</p>
+  <img src="/images/model_image/pose6.png" alt="흉기 탐지 모델" class="section-image">
+
+  <!-- 공간 추가 -->
+  <div class="spacer"></div>
+
+  <p class="section-text"> 1. 데이터 수집 및 학습 과정 </p>
+  <div class="image-row">
+    <img src="/images/model_image/pose17.jpg" alt="흉기 감지 모델" class="row-image">
+    <img src="/images/model_image/arrow5.png" alt="흉기 감지 모델" class="row-image">
+    <img src="/images/model_image/pose18.jpg" alt="흉기 감지 모델" class="row-image">
+  </div>
+</section>
+<p class="section-text"> CCTV 영상을 수집한 후, 프레임별로 캡처하여 이미지 묶음으로 변환하고, <br>
+  이를 무기 종류에 맞게 직접 라벨링하여 학습시켰습니다. 그 결과, 어두운 환경이나 흐린 화면에서도 정확한 무기 분류가 가능합니다. </p>
+
+<!-- 공간 추가 -->
+<div class="spacer"></div>
+<p class="section-text"> 2. 모델 테스트 및 결과 </p>
+<img src="/images/model_image/weapon.gif" alt="흉기 감지 모델" class="section-image">
+<p class="section-text"> <br> 학습된 모델을 테스트 결과, 흉기의 움직임에 따라 트래킹이 되며, 흉기의 종류에 맞게 인식 가능합니다. <br>
+  <br> (1) 바운딩 박스를 통해 얼굴을 감지 <br> (2) 실시간 얼굴 탐지 (Crime, Unknown) 표시 <br> (3) 정확도와 함께 예측 결과를 바운딩 박스 위에 출력 <br> </p>
+
+
+
+
+
+
+
+
+
+
+<!-- 공간 추가 -->
+<div class="spacer"></div>
+<!-- 얼굴 탐지 모델 -->
+<section id="technologies" class="section">
+  <h2 class="section-title">얼굴 탐지 모델</h2>
+  <p class="section-text">YOLO와 Roboflow를 기반으로 CCTV에서 범죄자의 얼굴을 인식하고 데이터베이스와 매칭하여 <br> 신원을 파악합니다.</p>
+  <img src="/images/model_image/pose11.jpg" alt="얼굴 탐지 모델" class="section-image">
+  <p class="section-text"> 1. 데이터 수집 및 학습 과정 </p>
+  <div class="image-row">
+    <img src="/images/model_image/pose16.jpg" alt="범죄자얼굴" class="row-image">
+    <img src="/images/model_image/arrow5.png" alt="범죄자얼굴" class="row-image">
+    <img src="/images/model_image/pose15.png" alt="이상행동 감지 모델" class="row-image">
+  </div>
+</section>
+<p class="section-text"> 범죄자 얼굴 10000장, 범죄자 외 얼굴 10000장 Roboflow 을 통해 Annotate, Augmentation 작업 진행, google Colab 통해 학습 진행하였습니다.</p>
+<!-- 공간 추가 -->
+<div class="spacer"></div>
+<p class="section-text"> 2. 모델 테스트 및 결과 </p>
+<img src="/images/model_image/facemodel_gif.gif" alt="이상행동 감지 모델" class="section-image">
+<p class="section-text"> <br> 학습된 모델을 테스트 결과, 범죄자의 얼굴을 분석하여 범죄자 클래스를 정확히 예측할 수 있었습니다. <br>
+  <br> (1) 바운딩 박스를 통해 얼굴을 감지 <br> (2) 실시간 얼굴 탐지 (Crime, Unknown) 표시 <br> (3) 정확도와 함께 예측 결과를 바운딩 박스 위에 출력 <br> </p>
+
+
+
+<div class="spacer"></div>
+
+<!-- 맨 위로 이동 버튼 -->
+<img src="/images/model_image/top_button.png" id="topButton" class="top-button" alt="맨 위로 이동 버튼">
+
+
+
+<!-- 푸터 -->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
+
+</body>
+</html>
+

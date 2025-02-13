@@ -1,0 +1,1157 @@
+/* 한신정보기술 송정은 201908 */
+.program .book_search {
+    position: relative;
+    z-index: 21;
+}
+/* 도서검색 - 리스트 */
+
+.program .book_search .search_btn {
+    padding: 7px 24px 6px;
+    border: 1px solid #4f5769;
+    background-color: #4f5769;
+    font-size: 17px;
+    line-height: 30px;
+    color: #fff;
+    text-align: center;
+    box-sizing: border-box
+}
+
+.program .book_search .search_btn.type2 {
+    background-color: #2c313c;
+}
+
+.program .book_search a.search_btn:visited, .program .book_search a.search_btn:link {
+    background-color: #fff;
+    color: #4f5769;
+    text-decoration: none;
+    transition: ease-in 0.25s all
+}
+
+.program .book_search a.search_btn:hover, .program .book_search .search_btn:hover {
+    background-color: #fff;
+    color: #4f5769;
+    text-decoration: none;
+    transition: ease-in 0.25s all
+}
+
+.program .book_search .best h4 {
+    float: left;
+    position: relative;
+    width: 88px;
+    padding-left: 18px;
+    font-size: 16px;
+    line-height: 30px;
+    color: #000
+}
+
+.program .book_search .best h4:before {
+    display: inline-block;
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 15px;
+    height: 14px;
+    background: url('/common/images/program/book_search_template.png') no-repeat 0 0;
+}
+
+.program .book_search .best ul {
+    float: left;
+    width: calc(100% - 160px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.program .book_search .best li {
+    display: inline-block;
+    padding: 0 17px;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+.program .book_search .multilingual_input {
+    position: relative;
+    padding-left: 26px;
+    margin-top: -61px;
+    font-size: 16px;
+    line-height: 30px;
+    color: #000
+}
+
+.program .book_search .multilingual_input:before {
+    display: inline-block;
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: 20px;
+    height: 19px;
+    background: url('/common/images/program/book_search_template.png') no-repeat -59px 0;
+}
+
+.program .book_search .book_searchform .text_area {
+    float: left;
+    position: relative;
+    width: 77%;
+    padding: 7px 0 6px;
+    border: 1px solid #bbb;
+    box-sizing: border-box
+}
+
+.program .book_search .book_searchform .text_area:before {
+    display: inline-block;
+    position: absolute;
+    top: 13px;
+    left: 86px;
+    width: 1px;
+    height: 18px;
+    background-color: #ccc;
+}
+
+.program .book_search .book_searchform .text_area select {
+    height: 30px;
+    padding: 0 28px;
+    border: none;
+    background: none;
+    font-size: 16px;
+    line-height: 30px;
+    color: #000;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.program .book_search .book_searchform .text_area select::-ms-expand {
+    display: none;
+}
+
+.program .book_search .book_searchform .text_area input[type=search] {
+    width: calc(100% - 214px);
+}
+
+.program .book_search .book_searchform .text_area .book_searchform_checkbox {
+    position: absolute;
+    top: 6px;
+    right: 17px;
+    font-size: 14px;
+    line-height: 30px;
+    color: #434343;
+}
+
+.program .book_search .book_searchform .btn_area {
+    float: left;
+    width: calc(23% - 6px);
+    margin-left: 6px;
+    font-size: 0;
+    line-height: 0;
+}
+
+.program .book_search .book_searchform .btn_area .search_btn {
+    width: 40%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.program .book_search .book_searchform .btn_area .search_btn.type2 {
+    width: calc(60% - 5px);
+    margin-left: 5px;
+}
+
+.program .book_search .book_search_check {
+    margin-top: 21px;
+    margin-bottom: 25px;
+}
+
+.program .book_search .book_search_check .top_text {
+    margin-bottom: 9px;
+    font-size: 16px;
+    line-height: 30px;
+    color: #555;
+    word-break: keep-all
+}
+
+.program .book_search .book_search_check .top_text span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #f36f21
+}
+
+.program .book_search .book_search_check .check_box {
+    position: relative;
+    padding: 19px 32px 23px;
+    border: 1px solid #bbb;
+}
+
+.program .book_search .book_search_check .check_box .check_list {
+    float: left;
+    width: 20%;
+    margin-bottom: 3px;
+}
+
+.program .book_search .book_search_check .check_box .check_list.fir {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.program .book_search .book_search_check .check_box .check_list label {
+    font-size: 16px;
+    line-height: 30px;
+    color: #555
+}
+
+.program .book_search .book_search_check .check_box .search_btn {
+    position: absolute;
+    top: 19px;
+    right: 27px;
+    padding: 0 17px;
+    font-size: 14px;
+    line-height: 30px;
+}
+
+.program .book_search .book_search_tab.tab_menu {
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+.program .book_search .book_search_tab.tab_menu .tab_wrap > ul > li {
+    width: calc(100% / 3);
+}
+
+.program .book_search .book_search_tab.tab_menu .tab_wrap > ul > li.active {
+    background-color: #4f5769;
+}
+
+.program .book_search .book_search_top_box {
+    margin-bottom: 10px;
+}
+
+.program .book_search .book_search_top_box .top_area1 {
+    display: inline-block;
+    float: left;
+}
+
+.program .book_search .book_search_top_box .top_area2 {
+    display: inline-block;
+    float: right;
+}
+
+.program .book_search .book_search_top_box .top_area2 ul {
+    font-size: 0;
+    line-height: 0;
+}
+
+.program .book_search .book_search_top_box .top_area2 ul li {
+    display: inline-block;
+    width: 42px;
+    vertical-align: top
+}
+
+.program .book_search .book_search_top_box .top_area2 ul li a {
+    display: block;
+    position: relative;
+    height: 38px;
+    border: 1px solid #a7a7a7;
+    background-color: #fff;
+    font-size: 1px;
+    line-height: 1px;
+    color: transparent
+}
+
+.program .book_search .book_search_top_box .top_area2 ul li.active a {
+    border: 1px solid #4f5769;
+    background-color: #4f5769;
+}
+
+.program .book_search .book_search_top_box .top_area2 ul li a:before {
+    display: inline-block;
+    position: absolute;
+    top: 11px;
+    left: calc(50% - 11px);
+    width: 23px;
+    height: 17px;
+    background: url('/common/images/program/book_search_template.png') no-repeat -121px 0;
+}
+
+.program .book_search .book_search_top_box ul li.active a:before {
+    background-position: -121px -42px;
+}
+
+.program .book_search .book_search_top_box .top_area2 ul li.text_type {
+    margin-left: 3px;
+}
+
+.program .book_search .book_search_top_box .top_area2 ul li.text_type a:before {
+    top: 12px;
+    left: calc(50% - 11px);
+    width: 22px;
+    height: 14px;
+    background-position: -178px -1px
+}
+
+.program .book_search .book_search_top_box .top_area2 ul li.text_type.active a:before {
+    background-position: -178px -43px;
+}
+
+.program .book_search .select {
+    height: 40px;
+    padding: 4px 39px 8px 12px;
+    border: 1px solid #bbb;
+    color: #555;
+    font-size: 16px;
+    line-height: 30px;
+    background: url('/common/images/program/book_search_select.png') no-repeat center right;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.program .book_search .select::-ms-expand {
+    display: none;
+}
+
+.program .book_search .search_btn.select_btn {
+    padding: 4px 24px 4px;
+}
+
+.program .book_search .book_search_list .list_top {
+    padding: 8px 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    font-size: 0;
+    line-height: 0;
+}
+
+.program .book_search .book_search_list .list_top #check_all {
+    margin: 0 24px 0 12px;
+    vertical-align: sub
+}
+
+.program .book_search .book_search_list .list_btn {
+    display: inline-block;
+    padding: 5px 19px 6px;
+    border: 1px solid #bbb;
+    background-color: #fff;
+    font-size: 15px;
+    line-height: 22px;
+    color: #444;
+}
+
+.program .book_search .book_search_list .list_btn:link, .program .book_search .book_search_list .list_btn:visited {
+    color: #444;
+}
+
+.program .book_search .book_search_list .list_btn:hover {
+    border: 1px solid #9c9da2;
+    background-color: #9c9da2;
+    color: #fff;
+    text-decoration: none;
+    transition: ease-in 0.25s all
+}
+
+.program .book_search .book_search_list .list_btn.grey {
+    border: 1px solid #9c9da2;
+    background-color: #9c9da2;
+    color: #fff;
+}
+
+.program .book_search .book_search_list .list_btn.grey:link, .program .book_search .book_search_list .list_btn.grey:visited {
+    color: #fff;
+}
+
+.program .book_search .book_search_list .list_btn.grey:hover {
+    border: 1px solid #bbb;
+    background-color: #fff;
+    color: #444;
+}
+
+.program .book_search .book_search_list .list_top .list_btn {
+    margin-right: 6px;
+    text-align: center
+}
+
+.program .book_search .book_search_list .list_top .list_btn:last-child {
+    margin-right: 0;
+}
+
+.program .book_search .book_search_list .list_box {
+    padding: 27px 0 29px;
+    border-bottom: 1px solid #ccc;
+    font-size: 0;
+    line-height: 0;
+    vertical-align: middle
+}
+
+.program .book_search .book_search_list .list_box input[type=checkbox] {
+    display: inline-block;
+    width: 44px;
+    vertical-align: middle
+}
+
+.program .book_search .book_img_area {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle
+}
+
+.program .book_search .book_img_area img {
+    width: 121px;
+    height: 148px;
+    border: 1px solid #d5d5d5;
+}
+
+.program .book_search .book_img_area span {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 37px;
+    padding: 14px 0 12px;
+    font-size: 14px;
+    line-height: 17px;
+    color: #fff;
+    text-align: center;
+}
+
+.program .book_search .book_img_area span.genre1 {
+    background-color: #33a56b;
+}
+
+.program .book_search .book_img_area span.genre2 {
+    padding: 5px 0 4px;
+    background-color: #0072bc;
+}
+
+.program .book_search .book_img_area span.genre3 {
+    background-color: #92278f;
+}
+
+.program .book_search .book_img_area span.genre4 {
+    background-color: #534741;
+}
+
+.program .book_search .book_img_area span.genre5 {
+    background-color: #a3620a;
+}
+
+.program .book_search .book_img_area span.genre6 {
+    background-color: #888;
+}
+
+.program .book_search .book_search_list .list_box .info_area {
+    display: inline-block;
+    width: calc(100% - 167px);
+    padding-left: 29px;
+    font-size: 16px;
+    line-height: 24px;
+    color: #555;
+    vertical-align: top;
+    box-sizing: border-box
+}
+
+.program .book_search .book_search_list .list_box .info_area .book_nm a {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 17px;
+    line-height: 22px;
+    color: #464646;
+    font-weight: bold
+}
+
+.program .book_search .book_search_list .list_box .info_area .book_nm a span {
+    display: inline-block;
+    padding: 0 8px;
+    margin-right: 5px;
+    border: 1px solid #a0a0a0;
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: normal
+}
+
+.program .book_search .book_search_list .list_box .info_area ul li {
+    float: left;
+    margin-right: 34px;
+}
+
+.program .book_search .book_search_list .list_box .list_stat {
+    margin-top: 18px;
+    font-size: 0;
+    line-height: 0;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .stat_btn {
+    display: inline-block;
+    padding: 4px 16px 6px;
+    border-radius: 17px;
+    background-color: #7a7a7a;
+    font-size: 15px;
+    line-height: 22px;
+    color: #fff;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .stat_area1 {
+    display: inline-block;
+    float: left;
+    vertical-align: top;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .stat_area2 {
+    display: inline-block;
+    float: right;
+    vertical-align: top;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .loan_able {
+    background-color: #f26522;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .bookable {
+    background-color: #1ca79d;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .delivery {
+    background-color: #33a56b;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .interest_book {
+    background-color: #3f62c4;
+}
+
+.program .book_search .book_search_list .list_box .list_stat .stat_btn.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+@media screen and (max-width: 1240px) {
+    .program .book_search .book_search_check .check_box .check_list {
+        width: 30%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .program .book_search .book_search_tab.tab_menu .tab_wrap > ul > li:nth-child(n + 3) {
+        border-top-width: 1px;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .program .book_search .book_search_check .top_text span {
+        font-size: 17px;
+    }
+
+    .program .book_search .book_search_tab.tab_menu {
+        margin-bottom: 30px;
+    }
+
+    .program .book_search .search_btn {
+        font-size: 15px
+    }
+
+    .program .book_search .best ul {
+        width: calc(100% - 106px);
+    }
+
+    .program .book_search .best li {
+        padding: 0 5px;
+    }
+
+    .program .book_search .book_searchform .text_area {
+        float: none;
+        width: 100%;
+    }
+
+    .program .book_search .book_searchform .text_area:before {
+        left: 70px
+    }
+
+    .program .book_search .book_searchform .text_area select {
+        padding: 0 20px
+    }
+
+    .program .book_search .book_searchform .text_area input[type=search] {
+        width: calc(100% - 183px);
+    }
+
+    .program .book_search .book_searchform .btn_area {
+        float: none;
+        width: 100%;
+        margin-top: 5px;
+        margin-left: 0;
+    }
+
+    .program .book_search .book_search_list .list_top #check_all {
+        width: 100%;
+        margin: 0 0 10px;
+    }
+
+    .program .book_search .book_search_list .list_top .list_btn {
+        width: 50%;
+        margin-top: -1px;
+        margin-right: -1px;
+        box-sizing: border-box
+    }
+
+    .program .book_search .book_search_check .check_box {
+        padding: 19px 20px 23px
+    }
+
+    .program .book_search .book_search_check .check_box .check_list {
+        width: 50%;
+    }
+
+    .program .book_search .book_search_check .check_box .search_btn {
+        right: 20px;
+    }
+
+    .program .book_search .book_search_top_box .top_area2 {
+        float: left;
+        width: 100%;
+        margin-top: 5px
+    }
+
+    .program .book_search .book_search_top_box .top_area2 ul li {
+        width: 50%;
+    }
+
+    .program .book_search .book_search_top_box .top_area2 ul li.text_type {
+        margin-left: 0;
+    }
+
+    .program .book_search .book_search_top_box .top_area2 ul li a {
+        height: 32px;
+    }
+
+    .program .book_search .book_search_top_box .top_area2 ul li a:before {
+        top: 8px;
+    }
+
+    .program .book_search .book_search_top_box .top_area2 ul li.text_type a:before {
+        top: 9px;
+    }
+
+    .program .book_search .select {
+        height: 36px;
+        font-size: 14px;
+        line-height: 26px;
+    }
+
+    .program .book_search .search_btn.select_btn {
+        padding: 2px 24px 2px
+    }
+
+    .program .book_search .book_search_list .list_box input[type=checkbox] {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .program .book_search .book_search_list .list_box .book_img_area {
+        width: 100%;
+        text-align: center;
+    }
+
+    .program .book_search .book_search_list .list_box .info_area {
+        display: block;
+        width: 100%;
+        padding: 0 10px;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .program .book_search .book_search_list .list_box .info_area .book_nm a {
+        font-size: 16px;
+    }
+
+    .program .book_search .book_search_list .list_box .info_area ul li {
+        float: none;
+        display: block;
+        margin-right: 0;
+    }
+
+    .program .book_search .book_search_list .list_box .list_stat .stat_btn {
+        margin-bottom: 5px;
+    }
+
+    .program .book_search .book_search_list .list_box .list_stat .stat_area1 {
+        display: inline-block;
+        float: none;
+    }
+
+    .program .book_search .book_search_list .list_box .list_stat .stat_area2 {
+        display: inline-block;
+        float: none;
+    }
+}
+
+/* 도서검색 - 상세 */
+.program .book_search.view .book_info {
+    position: relative;
+    border: 1px solid #bbb;
+}
+
+.program .book_search.view .book_info .title_box {
+    padding: 11px 14px 10px;
+    border-bottom: 1px solid #bbb;
+    font-size: 17px;
+    line-height: 22px;
+    color: #464646;
+}
+
+.program .book_search.view .book_info .title_box span {
+    display: inline-block;
+    padding: 2px 17px 3px;
+    margin-right: 14px;
+    border-radius: 15px;
+    background-color: #4f5769;
+    font-size: 15px;
+    color: #fff;
+}
+
+.program .book_search.view .book_info .cont_box {
+    padding: 40px 40px 32px;
+}
+
+.program .book_search.view .book_info .cont_box .info_area {
+    display: inline-block;
+    width: calc(100% - 127px);
+    padding-left: 30px;
+    box-sizing: border-box;
+    vertical-align: top
+}
+
+.program .book_search.view .book_info .cont_box .info_area ul {
+    padding: 0;
+}
+
+.program .book_search.view .book_info .cont_box .info_area ul li {
+    margin-bottom: 7px;
+    font-size: 0;
+    line-height: 0;
+}
+
+.program .book_search.view .book_info .cont_box .info_area ul li span {
+    display: inline-block;
+    width: 85%;
+    font-size: 16px;
+    line-height: 20px;
+    vertical-align: top;
+}
+
+.program .book_search.view .book_info .cont_box .info_area ul li .category {
+    width: calc(15% - 10px);
+    padding-right: 10px;
+}
+
+.program .book_search.view .book_info .marc_btn {
+    padding: 0 10px;
+    border: 1px solid #acacac;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.program .book_search.view .book_info .qr_code {
+    display: inline-block;
+    position: absolute;
+    bottom: 35px;
+    right: 37px;
+    font-size: 0;
+    line-height: 0;
+}
+
+.program .book_search.view .book_info .qr_code img {
+    width: 45px;
+    height: 45px;
+}
+
+.program .book_search.view table .btn.small {
+    padding: 3px 10px;
+    font-size: 14px
+}
+
+.program .book_search.view table .btn.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.program .book_search.view .book_search_recommen li {
+    float: left;
+    width: calc(100% / 5);
+    text-align: center;
+    box-sizing: border-box
+}
+
+.program .book_search.view .book_search_recommen .book_img_area img {
+    width: 148px;
+    height: 188px;
+}
+
+.program .book_search.view .book_search_recommen .book_title {
+    overflow: hidden;
+    display: inline-block;
+    height: 38px;
+    padding: 0 10%;
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 19px;
+    word-break: keep-all
+}
+
+@media screen and (max-width: 1240px) {
+    .program .book_search.view .book_search_recommen li {
+        padding: 0 2%;
+    }
+
+    .program .book_search.view .book_search_recommen .book_img_area img {
+        width: auto;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .program .book_search.view .book_info .cont_box .info_area ul li span {
+        width: 75%;
+    }
+
+    .program .book_search.view .book_info .cont_box .info_area ul li .category {
+        width: calc(25% - 10px);
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .program .book_search.view .book_info .cont_box {
+        padding: 20px;
+    }
+
+    .program .book_search.view .book_info .cont_box .book_img_area {
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: center
+    }
+
+    .program .book_search.view .book_info .cont_box .info_area {
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .program .book_search.view .book_info .qr_code {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .program .book_search.view .book_search_recommen {
+        text-align: center;
+        font-size: 0;
+        line-height: 0;
+    }
+
+    .program .book_search.view .book_search_recommen li {
+        float: none;
+        display: inline-block;
+        width: calc(100% / 3);
+        margin-bottom: 20px
+    }
+
+    .program .book_search.view .book_search_recommen .book_title {
+        overflow: hidden;
+        width: 100%;
+        padding: 0;
+        word-break: break-all;
+        white-space: nowrap;
+        text-overflow: ellipsis
+    }
+}
+
+/* 도서관 상세 검색 */
+.book_search.detail_search select {
+    height: 30px;
+    padding: 0 10px 0 12px;
+    border: 1px solid #bbb;
+    color: #555;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+/* 도서관 주제별 자료 */
+.program .book_search.subject .top_box {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.program .book_search.subject .top_box li {
+    float: left;
+    width: calc(100% / 5);
+    border-left: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    box-sizing: border-box;
+}
+
+.program .book_search.subject .top_box li:nth-child(-n + 5) {
+    border-top: 1px solid #bbb
+}
+
+.program .book_search.subject .top_box li:nth-child(5n) {
+    border-right: 1px solid #bbb;
+}
+
+.program .book_search.subject .top_box li a {
+    display: block;
+    position: relative;
+    height: 35px;
+    padding-top: 89px;
+    background-color: #fff;
+    font-size: 16px;
+    line-height: 24px;
+    color: #555;
+    text-align: center;
+}
+
+.program .book_search.subject .top_box li a:hover, .program .book_search.subject .top_box li a:focus {
+    background-color: #f6f6f6;
+    text-decoration: none;
+}
+
+.program .book_search.subject .top_box li a:before {
+    display: inline-block;
+    position: absolute;
+    top: 21px;
+    left: calc(50% - 26px);
+    width: 52px;
+    height: 53px;
+    background: url('/common/images/program/book_search_subject.png') no-repeat 0 0;
+}
+
+.program .book_search.subject .top_box li.icon2 a:before {
+    top: 24px;
+    left: calc(50% - 17px);
+    width: 35px;
+    height: 49px;
+    background-position: -201px 0;
+}
+
+.program .book_search.subject .top_box li.icon3 a:before {
+    top: 25px;
+    width: 53px;
+    height: 53px;
+    background-position: -386px 0;
+}
+
+.program .book_search.subject .top_box li.icon4 a:before {
+    top: 23px;
+    left: calc(50% - 24px);
+    width: 48px;
+    height: 48px;
+    background-position: -579px 0;
+}
+
+.program .book_search.subject .top_box li.icon5 a:before {
+    top: 25px;
+    left: calc(50% - 21px);
+    width: 42px;
+    height: 47px;
+    background-position: -766px 0;
+}
+
+.program .book_search.subject .top_box li.icon6 a:before {
+    top: 31px;
+    width: 53px;
+    height: 45px;
+    background-position: 0 -135px;
+}
+
+.program .book_search.subject .top_box li.icon7 a:before {
+    top: 28px;
+    left: calc(50% - 28px);
+    width: 57px;
+    height: 43px;
+    background-position: -194px -132px;
+}
+
+.program .book_search.subject .top_box li.icon8 a:before {
+    top: 34px;
+    width: 53px;
+    height: 36px;
+    background-position: -382px -138px;
+}
+
+.program .book_search.subject .top_box li.icon9 a:before {
+    top: 23px;
+    left: calc(50% - 23px);
+    width: 46px;
+    height: 47px;
+    background-position: -581px -127px;
+}
+
+.program .book_search.subject .top_box li.icon10 a:before {
+    top: 28px;
+    left: calc(50% - 25px);
+    width: 49px;
+    height: 42px;
+    background-position: -760px -132px;
+}
+
+.program .book_search.subject .cont_box {
+    margin-top: 46px;
+    font-size: 0;
+    line-height: 0;
+}
+
+.program .book_search.subject .cont_box .cont_area {
+    display: inline-block;
+    width: calc(100% / 4 - 17px);
+    margin-right: 23px;
+    margin-bottom: 20px;
+    vertical-align: top;
+}
+
+.program .book_search.subject .cont_box .cont_area:nth-child(4n) {
+    margin-right: 0;
+}
+
+.program .book_search.subject .cont_box .cont_area h4 {
+    display: block;
+    padding: 13px 0;
+    border: 1px solid #cecece;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center
+}
+
+.program .book_search.subject .cont_box .cont_area ul {
+    margin-top: 17px;
+}
+
+.program .book_search.subject .cont_box .cont_area ul li {
+    margin-bottom: 5px;
+}
+
+.program .book_search.subject .cont_box .cont_area ul li a {
+    font-size: 16px;
+    line-height: 20px;
+    color: #555;
+}
+
+@media screen and (max-width: 640px) {
+    .program .book_search.subject .top_box li a {
+        font-size: 15px;
+    }
+
+    .program .book_search.subject .cont_box {
+        margin-top: 26px;
+    }
+
+    .program .book_search.subject .cont_box .cont_area {
+        width: calc(100% / 2 - 6px);
+        margin-right: 12px;
+    }
+
+    .program .book_search.subject .cont_box .cont_area h4 {
+        font-size: 15px;
+    }
+
+    .program .book_search.subject .cont_box .cont_area:nth-child(2n) {
+        margin-right: 0;
+    }
+
+    .program .book_search.subject .cont_box .cont_area ul li a {
+        font-size: 15px;
+    }
+}
+
+/* 도서관 자료검색 상단 분류박스 */
+.book_search .book_class_box {
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.book_search .book_class_box .select_area {
+    float: left;
+    width: calc(100% - 120px)
+}
+
+.book_search .book_class_box.divide4 .select_area select {
+    width: calc(100% / 4 - 3px)
+}
+
+.book_search .book_class_box.divide3 .select_area select {
+    width: calc(100% / 3 - 3px)
+}
+
+.book_search .book_class_box input[type=submit] {
+    float: left;
+    width: 115px;
+    margin-left: 5px;
+}
+
+@media screen and (max-width: 640px) {
+    .book_search .book_class_box .select_area {
+        float: none;
+        width: 100%;
+    }
+
+    .book_search .book_class_box.divide4 .select_area select, .book_search .book_class_box.divide3 .select_area select {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .book_search .book_class_box input[type=submit] {
+        float: none;
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* 희망도서신청내역 및 신청 - 비치희망 신청 */
+.wishbook_app {
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: calc(50% - 400px);
+    width: 800px;
+    padding: 30px;
+    border: 1px solid #ccc;
+    z-index: 1300 !important;
+    background-color: #fff;
+    box-sizing: border-box
+}
+
+@media screen and (max-width: 1000px) {
+    .wishbook_app {
+        overflow-y: scroll;
+        left: 5%;
+        width: 90%;
+        height: 500px;
+    }
+}
+
+/* (주)한신정보기술 박윤정 2019-09-27 */
+/* 추천도서 */
+.program .book_search.recommendation .book_search_list .list_box .list_stat .stat_btn {
+    margin-right: 8px;
+}
+
+.program .book_search.recommendation .book_search_list .list_box .list_stat .stat_division {
+    display: inline-block;
+    font-size: 15px;
+    line-height: 17px;
+}
+
+.program .book_search.recommendation .book_search_list .list_box .list_stat .stat_division_slash {
+    display: inline-block;
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+@media screen and (max-width: 1240px) {
+    .program .book_search.recommendation .book_search_list .list_box .list_stat .stat_area1 {
+        position: relative;
+        margin-bottom: 10px;
+        padding-left: 100px;
+    }
+
+    .program .book_search.recommendation .book_search_list .list_box .list_stat .stat_area1 .stat_btn {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .program .book_search.recommendation .book_search_list .list_box .list_stat .stat_division_slash {
+        display: block;
+        font-size: 0;
+        line-height: 5px;
+    }
+}

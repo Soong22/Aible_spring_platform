@@ -1,0 +1,52 @@
+/* 네비게이션 스타일 */
+.nav-container {
+    position: fixed;
+    top: 50%;
+    left: 20px;  /* 왼쪽 고정 */
+    transform: translateY(-50%);
+    padding: 15px 20px;
+    z-index: 1000;
+}
+
+/* 메뉴 스타일 */
+.nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 리스트 아이템 스타일 */
+.nav-menu li {
+    margin: 10px 0;
+}
+
+/* 링크 스타일 - 박스 크기 통일 */
+.nav-link {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex; /* 플렉스 박스 적용 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 텍스트 가운데 정렬 */
+    padding: 12px 20px;
+    border-radius: 20px; /* 둥근 모서리 */
+    background-color: #f2f2f2; /* 배경색 */
+    width: 180px; /* 동일한 크기로 설정 */
+    height: 45px; /* 동일한 높이 설정 */
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* 마우스 호버 효과 */
+.nav-link:hover {
+    background-color: #e0e0e0; /* 호버 시 배경색 변경 */
+    text-decoration: none;
+    transform: scale(1.05);
+}
+
+/* 활성화된 링크 스타일 */
+.nav-link.active {
+    background-color: #d9d9d9;
+    text-decoration: none;
+}
