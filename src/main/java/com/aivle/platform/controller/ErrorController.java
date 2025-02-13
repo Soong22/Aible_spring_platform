@@ -18,25 +18,25 @@ public class ErrorController {
     @Value("${app.show-stacktrace:false}")
     private boolean showStackTrace;
 
-    @GetMapping("")
-    public String errorForm(Model model, HttpServletRequest request) {
-        // 🚀 에러 정보를 가져오기
-        Integer status = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
-        Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
-        String path = (String) request.getAttribute("javax.servlet.error.request_uri");
-
-        model.addAttribute("status", status != null ? status : 500); // 기본값 500
-        model.addAttribute("error", "서버 오류");
-        model.addAttribute("message", errorMessage != null ? errorMessage : "예기치 못한 오류가 발생했습니다.");
-        model.addAttribute("path", path);
-
-        if (showStackTrace && (exception != null)) {
-            model.addAttribute("trace", getStackTraceAsString(exception)); // 스택 트레이스 추가
-        }
-
-        return "error/error"; // Thymeleaf 템플릿 반환
-    }
+//    @GetMapping("")
+//    public String errorForm(Model model, HttpServletRequest request) {
+//        // 🚀 에러 정보를 가져오기
+//        Integer status = (Integer) request.getAttribute("javax.servlet.error.status_code");
+//        String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
+//        Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+//        String path = (String) request.getAttribute("javax.servlet.error.request_uri");
+//
+//        model.addAttribute("status", status != null ? status : 500); // 기본값 500
+//        model.addAttribute("error", "서버 오류");
+//        model.addAttribute("message", errorMessage != null ? errorMessage : "예기치 못한 오류가 발생했습니다.");
+//        model.addAttribute("path", path);
+//
+//        if (showStackTrace && (exception != null)) {
+//            model.addAttribute("trace", getStackTraceAsString(exception)); // 스택 트레이스 추가
+//        }
+//
+//        return "error/error"; // Thymeleaf 템플릿 반환
+//    }
 
     @GetMapping("/403")
     public String error403Form(Model model, HttpServletRequest request) {

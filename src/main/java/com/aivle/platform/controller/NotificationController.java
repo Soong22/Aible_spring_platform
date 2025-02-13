@@ -132,23 +132,24 @@ public class NotificationController {
         return "notification/notifications";
     }
 
-    @GetMapping("/notifications/back")
-    public String notificationsBack(HttpServletRequest request) {
-        String previousUrl = (String) request.getSession().getAttribute("previousUrl");
-        if (previousUrl != null) {
-            return "redirect:" + previousUrl;
-        } else {
-            return "redirect:/"; // 이전 URL이 없을 경우 메인 페이지로 이동
-        }
-    }
+//    @GetMapping("/notifications/back")
+//    public String notificationsBack(HttpServletRequest request) {
+//        String previousUrl = (String) request.getSession().getAttribute("previousUrl");
+//        if (previousUrl != null) {
+//            return "redirect:" + previousUrl;
+//        } else {
+//            return "redirect:/"; // 이전 URL이 없을 경우 메인 페이지로 이동
+//        }
+//    }
 
     @GetMapping("/notification/{notificationId}")
     public String getNotification(@PathVariable("notificationId") Long notificationId, Model model,
                                   Authentication authentication, RedirectAttributes redirectAttributes,
                                   HttpServletRequest request) {
         try {
-            String previousUrl = request.getHeader("Referer").split("\\?")[0];
-            request.getSession().setAttribute("previousUrl", previousUrl); // query parameter가 제거된 URL 저장
+//            String referer = request.getHeader("Referer");
+//            String previousUrl = (referer != null) ? referer.split("\\?")[0] : "/notifications";
+//            request.getSession().setAttribute("previousUrl", previousUrl);
 
             MemberService.addMemberInfoToModel(model, authentication);
 

@@ -37,7 +37,7 @@ public class SecurityConfig {
 
         // API 경로에 대해 CSRF 보호 비활성화
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/api/**")
+                .ignoringRequestMatchers("/api/**", "/board/**", "/comment/**", "/notification/**")
         );
 
         // 헤더 설정
