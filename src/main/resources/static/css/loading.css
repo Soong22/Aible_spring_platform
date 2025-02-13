@@ -1,0 +1,62 @@
+/* 🔥 로딩 화면 스타일 - 전체 화면 덮기 */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    z-index: 99999;
+    transition: opacity 1s ease-out;
+    text-align: center;
+    opacity: 1;
+}
+
+/* 컨텐츠 기본적으로 숨김 */
+.container {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+/* 텍스트 중앙 정렬 */
+.loading-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* 진행 바 스타일 */
+.progress-bar {
+    width: 50%;
+    height: 3px;
+    background-color: white;
+    margin-top: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress {
+    width: 0;
+    height: 100%;
+    background-color:  red;
+    animation: loading 2s linear forwards;
+}
+
+.loading-text p {
+    color: white; /* 노란색 */
+    font-size: 18px; /* 글자 크기 조정 가능 */
+}
+
+@keyframes loading {
+    0% { width: 0; }
+    100% { width: 100%; }
+}

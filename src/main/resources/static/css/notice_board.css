@@ -1,37 +1,27 @@
-html, body {
+body {
     font-family: 'Arial', sans-serif;
-    background: #ffffff; /* 바탕 흰색 */
     line-height: 1.8;
-    height: 100%;
     margin: 0;
     padding: 0;
+    background: #ffffff; /* 바탕 흰색 */
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 전체 높이를 채움 */
 }
 
-.container {
-    flex: 1; /* 부모 Flexbox에서 남은 공간 채우기 */
-    display: flex;
-    flex-direction: column;
-    min-height: 100%; /* 최소 높이 100%로 설정 */
-    overflow: visible;
-}
-
-.main-content {
-    flex: 1; /* 콘텐츠가 부족한 경우 남은 공간을 채움 */
+.notice-board {
     max-width: 2000px; /* 박스 가로 크기 */
-    width: 90%; /* 화면 크기에 따라 유동적 */
+    width: 95%; /* 화면 크기에 따라 유동적 */
     margin: 20px auto;
-    padding: 40px;
-    margin-top: 80px;
-    margin-left: 90px;
+    padding: 40px; /* 내부 여백 확대 */
     background: #f8f9fa; /* 밝은 회색 배경 */
     border: 3px solid #003366; /* 짙은 파란색 테두리 */
     border-radius: 12px; /* 둥근 모서리 */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* 그림자 */
 }
 
-h1 {
+.notice-board h1 {
     margin-bottom: 20px;
     color: #003366; /* 짙은 파란색 */
     text-align: center;
@@ -79,7 +69,7 @@ h1 {
     background: #001f4d; /* 더 짙은 파란색 */
 }
 
-table {
+.notice-board table {
     width: 100%;
     border-collapse: separate; /* 테두리 중첩 방지 */
     border-spacing: 0; /* 셀 간격 제거 */
@@ -87,7 +77,7 @@ table {
     border: 3px solid #003366; /* 테두리 */
 }
 
-table th, table td {
+.notice-board table th, table td {
     padding: 20px; /* 셀 크기 */
     text-align: center;
     border: 2px solid #003366; /* 셀 테두리 */
@@ -95,13 +85,13 @@ table th, table td {
     word-break: break-word; /* 긴 텍스트 줄바꿈 */
 }
 
-table th {
+.notice-board table th {
     background: #003366;
     color: #fff;
     text-transform: uppercase;
 }
 
-table td {
+.notice-board table td {
     background: #ffffff; /* 흰색 배경 */
     color: #003366;
 }

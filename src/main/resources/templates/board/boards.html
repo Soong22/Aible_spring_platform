@@ -2,167 +2,246 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
+    maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
     <title>게시판 목록</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <!-- CSS 파일 참조 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
+    <!-- css -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
+
+    <!-- js -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
+    <script src="/js/myLogin.js"></script>
 
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-        }
-
-        :root {
-            --table-header-bg: #003366; /* 기본 헤더 색상 (파란색) */
-            --table-header-text: white;
-        }
-
         /* 컨테이너 스타일 (유저 전체 조회와 동일) */
-        .table-container {
-            margin-top: 100px;
-            background-color: white;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            padding: 20px 40px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
+        .team24-boards-table-container {
+            background-color: white !important;
+            border: 1px solid #e9ecef !important;
+            border-radius: 12px !important;
+            padding: 20px 40px !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+            max-width: 1000px !important;
+            margin: 50px auto 50px auto !important;
 
         }
 
-        .table-container h1 {
-            text-align: left;
-            color: #003366;
-            margin-bottom: 20px;
+        .team24-boards-table-container h1 {
+            text-align: left !important;
+            color: #000820 !important;
+            margin-bottom: 20px !important;
+            font-size: 30pt;
+        }
+
+        .team24-boards-table-container h2 {
+            text-align: center;
+            font-size: 20pt;
         }
 
         /* 게시글 항목 */
-        .board-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #dee2e6;
-            cursor: pointer;
-            position: relative;
+        .team24-board-item {
+            display: flex !important;
+            align-items: center !important;
+            padding: 15px !important;
+            border-bottom: 1px solid #dee2e6 !important;
+            cursor: pointer !important;
+            position: relative !important;
         }
 
         /* 이미지 박스 */
-        .board-image-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin-right: 15px;
+        .team24-board-image-container {
+            position: relative !important;
+            width: 100px !important;
+            height: 100px !important;
+            margin-right: 15px !important;
         }
 
         /* 게시글 대표 이미지 */
-        .board-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-            background-color: #f8f9fa;
+        .team24-board-image {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 8px !important;
+            background-color: #f8f9fa !important;
         }
 
         /* 이미지 개수 표시 */
         .image-count {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            font-size: 15px;
-            font-weight: bold;
-            padding: 3px 9px;
-            border-radius: 4px;
+            position: absolute !important;
+            bottom: 0 !important;
+            right: 0 !important;
+            background-color: rgba(0, 0, 0, 0.6) !important;
+            color: white !important;
+            font-size: 15px !important;
+            font-weight: bold !important;
+            padding: 3px 9px !important;
+            border-radius: 4px !important;
         }
 
         /* 게시글 내용 */
-        .board-content {
-            flex-grow: 1;
+        .team24-board-content {
+            flex-grow: 1 !important;
         }
 
-        .board-title {
-            font-size: 1rem;
-            font-weight: bold;
+        .team24-board-title {
+            font-size: 1rem !important;
+            font-weight: bold !important;
         }
 
-        .board-comments {
-            color: #007bff;
-            font-size: 0.9rem;
+        .team24-board-comments {
+            color: #007bff !important;
+            font-size: 0.9rem !important;
         }
 
-        .board-meta {
-            font-size: 0.85rem;
-            color: #666;
+        .team24-board-meta {
+            font-size: 0.85rem !important;
+            color: #666 !important;
         }
 
-        .board-status {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #28a745;
+        .team24-board-status {
+            font-size: 0.85rem !important;
+            font-weight: bold !important;
+            color: #28a745 !important;
         }
 
-        /* 버튼 스타일 */
-        .pagination .page-link {
-            color: #003366;
-            margin-top: 15px;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #003366;
-            border-color: #003366;
-            color: white;
-        }
-
-        /* 페이지 버튼 호버 시 색상 변경 */
-        .pagination .page-link:hover {
-            background-color: #0073e6; /* 조금 더 밝은 파란색 */
-            border-color: #0073e6;
-            color: white;
-        }
-
-
-        .pagination-container {
-            position: relative;
+        /* 페이지네이션 컨테이너 */
+        .team24-pagination-container {
             display: flex;
-            justify-content: center; /* 페이지네이션을 중앙에 둠 */
+            justify-content: center;
             align-items: center;
+            width: 100%;
             margin-top: 20px;
+            position: relative;
         }
 
-        /* 작성하기 버튼을 왼쪽 끝에 고정 */
-        .btn-create {
+        /* 작성하기 버튼 */
+        .team24-button {
             position: absolute;
             left: 0;
-            background-color: #003366;
-            color: white;
+            background-color: #000820;
+            color: white !important;
             font-weight: bold;
-            padding: 8px 15px;
+            padding: 10px 16px;
             border-radius: 5px;
             text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
         }
 
-        .btn-create:hover {
-            background-color: #0073e6;
+        .team24-button:hover {
+            background-color: #444f6e;
             color: white;
+        }
+
+        /* 페이지네이션 */
+        .team24-pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 개별 페이지 버튼 */
+        .team24-page-item {
+            margin: 0 3px;
+        }
+
+        .team24-page-link {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #000820;
+            font-weight: bold;
+            border: 1px solid #000820;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .team24-page-link:hover {
+            background-color: #444f6e;
+            color: white;
+        }
+
+        /* 현재 페이지(active) */
+        .team24-page-item.active .team24-page-link {
+            background-color: #000820;
+            color: white;
+            border-color: #000820;
+        }
+
+        /* 비활성화된 버튼 (이전/다음) */
+        .team24-page-item.disabled .team24-page-link,
+        .team24-page-link.disabled {
+            color: #999;
+            border-color: #ddd;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        #footer {
+            visibility: hidden; /* 초기 로딩 시 숨김 */
+        }
+
+        .team24-footer-padding {
+            height: auto;
+            visibility: hidden; /* 처음엔 숨김 */
+        }
+
+        .team24-padding {
+            height: 20px;
         }
 
     </style>
 
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+    <script>
+        function setFooterPadding() {
+            const windowHeight = window.innerHeight; // 전체 화면 높이
+            const mainContent = document.querySelector('.team24-boards-table-container'); // 메인 콘텐츠
+            const footerPadding = document.querySelector('.team24-footer-padding'); // 푸터 패딩
+            const footer = document.querySelector('#footer'); // 푸터
+
+            if (mainContent && footerPadding && footer) {
+                const contentHeight = mainContent.offsetHeight; // 본문 높이
+                const footerHeight = footer.offsetHeight; // 푸터 높이
+
+                // 남은 공간 계산 (최소 0 이상)
+                let remainingSpace = windowHeight - (contentHeight + footerHeight);
+                remainingSpace = remainingSpace > 0 ? remainingSpace : 0;
+
+                // 높이 즉시 설정 (사용자가 움직이는 걸 인식 못 하도록)
+                footerPadding.style.height = `${remainingSpace}px`;
+
+                // 푸터와 패딩을 즉시 보이게 변경
+                footerPadding.style.visibility = "visible";
+                footer.style.visibility = "visible";
+            }
+        }
+
+        // 페이지가 완전히 로드되기 전에 실행 (즉시 반영)
+        document.addEventListener('DOMContentLoaded', setFooterPadding);
+
+
+    </script>
 
     <script th:inline="javascript" th:if="${errorMessage != null}">
         /*<![CDATA[*/
@@ -207,30 +286,84 @@
         }
     </script>
 
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+
+        .team24-footer-padding {
+            background-color: #f8f9fa;
+        }
+    </style>
+
 </head>
 <body>
-
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
-<!-- 메인 콘텐츠 -->
-<div class="team24-container">
-    <!-- 게시판 컨테이너 -->
-    <div class="table-container">
-        <h1>게시판 목록</h1>
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title"> 게시판 작성 </h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h1 class="main-title">게시판</h1>
+    <!--    <h1 class="main-title">범죄와의 전쟁</h1>-->
+</header>
+
+<!-- 게시판 컨테이너 -->
+<div id="wrapper">
+    <div class="team24-boards-table-container">
+<!--        <h1>게시판 목록</h1>-->
+
+        <div th:if="${#lists.isEmpty(boards.content)}" class="team24-no-content">
+            <h2>게시글이 없습니다</h2>
+        </div>
 
         <!-- 게시판 목록 -->
-        <div th:each="board : ${boards.content}" class="board-item" th:onclick="|goToBoardPage(${board.boardId})|">
+        <div th:each="board : ${boards.content}" class="team24-board-item"
+             th:onclick="|goToBoardPage(${board.boardId})|">
 
             <!-- 대표 이미지 -->
-            <div class="board-image-container">
+            <div class="team24-board-image-container">
                 <img th:if="${board.imageUrls.size() > 0}" th:src="${board.imageUrls[0]}" alt="대표 이미지"
-                     class="board-image">
+                     class="team24-board-image">
                 <img th:if="${board.imageUrls.size() == 0}" th:src="@{/images/noImage.png}" alt="기본 이미지"
-                     class="board-image">
+                     class="team24-board-image">
 
                 <!-- 이미지 개수 표시 -->
                 <div th:if="${board.imageUrls.size() > 1}" class="image-count"
@@ -238,15 +371,15 @@
             </div>
 
             <!-- 게시글 정보 -->
-            <div class="board-content">
-                <div class="board-title">
+            <div class="team24-board-content">
+                <div class="team24-board-title">
                     <span th:text="${board.title.length() > 20 ? board.title.substring(0, 20) + '...' : board.title}"></span>
-                    <span class="board-comments" th:text="'[' + ${board.comments.size()} + ']'"></span>
+                    <span class="team24-board-comments" th:text="'[' + ${board.comments.size()} + ']'"></span>
                 </div>
 
-                <div class="board-status" th:text="${board.status}"></div>
+                <div class="team24-board-status" th:text="${board.status}"></div>
 
-                <div class="board-meta">
+                <div class="team24-board-meta">
                     <span class="relative-time" th:attr="data-created-at=${board.createdAt}"></span> ·
                     <span th:if="${board.policeUnitName == '탈퇴자' or board.policeUnitType == '탈퇴자'}">탈퇴자</span>
                     <span th:unless="${board.policeUnitName == '탈퇴자' or board.policeUnitType == '탈퇴자'}"
@@ -260,32 +393,76 @@
         </div>
 
         <!-- 페이징 & 작성하기 버튼 컨테이너 -->
-        <div class="pagination-container">
+        <div class="team24-pagination-container">
             <!-- 작성하기 버튼 -->
-            <a href="/board/register" class="btn btn-create">작성하기</a>
+            <div class="team24-padding"></div>
+<!--            <a href="/board/register" class="team24-button">작성하기</a>-->
+            <div class="team24-padding"></div>
 
-            <!-- 기존 페이지네이션 -->
+            <!-- 페이지네이션 -->
             <nav th:if="${boards.totalPages > 1}">
-                <ul class="pagination">
-                    <li class="page-item" th:classappend="${boards.hasPrevious() ? '' : 'disabled'}">
-                        <a class="page-link" th:href="@{/boards(page=${boards.number - 1})}" aria-label="이전">
-                            <span aria-hidden="true">&laquo;</span>
+                <ul class="team24-pagination">
+
+                    <!-- 처음(<<) 버튼 -->
+                    <li class="team24-page-item" th:classappend="${boards.number == 0 ? 'disabled' : ''}">
+                        <a th:if="${boards.number > 0}" class="team24-page-link" th:href="@{/boards(page=0)}"
+                           aria-label="처음">
+                            &laquo;
                         </a>
+                        <span th:unless="${boards.number > 0}" class="team24-page-link disabled"
+                              aria-label="처음">&laquo;</span>
                     </li>
-                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, boards.totalPages - 1)}"
+
+                    <!-- 이전(<) 버튼 -->
+                    <li class="team24-page-item" th:classappend="${boards.number > 0 ? '' : 'disabled'}">
+                        <a th:if="${boards.number > 0}" class="team24-page-link"
+                           th:href="@{/boards(page=${boards.number - 1})}"
+                           aria-label="이전">
+                            &lt;
+                        </a>
+                        <span th:unless="${boards.number > 0}" class="team24-page-link disabled"
+                              aria-label="이전">&lt;</span>
+                    </li>
+
+                    <!-- 숫자 버튼 (3개씩 표시하되, 총 페이지가 3 미만이면 조절) -->
+                    <li class="team24-page-item"
+                        th:each="pageNum : ${#numbers.sequence(
+                    0,
+                    (boards.totalPages < 3 ? boards.totalPages - 1 :
+                    (boards.number == 0 ? 2 :
+                    (boards.number == boards.totalPages - 1 ? boards.totalPages - 1 : boards.number + 1)))
+                )}"
                         th:classappend="${pageNum == boards.number ? 'active' : ''}">
-                        <a class="page-link" th:href="@{/boards(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                        <a class="team24-page-link" th:href="@{/boards(page=${pageNum})}" th:text="${pageNum + 1}"></a>
                     </li>
-                    <li class="page-item" th:classappend="${boards.hasNext() ? '' : 'disabled'}">
-                        <a class="page-link" th:href="@{/boards(page=${boards.number + 1})}" aria-label="다음">
-                            <span aria-hidden="true">&raquo;</span>
+
+                    <!-- 다음(>) 버튼 -->
+                    <li class="team24-page-item"
+                        th:classappend="${boards.number < boards.totalPages - 1 ? '' : 'disabled'}">
+                        <a th:if="${boards.number < boards.totalPages - 1}" class="team24-page-link"
+                           th:href="@{/boards(page=${boards.number + 1})}"
+                           aria-label="다음">
+                            &gt;
                         </a>
+                        <span th:unless="${boards.number < boards.totalPages - 1}" class="team24-page-link disabled"
+                              aria-label="다음">&gt;</span>
                     </li>
+
+                    <!-- 마지막(>>) 버튼 -->
+                    <li class="team24-page-item"
+                        th:classappend="${boards.number == boards.totalPages - 1 ? 'disabled' : ''}">
+                        <a th:if="${boards.number < boards.totalPages - 1}" class="team24-page-link"
+                           th:href="@{/boards(page=${boards.totalPages - 1})}"
+                           aria-label="마지막">
+                            &raquo;
+                        </a>
+                        <span th:unless="${boards.number < boards.totalPages - 1}" class="team24-page-link disabled"
+                              aria-label="마지막">&raquo;</span>
+                    </li>
+
                 </ul>
             </nav>
         </div>
-
-
 
     </div>
 </div>
@@ -293,12 +470,9 @@
 <!-- 푸터 아래 추가 여백 -->
 <div class="team24-footer-padding"></div>
 
-<!-- 푸터 -->
-<div th:replace="~{fragments/footer :: footer}"></div>
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
 
-<!-- JavaScript -->
-<script src="/js/fragments/sidebar.js"></script>
-<script src="/js/fragments/scrollbar.js"></script>
 
 </body>
 </html>

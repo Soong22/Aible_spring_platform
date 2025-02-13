@@ -9,41 +9,93 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- CSS 파일 참조 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
-
     <link rel="stylesheet" th:href="@{/css/google_map.css}">
+    <!-- Google Maps API -->
+    <link rel="stylesheet" type="text/css" href="/css/font.css" />
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe8yGUEAzf3rrlE2PJ8zs68mYkwNLmlyE"></script>
+    <link rel="stylesheet" type="text/css" href="/css/google_map.css" />
+    <script src="/js/police_google_map.js" defer></script>
+    <!--[if lt IE 9]><script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/myLogin.js"></script>
 
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe8yGUEAzf3rrlE2PJ8zs68mYkwNLmlyE"></script>
+
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+
+        .team24-footer-padding {
+            background-color: #f8f9fa;
+        }
+    </style>
+
 </head>
 
 <body>
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
 <!-- 지도 콘텐츠 -->
 <div class="team24-container">
     <div class="main-content">
-        <h1>광주광역시 CCTV 지도</h1>
+        <h1></h1>
 
         <!-- 구 선택 -->
         <div class="select-container">
             <label for="region-select">구 선택:</label>
             <select id="region-select" onchange="loadCCTVData()">
-                <option value="광산구">광산구</option>
-                <option value="남구">남구</option>
-                <option value="서구">서구</option>
-                <option value="북구">북구</option>
-                <option value="동구">동구</option>
+                <option value="1">광산구</option>
+                <option value="2">남구</option>
+                <option value="3">서구</option>
+                <option value="4">북구</option>
+                <option value="5">동구</option>
             </select>
         </div>
 
@@ -59,9 +111,9 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <!-- JavaScript 추가 -->
-<script th:src="@{/js/google_map.js}" defer></script>
-<script src="/js/fragments/sidebar.js"></script>
-<script src="/js/fragments/scrollbar.js"></script>
+<script th:src="@{/js/tmp/google_map.js}" defer></script>
+<script src="/js/tmp/fragments/sidebar.js"></script>
+<script src="/js/tmp/fragments/scrollbar.js"></script>
 </body>
 
 </html>

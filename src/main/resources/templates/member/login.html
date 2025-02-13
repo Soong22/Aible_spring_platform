@@ -2,40 +2,64 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
+    maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
     <title>로그인</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- CSS 파일 참조 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
     <link rel="stylesheet" th:href="@{/css/member/login.css}">
-    <link rel="stylesheet" th:href="@{/css/fragments/scrollbar.css}">
-    <style>
-        html, body {
-            height: 100%; /* 페이지 전체를 스크롤 가능하게 설정 */
-            margin: 0;
-            overflow-y: auto; /* 세로 스크롤 허용 */
-            background-color: #f8f9fa;
-        }
-    </style>
 
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+
+    <!-- css -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
+
+    <!-- js -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
+    <script src="/js/myLogin.js"></script>
+
+        <style>
+            html, body {
+                margin: 0;
+                overflow-y: hidden; /* 세로 스크롤 허용 */
+                background-color: #f8f9fa;
+            }
+
+            #footer{
+                position: fixed; !important;
+                bottom: 0 !important;
+            }
+        </style>
+
 </head>
 <body>
-
-<!-- 사이드바 -->
-<div th:replace="~{fragments/sidebar :: sidebar}" id="sidebar"></div>
 
 <!-- 헤더 -->
 <div th:replace="~{fragments/header :: header}" class="header"></div>
 
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
 <!-- 메인 콘텐츠 -->
-<div class="team24-container">
+<div id="wrapper">
     <div class="team24-login-container">
 
         <!-- 로그인 폼 -->
@@ -64,21 +88,18 @@
             <!-- 추가 링크 -->
             <div class="team24-login-additional-links">
                 <a href="/member/register">회원가입</a>
-                <a href="/member/register">비밀번호 찾기</a>
+                <span>
+                    <a href="/member/find-email">이메일 찾기</a>/
+                    <a href="/member/find-pwd">비밀번호 찾기</a>
+                </span>
             </div>
         </form>
     </div>
 </div>
 
-<!-- 푸터 아래 추가 여백 -->
-<div class="team24-footer-padding"></div>
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
 
-<!-- 푸터 -->
-<div th:replace="~{fragments/footer :: footer}"></div>
-
-<!-- JavaScript -->
-<script src="/js/fragments/sidebar.js"></script>
-<script src="/js/fragments/scrollbar.js"></script>
 <script>
     async function checkStatusAndSubmit(event) {
         event.preventDefault(); // 기본 폼 제출 방지

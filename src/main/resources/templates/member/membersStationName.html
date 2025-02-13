@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,
+    maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"/>
+    <title>전체 유저 조회</title>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- css -->
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/css/font_ie8.css"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/top_button.css"/>
+
+    <!-- js -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/top_button.js"></script>
+    <script src="/js/myLogin.js"></script>
+
+    <style>
+        /*html, body {*/
+        /*    height: 100%; !* 페이지 전체를 스크롤 가능하게 설정 *!*/
+        /*    margin: 0;*/
+        /*    overflow-y: auto; !* 세로 스크롤 허용 *!*/
+        /*    background-color: #f8f9fa;*/
+        /*}*/
+
+        :root {
+            --table-header-bg: #444f6e !important; /* 기본 헤더 색상 (파란색) */
+            --table-header-text: white !important;
+        }
+
+        .table-container {
+            margin-top: 50px !important;
+            background-color: white !important;
+            border: 1px solid #e9ecef !important;
+
+            border-radius: 12px !important;
+            padding: 20px 40px 20px 40px !important; /* 폼과 테이블 간격 증가 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+
+            overflow-x: auto !important; /* ✅ 가로 스크롤 추가 */
+            -webkit-overflow-scrolling: touch !important; /* ✅ 모바일에서 부드러운 스크롤 */
+            max-width: 100% !important; /* ✅ 부모 요소를 벗어나지 않도록 설정 */
+
+            margin-bottom: 50px;
+        }
+
+        .table-container h1 {
+            text-align: left !important;
+            color: #000820 !important;
+            margin-bottom: 20px !important;
+            font-size: 30pt;
+        }
+
+        /* 테이블 스타일 */
+        .table {
+            /*table-layout: fixed;*/
+            min-width: 900px !important; /* ✅ 테이블이 너무 작아지지 않도록 최소 너비 설정 */
+            table-layout: auto !important; /* ✅ 셀 크기 자동 조정 */
+            white-space: nowrap !important; /* ✅ 텍스트 줄바꿈 방지 */
+
+            border: 1px solid #ddd !important; /* 컬럼 구분선 */
+
+            width: 100% !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            border-radius: 12px !important; /* 테이블도 둥글게 */
+            overflow: hidden !important;
+        }
+
+        /* 헤더 스타일 */
+        .table thead th {
+            background-color: var(--table-header-bg) !important;
+            color: var(--table-header-text) !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            padding: 12px !important;
+            border-right: 1px solid #ddd !important; /* 컬럼 구분선 */
+        }
+
+        .table thead th:last-child {
+            border-right: none !important; /* 마지막 컬럼에는 테두리 제거 */
+        }
+
+        /* 첫 번째 컬럼(#, 행번호) 스타일 */
+        .table tbody th:first-child {
+            background-color: white !important;
+            color: black !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            border-right: 1px solid #ddd !important; /* 컬럼 구분선 */
+        }
+
+        /* 일반 행 스타일 */
+        .table tbody td {
+            text-align: center !important;
+            vertical-align: middle !important;
+            padding: 16px !important;
+            border-right: 1px solid #ddd !important; /* 컬럼 구분선 */
+        }
+
+        .table tbody td:last-child {
+            border-right: none !important; /* 마지막 컬럼에는 테두리 제거 */
+        }
+
+        /* 클릭 가능한 행 스타일 */
+        .clickable-row:hover {
+            background-color: #f1f1f1 !important;
+            cursor: pointer !important;
+        }
+
+        /* 컬럼별 너비 설정 */
+        .table th:nth-child(1), .table td:nth-child(1) {
+            width: 5% !important;
+        }
+
+        .table th:nth-child(2), .table td:nth-child(2) {
+            width: 15% !important;
+        }
+
+        .table th:nth-child(3), .table td:nth-child(3) {
+            width: 20% !important;
+        }
+
+        .table th:nth-child(4), .table td:nth-child(4) {
+            width: 10% !important;
+        }
+
+        .table th:nth-child(5), .table td:nth-child(5) {
+            width: 15% !important;
+        }
+
+        .table th:nth-child(6), .table td:nth-child(6) {
+            width: 15% !important;
+        }
+
+        .table th:nth-child(7), .table td:nth-child(7) {
+            width: 15% !important;
+        }
+
+        .table th:nth-child(8), .table td:nth-child(8) {
+            width: 20% !important;
+        }
+
+        /*!* 현재 선택된 페이지 버튼 색상 변경 *!*/
+        /*.pagination .page-item.active .page-link {*/
+        /*    background-color: #003366 !important;*/
+        /*    border-color: #003366 !important;*/
+        /*    color: white !important;*/
+        /*}*/
+
+        /*!* 기본 페이지 버튼 색상 유지 (필요한 경우 추가) *!*/
+        /*.pagination .page-link {*/
+        /*    color: #003366 !important;*/
+        /*}*/
+
+        /*!* 페이지 버튼 호버 시 색상 변경 *!*/
+        /*.pagination .page-link:hover {*/
+        /*    background-color: #0073e6; !* 조금 더 밝은 파란색 *!*/
+        /*    border-color: #0073e6;*/
+        /*    color: white;*/
+        /*}*/
+
+        /* 페이지네이션 컨테이너 */
+        .team24-pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        /* 작성하기 버튼 */
+        .team24-button {
+            position: absolute;
+            left: 0;
+            background-color: #000820;
+            color: white !important;
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .team24-button:hover {
+            background-color: #444f6e;
+            color: white;
+        }
+
+        /* 페이지네이션 */
+        .team24-pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 개별 페이지 버튼 */
+        .team24-page-item {
+            margin: 0 3px;
+        }
+
+        .team24-page-link {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #000820;
+            font-weight: bold;
+            border: 1px solid #000820;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .team24-page-link:hover {
+            background-color: #444f6e;
+            color: white;
+        }
+
+        /* 현재 페이지(active) */
+        .team24-page-item.active .team24-page-link {
+            background-color: #000820;
+            color: white;
+            border-color: #000820;
+        }
+
+        /* 비활성화된 버튼 (이전/다음) */
+        .team24-page-item.disabled .team24-page-link,
+        .team24-page-link.disabled {
+            color: #999;
+            border-color: #ddd;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        #footer {
+            visibility: hidden; /* 초기 로딩 시 숨김 */
+        }
+
+        .team24-footer-padding {
+            height: auto;
+            visibility: hidden; /* 처음엔 숨김 */
+        }
+
+    </style>
+
+    <script>
+        function setFooterPadding() {
+            const windowHeight = window.innerHeight; // 전체 화면 높이
+            const mainContent = document.querySelector('.table-container'); // 메인 콘텐츠
+            const footerPadding = document.querySelector('.team24-footer-padding'); // 푸터 패딩
+            const footer = document.querySelector('#footer'); // 푸터
+
+            if (mainContent && footerPadding && footer) {
+                const contentHeight = mainContent.offsetHeight; // 본문 높이
+                const footerHeight = footer.offsetHeight; // 푸터 높이
+
+                // 남은 공간 계산 (최소 0 이상)
+                let remainingSpace = windowHeight - (contentHeight + footerHeight);
+                remainingSpace = remainingSpace > 0 ? remainingSpace : 0;
+
+                // 높이 즉시 설정 (사용자가 움직이는 걸 인식 못 하도록)
+                footerPadding.style.height = `${remainingSpace}px`;
+
+                // 푸터와 패딩을 즉시 보이게 변경
+                footerPadding.style.visibility = "visible";
+                footer.style.visibility = "visible";
+            }
+        }
+
+        // 페이지가 완전히 로드되기 전에 실행 (즉시 반영)
+        document.addEventListener('DOMContentLoaded', setFooterPadding);
+
+
+    </script>
+
+
+    <script th:inline="javascript" th:if="${errorMessage != null}">
+        /*<![CDATA[*/
+        var msg = /*[[${errorMessage}]]*/ "";
+        alert(msg);
+        /*]]>*/
+    </script>
+
+    <script>
+        function goToMemberPage(memberId) {
+            // 기존: location.href = `/member/${memberId}`;
+            // 변경: 특정 유저에게 알림 작성 URL
+            location.href = `/notification/register-to-member?receiverId=` + memberId;
+        }
+    </script>
+
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 100px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- 헤더 -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+<!--    <h3 class="sub-title" th:text="${stationName}">지역구</h3>-->
+    <h1 th:text="${stationName}" class="main-title">지역구</h1>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<div id="wrapper">
+    <div class="container mt-5">
+        <div class="table-container">
+            <div class="table-responsive">
+<!--                <h1 th:text="${stationName}" class="mb-4 text-left"></h1>-->
+                <table class="table table-hover">
+                    <colgroup>
+                        <col style="width: 35%;">
+                        <col style="width: 35%;">
+                        <col style="width: 30%;">
+
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>구역</th>
+                        <th>소속</th>
+                        <th>이름</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="member, memberStat : ${members}" class="clickable-row"
+                        th:onclick="|goToMemberPage(${member.memberId})|">
+                        <td th:text="${stationName}">구역</td>
+                        <td>
+                        <span th:if="${member.policeUnitId != null && policeUnits[member.policeUnitId] != null}"
+                              th:text="${policeUnits[member.policeUnitId].policeUnitName + ' ' + policeUnits[member.policeUnitId].policeUnitTypeDescription}">
+                        </span>
+                            <span th:unless="${member.policeUnitId != null && policeUnits[member.policeUnitId] != null}">정보 없음</span>
+                        </td>
+                        <td th:text="${member.memberName}">이름</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <!-- 페이징 컨테이너 -->
+            <div class="team24-pagination-container">
+                <!-- 페이지네이션 -->
+                <nav th:if="${members.totalPages > 1}">
+                    <ul class="team24-pagination">
+
+                        <!-- 처음(<<) 버튼 -->
+                        <li class="team24-page-item" th:classappend="${members.number == 0 ? 'disabled' : ''}">
+                            <a th:if="${members.number > 0}" class="team24-page-link" th:href="@{'/members/' + ${stationName}(page=0)}"
+                               aria-label="처음">
+                                &laquo;
+                            </a>
+                            <span th:unless="${members.number > 0}" class="team24-page-link disabled"
+                                  aria-label="처음">&laquo;</span>
+                        </li>
+
+                        <!-- 이전(<) 버튼 -->
+                        <li class="team24-page-item" th:classappend="${members.number > 0 ? '' : 'disabled'}">
+                            <a th:if="${members.number > 0}" class="team24-page-link"
+                               th:href="@{'/members/' + ${stationName}(page=${members.number - 1})}"
+                               aria-label="이전">
+                                &lt;
+                            </a>
+                            <span th:unless="${members.number > 0}" class="team24-page-link disabled"
+                                  aria-label="이전">&lt;</span>
+                        </li>
+
+                        <!-- 숫자 버튼 (3개씩 표시, 하지만 총 페이지 수가 3개보다 작을 경우 조정) -->
+                        <li class="team24-page-item"
+                            th:each="pageNum : ${#numbers.sequence(
+                    0,
+                    (members.totalPages < 3 ? members.totalPages - 1 :
+                    (members.number == 0 ? 2 :
+                    (members.number == members.totalPages - 1 ? members.totalPages - 1 : members.number + 1)))
+                )}"
+                            th:classappend="${pageNum == members.number ? 'active' : ''}">
+                            <a class="team24-page-link" th:href="@{'/members/' +${stationName}(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                        </li>
+
+                        <!-- 다음(>) 버튼 -->
+                        <li class="team24-page-item"
+                            th:classappend="${members.number < members.totalPages - 1 ? '' : 'disabled'}">
+                            <a th:if="${members.number < members.totalPages - 1}" class="team24-page-link"
+                               th:href="@{'/members/' + ${stationName}(page=${members.number + 1})}"
+                               aria-label="다음">
+                                &gt;
+                            </a>
+                            <span th:unless="${members.number < members.totalPages - 1}" class="team24-page-link disabled"
+                                  aria-label="다음">&gt;</span>
+                        </li>
+
+                        <!-- 마지막(>>) 버튼 -->
+                        <li class="team24-page-item"
+                            th:classappend="${members.number == members.totalPages - 1 ? 'disabled' : ''}">
+                            <a th:if="${members.number < members.totalPages - 1}" class="team24-page-link"
+                               th:href="@{'/members/' + ${stationName}(page=${members.totalPages - 1})}"
+                               aria-label="마지막">
+                                &raquo;
+                            </a>
+                            <span th:unless="${members.number < members.totalPages - 1}" class="team24-page-link disabled"
+                                  aria-label="마지막">&raquo;</span>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 아래 추가 여백 -->
+<div class="team24-footer-padding"></div>
+
+<!--푸터-->
+<div th:replace="~{fragments/footer :: footer}" id="footer"></div>
+
+</body>
+</html>

@@ -9,8 +9,15 @@
     <!--          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
 
 
+
 </head>
 <body>
+
+<!-- 헤더 -->
+<!--<div th:replace="~{fragments/header :: header}" class="header"></div>-->
+
+<!-- 알림 -->
+<div th:replace="~{fragments/notification :: notification}"></div>
 
 <h1 th:text="${status} + ' 에러가 발생했습니다.'">에러가 발생했습니다.</h1>
 

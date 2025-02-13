@@ -23,18 +23,26 @@ public class HomeController {
         return "index";
     }
 
+    // 메인 맵 페이지
+    @GetMapping("/region/gwangjumap")
+    public String gwangjumap(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "region/gwangjumap";
+    }
+
+    @GetMapping("/introduce/team_introduce")
+    public String teamIntroduce(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "introduce/team_introduce"; // templates/introduce/team_introduce.html 매핑
+    }
+
     @GetMapping("/login")
     public String loginPage(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
 
-        return "member/login"; // `login.html`로 이동
-    }
-
-    @GetMapping("/index2")
-    public String index2(Model model, Authentication authentication) {
-        MemberService.addMemberInfoToModel(model, authentication);
-
-        return "index2"; // templates/index2.html 반환
+        return "member/login";
     }
 
     @GetMapping("/notice_board/boards")
@@ -43,49 +51,48 @@ public class HomeController {
         return "notice_board/boards";
     }
 
-
-    // Google Map 기본 페이지 요청 처리
-    @GetMapping("/cctv/google_map")
-    public String googleMapPage(Model model, Authentication authentication) {
-        MemberService.addMemberInfoToModel(model, authentication);
-        return "cctv/google_map"; // templates/cctv/google_map.html
-    }
-
-    // 구별 페이지 요청 처리
-    @GetMapping("/cctv/{region}")
-    public String cctvPage(@PathVariable("region") String region, Model model, Authentication authentication) {
+    @GetMapping("/management/anomaly")
+    public String anomaly(Model model, Authentication authentication) {
         MemberService.addMemberInfoToModel(model, authentication);
 
-        return switch (region) {   // 북구
-            // 광산구
-            // 서구
-            // 동구
-            case "buk", "gwang", "seo", "dong", "nam" ->   // 남구
-                    "cctv/cctv_" + region; // templates/cctv/cctv_{region}.html
-            default -> "redirect:/cctv/google_map"; // 잘못된 region 값에 대해 기본 페이지로 리디렉션
-        };
+        return "management/anomaly";
     }
 
-    // JSON 데이터 제공
-    @GetMapping("/cctv/cctv_data_{region}.json")
-    public ResponseEntity<?> getCctvData(@PathVariable("region") String region, Model model, Authentication authentication) {
-        String filePath = "src/main/resources/static/cctv_data_" + region + ".json"; // JSON 파일 경로
-        Path path = Paths.get(filePath);
+    @GetMapping("/management/crime")
+    public String crime(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
 
-        if (Files.exists(path)) {
-            try {
-                byte[] content = Files.readAllBytes(path); // 파일 읽기
-                return ResponseEntity.ok()
-                        .header("Content-Type", "application/json; charset=UTF-8")
-                        .body(new String(content));
-            } catch (IOException e) {
-                // 파일 읽기 실패 처리
-                return ResponseEntity.internalServerError().body("파일 읽기 오류: " + e.getMessage());
-            }
-        } else {
-            // 파일이 없는 경우 404 반환
-            return ResponseEntity.status(404).body("JSON 파일을 찾을 수 없습니다: " + filePath);
-        }
+        return "management/crime";
+    }
+
+    // AI 소개 페이지 매핑
+    @GetMapping("/ai_introduce/ai_introduce")
+    public String aiIntroduce(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "ai_introduce/ai_introduce";
+    }
+
+    // 경찰 Google Map 페이지 매핑
+    @GetMapping("/police/police_google_map")
+    public String policeGoogleMap(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "police/police_google_map";
+    }
+
+    // CCTV 페이지 매핑
+    @GetMapping("/cctv/gwangju_cctv")
+    public String gwangjuCctv(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "cctv/gwangju_cctv";
+    }
+
+    // 수사 요청 페이지 매핑
+    @GetMapping("/notification/police_map")
+    public String policeMap(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+        return "notification/police_map";
     }
 
 }

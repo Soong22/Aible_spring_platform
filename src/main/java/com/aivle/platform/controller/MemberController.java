@@ -87,7 +87,40 @@ public class MemberController {
         model.addAttribute("totalPages", members.getTotalPages()); // 전체 페이지 수
         model.addAttribute("totalItems", members.getTotalElements()); // 전체 항목 수
 
-        return "member/members"; // register.html 페이지로 반환
+        return "member/members";
+    }
+
+    @GetMapping("/members/{stationName}")
+    public String getMembersByStationName(Model model, Authentication authentication,
+                             @PathVariable("stationName") String stationName,
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        // 페이지 요청 파라미터 (기본값: 첫 페이지, 한 페이지당 10개 항목)
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 페이징된 멤버 목록 조회
+        Page<MemberResponseDto> members = memberService.getAllMembersByStationName(stationName, pageable);
+
+        // 경찰서 정보를 추가적으로 조회
+        Map<Long, PoliceUnit> policeUnits = members.getContent().stream()
+                .map(MemberResponseDto::getPoliceUnitId) // policeUnitId가 있는 멤버만 처리
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(
+                        id -> id,
+                        policeUnitService::getPoliceUnitById
+                ));
+
+        // 모델에 멤버 목록과 페이징 정보 추가
+        model.addAttribute("stationName", stationName); // 멤버 목록
+        model.addAttribute("members", members); // 멤버 목록
+        model.addAttribute("policeUnits", policeUnits); // 경찰서 정보 맵
+        model.addAttribute("currentPage", page); // 현재 페이지
+        model.addAttribute("totalPages", members.getTotalPages()); // 전체 페이지 수
+        model.addAttribute("totalItems", members.getTotalElements()); // 전체 항목 수
+
+        return "member/membersStationName";
     }
 
     // 단건 조회
@@ -226,6 +259,22 @@ public class MemberController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/members";
         }
+    }
+
+    // 아이디 찾기GET
+    @GetMapping("/member/find-email")
+    public String getMyEmailForm(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "member/find-email";
+    }
+
+    // 비번 찾기GET
+    @GetMapping("/member/find-pwd")
+    public String changeMyPwdForm(Model model, Authentication authentication) {
+        MemberService.addMemberInfoToModel(model, authentication);
+
+        return "member/find-pwd";
     }
 
 }

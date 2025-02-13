@@ -1,0 +1,142 @@
+<div th:fragment="notification">
+    <!-- jQuery 라이브러리 (toastr 이전에 로드) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- CDN으로 라이브러리 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+    <!-- toastr CSS (head 태그 내에 추가) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+
+    <!-- toastr JS (body 태그 끝부분이나 필요한 곳에 추가) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- 알림 효과음을 위한 audio 태그 -->
+    <audio id="alarmSound" src="/mp3/melody.mp3" preload="auto"></audio>
+
+    <style>
+        /* 기본 토스트 스타일 오버라이드 (MacBook 스타일로 디자인) */
+        .toast {
+            opacity: 0.75 !important;
+
+            /* 전체 크기와 내부 여백 조정 */
+            margin-top: 40px !important;
+            width: 300px !important;
+            padding: 10px 15px;
+            /* 그림자와 둥근 모서리 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            z-index: 9999999999;
+            /* 배경색 (불투명하게) */
+            background-color: lightgrey !important;
+            /*background-color: rgba(60, 60, 60, 1) !important;*/
+            border: none;
+            line-height: 1.2;
+        }
+        /* 오른쪽 상단 위치 조정 */
+        .toast-top-right {
+            top: 60px !important;
+        }
+        /* 토스트 내부의 커스텀 콘텐츠 */
+        .toast .toast-custom-content {
+            display: flex;
+            align-items: center;
+            /* 좌측에 여유를 줘서 텍스트가 아이콘과 겹치지 않도록 함 */
+            padding-left: 60px;
+        }
+        /* 기본 아이콘을 위한 스타일 – (원형 이미지) */
+        .toast .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            /* 기존 margin은 제거합니다(절대 위치로 재배치할 것이므로) */
+            margin: 0;
+        }
+        /* 텍스트 영역 스타일 */
+        .toast .toast-message {
+            margin-left: 5px;
+            font-size: 16px;
+            color: black !important;
+            font-weight: bold;
+        }
+        /* 토스트 닫기 버튼 스타일 (원본 그대로) */
+        .toast-close-button {
+            color: black !important;
+            font-size: 1.2rem;
+        }
+
+        /* ★ 기본 toast-info의 exclamation 아이콘(배경이나 pseudo-element)이 보이지 않도록 하고,
+           커스텀 아이콘이 그 위에 절대 위치로 덮어씌워지도록 처리 ★ */
+        .toast.toast-info {
+            position: relative;
+            /* 만약 toastr 기본 스타일에 background-image로 아이콘이 있다면 제거 */
+            background-image: none !important;
+        }
+        .toast.toast-info .toast-icon {
+            position: absolute;
+            top: 10px;   /* 기본 exclamation 아이콘 위치에 맞춰 조정 */
+            left: 10px;  /* 기본 exclamation 아이콘 위치에 맞춰 조정 */
+            z-index: 10; /* 항상 앞쪽에 보이도록 */
+        }
+    </style>
+
+    <script>
+        // WebSocket 연결 생성
+        var socket = new SockJS('/ws');
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log('WebSocket 연결됨: ' + frame);
+
+            stompClient.subscribe('/user/queue/notifications', function (message) {
+                var notification = JSON.parse(message.body);
+                showNotificationPopup(notification);
+            });
+        });
+
+        // 푸쉬 알림 팝업을 표시하는 함수
+        function showNotificationPopup(notification) {
+            // 알림 도착 시 효과음 재생
+            var alarm = document.getElementById('alarmSound');
+            if (alarm) {
+                alarm.play().catch(function(error) {
+                    console.log("알림 효과음 재생 오류:", error);
+                });
+            }
+
+            // toastr 옵션 설정
+            toastr.options = {
+                "closeButton": true,           // 닫기(X) 버튼 표시
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right", // 우측 상단 위치
+                "preventDuplicates": false,
+                "onclick": function () {
+                    // 토스트 클릭 시 해당 알림의 id를 포함한 URL로 이동
+                    window.location.href = "/notification/" + notification.notificationId;
+                },
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": 0,                  // 0이면 자동으로 사라지지 않음
+                "extendedTimeOut": 0,
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            // HTML 형식의 알림 콘텐츠
+            var htmlContent =
+                /* 커스텀 아이콘 – 아래 절대 위치 처리로 인해 toast-info 영역의 좌측 상단(10px,10px)에 표시됩니다. */
+                '<div>' +
+                '<img src="/images/이미지.png" class="toast-icon" alt="Icon">' +
+                '<div class="toast-message">관리자에게 지원요청이 들어왔습니다.</div>' +
+                '</div>';
+
+            // 알림창 표시 (HTML 콘텐츠 그대로 사용)
+            toastr.info(htmlContent);
+        }
+    </script>
+</div>

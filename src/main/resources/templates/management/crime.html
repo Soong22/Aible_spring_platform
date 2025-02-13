@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes" />
+    <meta name="keywords" content="KT Avile School 6기 24조" />
+    <meta name="description" content="범죄와 전쟁 : AI 범죄모니터링 시스템은, 시민의 안전하고 행복한 생활을 위하여 24시간 방범관제 및 범죄자 예측을 제공하고 있습니다." />
+
+    <!-- CSS 파일들 -->
+    <link rel="stylesheet" type="text/css" href="/css/font.css" />
+    <link rel="stylesheet" type="text/css" href="/css/cctv/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/management.css" />
+
+    <!-- JS 파일들 -->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="/js/jquery.screen.min.js"></script>
+    <script src="/js/jquery.menu.min.js"></script>
+    <script src="/js/jquery.customForm.min.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/slick.extensions.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/program.min.js"></script>
+    <script src="/js/cctv/common.js"></script>
+    <script src="/js/cctv/main.js"></script>
+    <script src="/js/loading.js"></script>
+    <script src="/js/myLogin.js"></script>
+
+    <title>범죄 이력 관리</title>
+
+    <!-- 메인 타이틀 -->
+    <style>
+        .hero {
+            padding: 60px 20px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .spacer {
+            height: 300px; /* 여백 크기 */
+            background: transparent; /* 배경 없음 */
+        }
+
+        /* 배경색 */
+        #wrapper {
+            background-color: #f8f9fa;
+        }
+
+        .table-section {
+            /* 🔥 푸터를 넘어가지 않도록 최대 높이 설정 */
+            max-height: 300px; /* 필요에 따라 조절 */
+            overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
+        }
+    </style>
+</head>
+
+
+<!-- 헤더 (Thymeleaf 사용) -->
+<div th:replace="~{fragments/header :: header}" class="header"></div>
+
+
+<!-- 메인 타이틀 -->
+<header class="hero">
+    <h3 class="sub-title"> 범죄 이력 관리 </h3>
+    <h1 class="main-title">범죄와의 전쟁</h1>
+</header>
+
+
+<!-- 메인 콘텐츠 -->
+<body>
+<div class="grid-container">
+    <!-- 좌측: 스트리밍 영상 혹은 기타 콘텐츠 -->
+    <div class="video-section">
+        <img src="https://crime-detect.run.goorm.io/predict" alt="MJPEG Stream" />
+    </div>
+
+    <!-- 우측: 최신 범죄 알림 이미지 -->
+    <div class="image-section">
+        <!-- 전체화면 토글 버튼 -->
+        <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
+
+        <!-- 다운로드 버튼 -->
+        <button id="downloadBtn" onclick="downloadImage()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10.4a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V10.4a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+        </button>
+
+        <img id="crime-image" src="/images/placeholder.jpg" alt="범죄 알림 이미지" />
+    </div>
+
+    <!-- 하단: 범죄 알림 정보 테이블 -->
+    <div class="table-section">
+        <table id="crime-table">
+            <thead>
+            <tr>
+                <th>이름</th>
+                <th>범죄 유형</th>
+                <th>범죄 횟수</th>
+                <th>출소 여부</th>
+                <th>위험도</th>
+                <th>정확도</th>
+                <th>일시</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- JavaScript로 데이터 추가 -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // 타임스탬프 포맷팅 함수: "yyyyMMdd_HHmmss" → "yyyy년 MM월 dd일 HH:mm:ss"
+    function formatTimestamp(ts) {
+        if (ts) {
+            var parts = ts.split("_");
+            if (parts.length === 2 && parts[0].length === 8 && parts[1].length === 6) {
+                var year = parts[0].substring(0, 4);
+                var month = parts[0].substring(4, 6);
+                var day = parts[0].substring(6, 8);
+                var hour = parts[1].substring(0, 2);
+                var minute = parts[1].substring(2, 4);
+                var second = parts[1].substring(4, 6);
+                return year + "년 " + month + "월 " + day + "일 " + hour + ":" + minute + ":" + second;
+            }
+        }
+        return ts;
+    }
+
+    // 전체화면 토글 함수 (문서 전체를 대상으로 함)
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.body.requestFullscreen().then(() => {
+                console.log("전체화면 모드 진입");
+            }).catch(err => {
+                console.error(`전체화면 요청 에러: ${err.message} (${err.name})`);
+            });
+        } else {
+            document.exitFullscreen().then(() => {
+                console.log("전체화면 모드 종료");
+            }).catch(err => {
+                console.error(`전체화면 종료 에러: ${err.message} (${err.name})`);
+            });
+        }
+    }
+
+    // 다운로드 버튼 클릭 시 호출되는 함수
+    function downloadImage() {
+        const image = document.getElementById("crime-image");
+        const imageUrl = image.src;
+        const link = document.createElement("a");
+        link.href = imageUrl;
+        let fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+        if(fileName.indexOf('?') !== -1){
+            fileName = fileName.substring(0, fileName.indexOf('?'));
+        }
+        link.download = fileName || "downloaded_image.jpg";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // 범죄 알림 데이터를 주기적으로 갱신하는 함수
+    function updateCrimeData() {
+        $.ajax({
+            url: '/api/crime',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var tableBody = $('#crime-table tbody');
+                tableBody.empty();
+                data.slice().reverse().forEach(function(alert) {
+                    var formattedTimestamp = formatTimestamp(alert.timestamp);
+                    var row = `<tr>
+                                        <td>${alert.name ? alert.name : '-'}</td>
+                                        <td>${alert.crimeType ? alert.crimeType : '-'}</td>
+                                        <td>${alert.crimeCount}</td>
+                                        <td>${alert.released ? '출소' : '미출소'}</td>
+                                        <td>${alert.riskLevel ? alert.riskLevel : '-'}</td>
+                                        <td>${parseFloat(alert.accuracy).toFixed(1)}%</td>
+                                        <td>${formattedTimestamp}</td>
+                                   </tr>`;
+                    tableBody.append(row);
+                });
+                if (data.length > 0) {
+                    var latest = data[data.length - 1];
+                    $('#crime-image').attr('src', latest.imageUrl + '?t=' + new Date().getTime());
+                }
+            },
+            error: function(err) {
+                console.error('범죄 알림 데이터 조회 오류:', err);
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        updateCrimeData();
+        setInterval(updateCrimeData, 5000);
+    });
+</script>
+
+<!-- 공간 추가 -->
+<div class="spacer"></div>
+
+<!-- 푸터 (Thymeleaf 사용) -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

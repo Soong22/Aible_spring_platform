@@ -21,6 +21,8 @@ SELECT * FROM notification;
 
 SELECT * FROM verification_token;
 
+DELETE FROM verification_token;
+
 
 SELECT * FROM image;
 
