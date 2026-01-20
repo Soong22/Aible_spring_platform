@@ -421,76 +421,117 @@ docker-compose logs -f
 
 ## 👥 팀 역할
 
-### 📌 **조수아 (Sooah Cho)** - Backend/Frontend 개발 담당 ⭐
+### 📌 **JoSooAh** - Backend/Frontend 개발 담당 ⭐
 
-#### 주요 역할
-1. **Spring Boot Backend 개발**
-   - `HomeController`: 홈 페이지, CCTV 지도, 경찰서 위치 맵
-   - `MemberController`: 회원 관리, 인증/인가
-   - `BoardController`: 게시판 CRUD
-   - `CommentController`: 댓글 기능
-   - Spring Security 설정 및 커스텀 로그인
-   - WebConfig (CORS, 인터셉터) 설정
+#### 🔧 백엔드 개발 (Python FastAPI + Java Spring Boot)
 
-2. **이미지 관리 시스템**
-   - `ImageService`: FastAPI에서 전송받은 탐지 이미지 저장/조회
-   - MultipartFile 처리 및 파일 시스템 관리
-   - 이미지 다운로드 기능 구현
-   - CopyOnWriteArrayList 기반 스레드 안전성 보장
+**1. FastAPI 서버에서 실시간 영상 수신 및 처리**
+- **역할**: `/predict` 엔드포인트에서 웹캠/CCTV 영상을 받아서 AI 모델로 처리한 결과를 MJPEG 형식으로 실시간 스트리밍
+- **기술**: FastAPI + Uvicorn으로 비동기 서버 구성
+- **로직**:
+  1. 웹캠에서 프레임 수신
+  2. YOLO Pose로 포즈 추출, LSTM으로 이상 행동 분류
+  3. OpenCV로 감지 결과를 이미지에 바운딩 박스로 그려서 표시
+  4. 결과 이미지를 MJPEG 형식으로 인코딩하여 스트리밍
 
-3. **알림 시스템 (Notification)**
-   - `NotificationController`: 이상 행동 탐지 시 실시간 알림
-   - WebSocket 기반 실시간 메시지 전송
-   - 경찰서별 알림 라우팅
+**2. 고성능 멀티스레딩 처리로 동시에 여러 프레임 처리**
+- **역할**: 프레임을 빠르게 처리하기 위해 여러 스레드에서 동시 처리
+- **기술**: Python ThreadPoolExecutor + Queue
+- **로직**:
+  1. 들어오는 프레임들을 Queue에 저장
+  2. ThreadPoolExecutor가 여러 스레드에서 동시에 AI 모델 추론 실행
+  3. 성능: 약 50ms의 응답 시간 달성
 
-4. **Frontend - Thymeleaf 템플릿**
-   - 공통 레이아웃 구성 (header, footer, navigation)
-   - CCTV 대시보드 페이지 (MJPEG 스트리밍 표시)
-   - Google Maps 기반 CCTV 위치 시각화
-   - 게시판 및 댓글 페이지
-   - 로그인/회원가입 페이지
-
-5. **JavaScript 인터랙션**
-   - Ajax 기반 실시간 데이터 갱신
-   - MJPEG 스트리밍 자동 새로고침
-   - Google Maps 마커 클릭 이벤트 처리
-   - 이미지 다운로드 기능
-   - 전체 화면 토글
-
-6. **API 연동**
-   - Spring Boot ↔ FastAPI 통신
-   - REST API 설계 및 구현
-   - JSON 데이터 전송/수신
-
-#### 구현한 주요 파일
-```
-src/main/java/com/aivle/platform/
-├── controller/
-│   ├── HomeController.java ✅
-│   ├── MemberController.java ✅
-│   ├── BoardController.java ✅
-│   ├── CommentController.java ✅
-│   ├── NotificationController.java ✅
-│   └── ApiController.java ✅
-├── service/
-│   ├── MemberService.java ✅
-│   ├── ImageService.java ✅
-│   └── NotificationService.java ✅
-├── config/
-│   ├── SecurityConfig.java ✅
-│   ├── WebConfig.java ✅
-│   └── WebSocketConfig.java ✅
-└── templates/ (Thymeleaf)
-    ├── index.html ✅
-    ├── cctv/cctv_dashboard.html ✅
-    ├── member/login.html ✅
-    ├── board/boards.html ✅
-    └── ...
-```
+**3. Spring Boot에서 탐지 결과 이미지 저장 및 관리**
+- **역할**: FastAPI에서 보내온 탐지 결과 이미지를 서버의 파일 시스템에 안전하게 저장
+- **기술**: MultipartFile (Spring), Java NIO Files, CopyOnWriteArrayList
+- **로직**:
+  1. FastAPI에서 POST 요청으로 이미지 파일 수신
+  2. MultipartFile로 받은 파일을 검증
+  3. Java NIO Files로 파일 시스템에 저장 (빠르고 효율적)
+  4. CopyOnWriteArrayList로 저장된 이미지 목록을 스레드 안전하게 관리 (멀티스레드 환경에서도 안전)
+  5. 필요시 이미지를 다운로드할 수 있도록 제공
 
 ---
 
-### 🤖 **다른 팀원들** - AI/ML 모델 개발
+#### 🎨 프론트엔드 개발 (Thymeleaf + JavaScript)
+
+**1. 공통 레이아웃 구성 (모든 페이지의 기본 틀)**
+- **역할**: 헤더, 네비게이션, 푸터 등 모든 페이지에서 반복되는 부분을 한 번만 작성하고 재사용
+- **기술**: Thymeleaf 템플릿 엔진의 `th:replace` 사용
+- **로직**:
+  1. `fragments/header.html`, `fragments/footer.html` 등 공통 파일 작성
+  2. 각 페이지에서 `<div th:replace="~{fragments/header :: header}"></div>` 형태로 포함
+  3. 전체 디자인 일관성 유지, 수정 시 한 곳만 수정하면 모든 페이지에 반영
+
+**2. CCTV 대시보드 페이지 - 실시간 영상 스트리밍**
+- **페이지**: `cctv/cctv_dashboard.html`
+- **역할**: FastAPI에서 보내는 실시간 MJPEG 스트리밍 영상을 웹 브라우저에 표시
+- **기술**: HTML `<img>` 태그, JavaScript
+- **로직**:
+  ```html
+  <!-- FastAPI의 /predict 엔드포인트 URL을 img src에 설정 -->
+  <img src="/api/predict" />
+  <!-- MJPEG는 자동으로 계속 새로운 프레임을 갱신 -->
+  ```
+- **추가 기능**:
+  - ⬇️ 이미지 다운로드: 감지 결과 이미지를 로컬에 저장
+  - 🖥️ 전체 화면 토글: CCTV 영상을 전체 화면으로 확대 표시
+
+**3. CCTV 위치 지도 - Google Maps 기반 인터랙티브 지도**
+- **페이지**: `cctv/google_map.html`
+- **역할**: 광주광역시의 모든 CCTV 위치를 지도에 표시, 마커 클릭 시 해당 CCTV 실시간 영상 표시
+- **기술**: Google Maps API, SVG, JavaScript
+- **로직**:
+  1. Spring Boot에서 CCTV 좌표 데이터를 JSON으로 제공
+  2. JavaScript로 Google Maps에 마커 생성 (각 CCTV마다 하나의 마커)
+  3. 사용자가 마커 클릭
+  4. `onClick` 이벤트에서 해당 CCTV ID를 추출
+  5. 드롭다운 메뉴를 자동으로 그 CCTV로 변경
+  6. MJPEG 스트리밍 영상을 자동으로 전환
+
+**4. Ajax 기반 실시간 데이터 갱신**
+- **역할**: 페이지 새로고침 없이 최신 탐지 결과를 자동으로 가져와서 화면 업데이트
+- **기술**: JavaScript Ajax, jQuery 또는 Fetch API
+- **로직**:
+  ```javascript
+  // 3초마다 서버에서 최신 탐지 결과 가져오기
+  setInterval(function() {
+    // GET 요청으로 최신 데이터 조회
+    fetch('/api/detection-results')
+      .then(response => response.json())
+      .then(data => {
+        // 화면의 결과 영역 업데이트
+        updateDetectionUI(data);
+      });
+  }, 3000);
+  ```
+- **사용되는 페이지**:
+  - CCTV 대시보드: 감지 결과 실시간 표시
+  - 게시판: 새 게시물 알림
+  - 알림 영역: 새 알림 표시
+
+---
+
+#### 📋 구현한 주요 페이지
+
+| 페이지 | 설명 | 주요 기능 |
+|--------|------|---------|
+| **index.html** | 홈 페이지 | 프로젝트 소개, 네비게이션 |
+| **cctv/cctv_dashboard.html** | CCTV 영상 뷰어 | 실시간 MJPEG 스트리밍, 이미지 다운로드 |
+| **cctv/google_map.html** | CCTV 위치 지도 | 지도에서 CCTV 마커 클릭 → 실시간 영상 전환 |
+| **region/police_map.html** | 경찰서 위치 지도 | 광주시 경찰서 위치 정보 표시 |
+| **board/boards.html** | 공지사항 게시판 | 게시물 작성/조회/수정/삭제, 댓글 기능 |
+| **member/login.html** | 로그인 페이지 | 회원 인증 처리 |
+
+#### 핵심 기술 스택
+- **Python**: FastAPI, OpenCV, NumPy, ThreadPoolExecutor (고성능 영상 처리)
+- **Java**: Spring Boot, MultipartFile, NIO Files (이미지 저장 및 관리)
+- **Frontend**: Thymeleaf (공통 레이아웃), JavaScript/Ajax (동적 화면 갱신), Google Maps API (인터랙티브 지도)
+
+---
+
+### 🤖 **다른 팀원들** - AI/ML 모델 개발, 프론트엔드/백엔드 개발
 
 #### 주요 역할
 - **YOLO Pose 모델**: 포즈 추출 (17개 관절)
@@ -503,36 +544,26 @@ src/main/java/com/aivle/platform/
 
 ## 📊 성과 및 특징
 
-### ✨ 기술적 성과
-- **실시간 처리**: ~50ms 응답 시간 (GPU 기준)
-- **멀티스레딩**: ThreadPoolExecutor 기반 동시 처리
-- **마이크로서비스 아키텍처**: FastAPI + Spring Boot 분리
-- **보안**: Spring Security 기반 인증/인가 및 CSRF 보호
-- **스케일러빌리티**: 여러 CCTV 동시 처리 가능
+## 📊 성과 및 특징
 
 ### 🏆 프로젝트 성과
 - **KT AIVLE School Big Project Practical 상 수상** 🏆
-- 팀 전체: 조수아 외 7인
+- 팀원: JoSooAh 외 7인
 
-### 📈 개인 역량 향상
-- ✅ Spring Boot 풀스택 개발 능력 강화
-- ✅ FastAPI 기반 비동기 API 설계 경험
-- ✅ Git 협업 (브랜치 전략, 머지, 충돌 관리)
-- ✅ Thymeleaf 서버 템플릿 엔진 활용
-- ✅ WebSocket 기반 실시간 통신 구현
-- ✅ Google Maps API 활용 능력
-- ✅ 멀티스레딩 및 동시성 처리
+### 📈 개인 역량 향상 (portfolio.md 참고)
+- ✅ FastAPI 기반 **비동기 API 설계 경험**
+- ✅ Spring Boot를 활용한 **백엔드 웹 개발 역량 강화**
+- ✅ Git 협업 (브랜치 전략, 머지, 충돌 관리) 실습
+- ✅ 실시간 영상 처리 파이프라인 이해
 
 ### ⚠️ 한계 및 개선 사항
-- **DB 통합 미흡**: 탐지 결과를 DB에 저장하지 못해 장기 데이터 관리 한계
-- **모델 성능**: 특정 각도에서의 인식률 개선 필요
-- **실시간성**: 고해상도 영상에서의 지연 시간 개선
+- **DB 통합 미흡**: 탐지 결과를 DB에 저장하지 못해 장기 데이터 관리에 한계
+- **모델링 작업 기여도**: 상대적으로 낮았음
 - **향후 개선 계획**:
-  - [ ] 탐지 결과 MySQL DB 연동
-  - [ ] 이상 행동 클래스 확장 (넘어짐, 폭력 행동 등)
-  - [ ] 모델 성능 개선 및 자동 재학습
-  - [ ] 프로덕션 환경 배포 (클라우드)
-  - [ ] 성능 모니터링 대시보드 추가
+  - [ ] 탐지 결과 DB 연동
+  - [ ] 이상 행동 클래스 확장
+  - [ ] 모델 성능 개선 및 재학습 자동화
+  - [ ] 실서비스 환경 배포 구성
 
 ---
 
